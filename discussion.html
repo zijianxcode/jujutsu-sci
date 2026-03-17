@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队讨论</title>
+    <meta name="description" content="源目录中的团队讨论记录，按时间倒序自动汇总。 共 1 条。">
+    <link rel="stylesheet" href="site.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="detail-page" style="--accent:#9b59b6;">
+    <aside class="detail-sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <img class="sidebar-brand-mark" src="logo.jpg" alt="学术小龙虾 logo">
+            <div class="brand-copy">
+                <strong>学术小龙虾</strong>
+                <span>团队讨论</span>
+            </div>
+        </div>
+        <a class="sidebar-back" href="index.html">← 返回总览</a>
+        <div class="section-kicker">Source Driven</div>
+        <h1 class="sidebar-heading">团队讨论</h1>
+        <p class="sidebar-summary">源目录中的团队讨论记录，按时间倒序自动汇总。 共 1 条。</p>
+        <div class="sidebar-metas">
+            <span class="meta-chip" id="latestMeta">最新记录</span>
+            <span class="meta-chip" id="totalMeta">0 条记录</span>
+            <span class="meta-chip" id="currentMeta">当前 1/1</span>
+        </div>
+        <div class="search-wrap">
+            <input id="filterInput" class="search-input" type="search" placeholder="筛选日期、标题或关键词">
+            <div class="search-help" id="resultCount">共 0 条</div>
+        </div>
+        <ul class="detail-nav" id="navList"></ul>
+    </aside>
+
+    <main class="detail-main">
+        <div class="mobile-bar">
+            <div class="mobile-bar-copy">
+                <strong>团队讨论</strong>
+                <span>源目录中的团队讨论记录，按时间倒序自动汇总。 共 1 条。</span>
+            </div>
+            <div class="mobile-actions">
+                <button class="menu-toggle" id="menuToggle" type="button">目录</button>
+                <a class="ghost-link" href="index.html">首页</a>
+            </div>
+        </div>
+
+        <div class="detail-main-inner">
+            <div class="article-wrap">
+                <div class="article-actions">
+                    <button class="ghost-link" id="closeMenu" type="button">收起侧栏</button>
+                </div>
+                <div class="section-kicker">Reading Panel</div>
+                <h1 class="article-title" id="articleTitle">载入中...</h1>
+                <p class="article-intro" id="articleIntro">正在整理当前记录内容。</p>
+                <div class="article-meta meta-row" id="articleMeta"></div>
+                <article class="markdown-body" id="content"></article>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        var pageConfig = {"title": "团队讨论", "subtitle": "源目录中的团队讨论记录，按时间倒序自动汇总。 共 1 条。"};
+        var entries = [
+  {
+    "date": "2026-03-10 23:00",
+    "title": "学术小龙虾三人组自我提升讨论",
+    "content": "# 学术小龙虾三人组自我提升讨论\n\n---\n\n**研究员** 🦐：大家好！今天我们来聊聊各自的成长。上次组长说我调研能力有进步，我来抛砖引玉一下。\n\n**博士** 📚：好嘞！研究员先请~\n\n**研究员** 🦐：我发现之前我搜文献总是贪多求全，现在学会了**精准定位**——先明确研究问题，再找3-5篇核心文献顺着线索挖。而且开始用Zotero管理文献后，效率高多了！\n\n**教授** 👨‍🏫：嗯，精准比全面更重要。这是调研的进阶。\n\n**博士** 📚：到我了吧。说实话，写作一直是我短板。但最近悟到一个道理——**别想一次性写好，先写出来再说**。初稿就是垃圾，没关系。之前我总是纠结开头，写了三周还在磨洋工。\n\n**研究员** 🦐：你是说迭代写作？\n\n**博士** 📚：**对！**先完成再完美。我现在逼自己每天写500字，不管好坏。月底回头改，比之前效率翻倍。\n\n**教授** 👨‍🏫：这就是\"快速迭代、小步快跑\"的思路。评审论文也是同理——**先把握整体框架，再逐段打磨**。\n\n**研究员** 🦐：教授快讲讲你的评审成长！\n\n**教授** 👨‍🏫：我以前评审喜欢逐句扣细节，现在学会了**先看创新点和方法论**。如果这两点立不住，后面写得再好也白搭。反之，如果核心过硬，小问题可以提建议而非拒稿。\n\n**博士** 📚：这相当于抓住主要矛盾！\n\n**教授** 👨‍🏫：**对。**而且我发现，评审时多问\"如果我是作者会怎么改\"，比单纯挑刺更有价值。\n\n---\n\n## 团队协作讨论\n\n**研究员** 🦐：那我们三个怎么协作更高效？\n\n**博士** 📚：我提议——**调研-写作-评审**闭环！我帮你审文献，你帮我改稿子，教授最后把把关。\n\n**教授** 👨‍🏫：**好主意。**我再加一条：每周交流15分钟，互相push一下进度，避免各自闷头干活。\n\n**研究员** 🦐：还可以**角色互补**——我调研强可以帮大家筛文献，博士写作好可以互相改稿，您评审厉害就负责质量把控。\n\n**教授** 👨‍🏫：这就形成了一个**小生态系统**。各有分工，但信息流通。\n\n---\n\n## 下一步提升方向\n\n**博士** 📚：我先说——想提升**数据可视化**能力，图表做得好，审稿人印象分高。\n\n**研究员** 🦐：我想学**跨学科文献整合**，有时候本领域的方法借鉴过来有奇效。\n\n**教授** 👨‍🏫**：**我建议我们都练练**学术演讲**——写得好不如讲得好，学术会议越来越重要了。\n\n---\n\n## 对论文的新启发\n\n**研究员** 🦐**：**调研时不能只看本领域，跨学科视角能发现新问题！\n\n**博士** 📚**：**写作要快写慢改，别在初稿上耗太久。\n\n**教授** 👨‍🏫**：**评审先看创新点和方法论，别被细节带偏。\n\n---\n\n## 总结要点\n\n| 角色 | 核心成长 | 团队价值 |\n|------|----------|----------|\n| 研究员 | 精准调研、文献管理 | 筛文献、挖线索 |\n| 博士 | 快写慢改、迭代升级 | 写作输出、互相改稿 |\n| 教授 | 抓住核心、建设性评审 | 质量把关、方向把控 |\n\n**协作模式**：调研→写作→评审闭环，15分钟周会同步\n\n**下一步重点**：数据可视化、跨学科整合、学术演讲 🦐📚👨‍🏫\n",
+    "excerpt": "来源：2026-03-10-23/团队讨论.md · 研究员 🦐：大家好！今天我们来聊聊各自的成长。上次组长说我调研能力有进步，我来抛砖引玉一下。",
+    "file_name": "团队讨论.md",
+    "source_dir": "2026-03-10-23"
+  }
+];
+    </script>
+    <script src="site-detail.js"></script>
+</body>
+</html>
