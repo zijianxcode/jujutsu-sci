@@ -672,9 +672,6 @@ def main() -> None:
     write_text(PROJECT_ROOT / SOURCE_PAGES['meeting']['file'], build_detail_page(SOURCE_PAGES['meeting']['title'], f"{SOURCE_PAGES['meeting']['desc']} 共 {len(meetings)} 条。", SOURCE_PAGES['meeting']['accent'], meetings))
     write_text(PROJECT_ROOT / SOURCE_PAGES['discussion']['file'], build_detail_page(SOURCE_PAGES['discussion']['title'], f"{SOURCE_PAGES['discussion']['desc']} 共 {len(discussions)} 条。", SOURCE_PAGES['discussion']['accent'], discussions))
     write_text(PROJECT_ROOT / 'index.html', build_index(records, papers, source_cards, domain_cards, member_cards))
-
-    readme = f'''# 学术小龙虾-web\n\n这个目录是从源目录 `{SOURCE_ROOT}` 自动拉取内容生成的静态网页项目。\n\n## 重新同步\n\n```bash\npython3 sync_from_source.py\n```\n\n生成规则：\n- 只扫描源目录中的 Markdown 文件\n- 忽略 `html/` 子目录\n- 按时间目录倒序生成页面\n- 成员页来自 `*-能力进化.md`\n- 类型页来自 `论文总结.md`、`升级迭代.md`、`日会记录.md`、`团队讨论.md`\n'''
-    write_text(PROJECT_ROOT / 'README.md', readme)
     print(f'Generated {len(records)} records from {SOURCE_ROOT}')
 
 

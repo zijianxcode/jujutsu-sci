@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML</title>
-    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 41 条。">
+    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 42 条。">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -20,7 +20,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">ML</h1>
-        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 41 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 42 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -37,7 +37,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>ML</strong>
-                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 41 条。</span>
+                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 42 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -60,8 +60,16 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 41 条。"};
+        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 42 条。"};
         var entries = [
+  {
+    "date": "2026-03-18 03:00",
+    "title": "论文总结：MultiShadow",
+    "content": "# 论文总结：MultiShadow\n\n**论文标题：** MultiShadow: Multi-Object Shadow Generation for Image Compositing via Diffusion Model  \n**作者：** Waqas Ahmed 等  \n**来源：** arXiv:2603.02743 (cs.CV), 2026年3月  \n**类别：** CVPR 2026\n\n---\n\n## 1. 研究什么？\n\n本论文研究**多目标阴影生成**问题——给定一张合成图像（前景物体已插入背景），如何为图像中多个前景物体自动生成物理合理的阴影。这是图像合成领域中一个尚未被充分探索的任务。\n\n## 2. 为什么研究？\n\n在图像合成（image compositing）中，将前景物体插入背景后，如果缺少合理的阴影，会让合成图像看起来不真实，降低视觉效果。现有方法主要关注单目标阴影生成，而实际应用中经常需要处理多目标场景。自动生成高质量阴影可以大幅提升图像合成的效率和应用价值。\n\n## 3. 别人做过什么？\n\n- **传统方法**：基于物理的光照模型，需要已知场景几何和光照条件，实用性受限\n- **早期深度学习方法**：如 ASG-EF 采用曝光融合生成阴影，需要多张欠曝光图像融合\n- **DMASNet**：两阶段方法（box预测+形状预测），在单目标场景效果较好，但难以处理多目标\n- **Shadow Generation for Composite Image Using Diffusion Model (CVPR 2024)**：首个基于扩散模型的阴影生成方法，但主要针对单目标\n\n现有方法的不足：难以处理多目标场景；阴影的物理合理性不够；对跨域泛化能力有限。\n\n## 4. 作者怎么研究的？\n\n- **核心思路**：利用预训练的 text-to-image 扩散模型的多模态生成能力\n- **方法**：\n  - 将合成图像和前景物体mask作为条件输入\n  - 利用扩散模型的生成能力，根据图像上下文（光照、场景）预测合理的阴影\n  - 设计了针对多目标场景的特殊处理机制\n- **实验设置**：\n  - 在单目标和多目标场景分别评估\n  - 与 ASG-EF、DMASNet 等SOTA方法对比\n  - 使用FID、SSIM等指标评估生成质量\n\n## 5. 发现了什么？\n\n- 该方法在单目标和多目标阴影生成任务上均达到了**state-of-the-art** 性能\n- 扩散模型的随机性天然适合阴影生成这种多模态任务（一个输入对应多个合理输出）\n- 预训练模型的先验知识能有效提升阴影的物理合理性\n\n## 6. 价值和不足？\n\n**创新点：**\n- 首次系统研究多目标阴影生成问题\n- 创新性地将扩散模型应用于阴影生成任务\n- 充分利用预训练模型的多模态能力\n\n**局限性：**\n- 对极端光照场景的处理可能仍有挑战\n- 需要消耗较大的计算资源（扩散模型推理开销）\n- 在某些特定艺术风格图像上可能不适用\n",
+    "excerpt": "来源：2026-03-18-03/论文总结.md · 论文标题： MultiShadow: Multi Object Shadow Generation for Image Compositing via Diffusion Model",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-18-03"
+  },
   {
     "date": "2026-03-17 20:00",
     "title": "Adaptive Vision-Language Model Routing for Computer Use Agents",
