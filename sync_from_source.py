@@ -51,6 +51,69 @@ def parse_folder_timestamp(folder_name: str) -> datetime | None:
     return None
 
 
+def parse_content_timestamp(content: str, fallback: datetime) -> datetime:
+    lines = [line.strip() for line in content.splitlines()]
+    probe_lines = lines[:48] + lines[-24:]
+
+    def normalize(line: str) -> str:
+        line = re.sub(r'[*`_]+', '', line)
+        return re.sub(r'\s+', ' ', line).strip()
+
+    normalized = [normalize(line) for line in probe_lines if line.strip()]
+    date_text = None
+    time_text = None
+
+    datetime_patterns = [
+        r'(?:生成时间|更新时间|记录时间|整理时间|时间)\s*[:：]\s*(20\d{2}-\d{2}-\d{2})\s+(\d{2}:\d{2})',
+        r'(20\d{2}-\d{2}-\d{2})\s+(\d{2}:\d{2})',
+    ]
+    date_patterns = [
+        r'(?:整理日期|记录日期|日期)\s*[:：]\s*(20\d{2}-\d{2}-\d{2})',
+    ]
+    time_patterns = [
+        r'(?:生成时间|更新时间|记录时间|整理时间|时间|会议结束)\s*[:：]\s*(\d{2}:\d{2})',
+    ]
+
+    for line in normalized:
+        if '下次' in line:
+            continue
+        for pattern in datetime_patterns:
+            match = re.search(pattern, line)
+            if match:
+                try:
+                    return datetime.strptime(f'{match.group(1)} {match.group(2)}', '%Y-%m-%d %H:%M')
+                except ValueError:
+                    continue
+
+    for line in normalized:
+        if '下次' in line:
+            continue
+        if not date_text:
+            for pattern in date_patterns:
+                match = re.search(pattern, line)
+                if match:
+                    date_text = match.group(1)
+                    break
+        if not time_text:
+            for pattern in time_patterns:
+                match = re.search(pattern, line)
+                if match:
+                    time_text = match.group(1)
+                    break
+
+    if date_text and time_text:
+        try:
+            return datetime.strptime(f'{date_text} {time_text}', '%Y-%m-%d %H:%M')
+        except ValueError:
+            pass
+    if date_text:
+        try:
+            return datetime.strptime(f'{date_text} {fallback.strftime("%H:%M")}', '%Y-%m-%d %H:%M')
+        except ValueError:
+            pass
+    return fallback
+
+
 def detect_kind(file_name: str) -> str:
     if file_name == '论文总结.md':
         return 'paper'
@@ -127,9 +190,10 @@ def load_records() -> list[dict]:
         if not dt:
             continue
         content = path.read_text(encoding='utf-8')
+        actual_dt = parse_content_timestamp(content, dt)
         file_name = path.name
         record = {
-            'date': dt.strftime('%Y-%m-%d %H:%M'),
+            'date': actual_dt.strftime('%Y-%m-%d %H:%M'),
             'folder_name': folder_name,
             'file_name': file_name,
             'source_path': str(rel),
@@ -138,7 +202,7 @@ def load_records() -> list[dict]:
             'title': build_title(file_name, content),
             'content': content,
             'excerpt': build_excerpt(file_name, content, folder_name),
-            'timestamp': dt,
+            'timestamp': actual_dt,
             'source_dir': folder_name,
         }
         records.append(record)
