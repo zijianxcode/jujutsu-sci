@@ -149,6 +149,20 @@ function normalizeText(entry) {
         closeMenu.addEventListener('click', closeSidebar);
     }
 
+    var overlay = document.getElementById('navOverlay');
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeSidebar();
+        }
+    });
+
+    navRoot.setAttribute('role', 'listbox');
+    navRoot.setAttribute('aria-label', '记录导航列表');
+
     window.addEventListener('hashchange', () => {
         if (openFromHash()) {
             setActive(state.activeIndex, false);

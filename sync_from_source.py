@@ -264,7 +264,7 @@ def domain_records(domain: str, papers: list[dict]) -> list[dict]:
 
 
 def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict], cover_image: str | None = None) -> str:
-    cover_markup = f'        <img class="sidebar-cover" src="{cover_image}" alt="{title} 封面">\n' if cover_image else ''
+    cover_markup = f'        <img class="sidebar-cover" src="{cover_image}" alt="{title} 封面" loading="lazy">\n' if cover_image else ''
     payload = [
         {
             'date': entry['date'],
@@ -283,11 +283,17 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <meta name="description" content="{subtitle}">
+    <meta property="og:title" content="{title} - 咒术SCI高专">
+    <meta property="og:description" content="{subtitle}">
+    <meta property="og:image" content="logo.jpg">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:{accent};">
+    <div class="nav-overlay" id="navOverlay"></div>
     <aside class="detail-sidebar" id="sidebar">
         <div class="sidebar-brand">
             <img class="sidebar-brand-mark" src="logo.jpg" alt="学术小龙虾 logo">
@@ -397,7 +403,7 @@ def render_member_cards(items: list[dict]) -> str:
         html.append(f'''                <a class="member-card" href="{item['href']}">
                     <div class="member-head">
                         <div class="member-profile">
-                            <img class="member-avatar" src="{item['image']}" alt="{item['name']}">
+                            <img class="member-avatar" src="{item['image']}" alt="{item['name']}" width="56" height="56" loading="lazy">
                             <div>
                                 <div class="member-name">{item['name']}</div>
                                 <div class="member-role">{item['role']}</div>
@@ -638,6 +644,11 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>咒术SCI高专</title>
     <meta name="description" content="围绕论文追踪、主题沉淀与成员进化持续更新的学术协作主页。">
+    <meta property="og:title" content="咒术SCI高专">
+    <meta property="og:description" content="围绕论文追踪、主题沉淀与成员进化持续更新的学术协作主页。">
+    <meta property="og:image" content="logo.jpg">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="site.css">
 </head>
 <body class="home-page">

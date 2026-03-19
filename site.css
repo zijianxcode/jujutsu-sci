@@ -1010,13 +1010,18 @@ input {
         transform: translateX(0);
     }
 
-    body.nav-open::after {
-        content: "";
+    .nav-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(2, 6, 23, 0.56);
         backdrop-filter: blur(2px);
         z-index: 20;
+        cursor: pointer;
+    }
+
+    body.nav-open .nav-overlay {
+        display: block;
     }
 }
 
