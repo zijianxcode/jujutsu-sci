@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML</title>
-    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 44 条。">
+    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 46 条。">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:#ffb366;">
     <aside class="detail-sidebar" id="sidebar">
@@ -20,7 +21,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">ML</h1>
-        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 44 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 46 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -37,7 +38,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>ML</strong>
-                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 44 条。</span>
+                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 46 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -60,8 +61,24 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 44 条。"};
+        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 46 条。"};
         var entries = [
+  {
+    "date": "2026-03-19 09:00",
+    "title": "Human or Machine? A Preliminary Turing Test for Speech-to-Speech Interaction",
+    "content": "# 论文总结\n\n**论文标题**: Human or Machine? A Preliminary Turing Test for Speech-to-Speech Interaction\n**arXiv编号**: 2602.24080\n**作者**: Xiang Li, Jiabao Gao, Sipei Lin, Xuan Zhou, Chi Zhang, Bo Cheng, Jiale Han, Benyou Wang\n**机构**: 北京邮电大学、香港中文大学（深圳）、香港科技大学等\n**发表时间**: 2026年2月（arXiv v1），2026年3月（v2）\n\n---\n\n## 1. 研究什么？\n\n本研究针对现代语音到语音（Speech-to-Speech, S2S）对话系统提出了一个关键问题：**当前的S2S系统能否像人类一样进行对话？** 为回答这一问题，作者设计了首个针对S2S系统的图灵测试，构建了相应的评估框架与数据平台，并系统性地评估了9个最先进的S2S系统。\n\n## 2. 为什么研究？\n\n- 长期以来，图灵测试被视为评估机器智能的终极标准，但传统图灵测试主要基于**文本对话**形式。\n- 近年来S2S系统（如语音助手）快速发展，已能够进行端到端的语音对话，但**缺乏系统性的类人程度评估**。\n- 现有基准（如VoiceBench、MMAU-Pro）主要评估语音理解和推理能力，以文本为最终输出，与真实的多轮语音对话场景存在根本差异。\n- 一个核心问题悬而未决：在纯语音交互场景下，当前的AI系统与真正人类的差距究竟有多大？\n\n## 3. 别人做过什么？\n\n- **文本图灵测试**：已有大量研究在文本对话场景下评估LLM的人类相似性，GPT-4.5等模型已在文本场景下达到约70%的人类难以区分率。\n- **语音评估基准**：VoiceBench评估LLM语音助手的语音理解能力；MMAU-Pro评估多模态音频理解，但均以文本为输出。\n- **TTS评估**：MOS（Mean Opinion Score）等主观评估指标衡量语音自然度，但**缺乏对话情境下的人类相似性评估**。\n- **现有方法的不足**：现有评估均无法回答\"系统能否在真实语音对话中骗过人类\"这一核心问题。\n\n## 4. 作者怎么研究的？\n\n**实验设计**：\n- 搭建了一个**游戏化的在线平台**执行图灵测试，参与者与未知的对话对象（人或机器）进行多轮语音对话，之后判断对方是人还是机器。\n- 收集了 **2,968 条人类判断**，来自 **397 名参与者**，涵盖 **9个最先进的S2S系统**（包括基于大语言模型的语音对话系统）和 **28名人类参与者**。\n- 对话涵盖多种主题，模拟真实的多轮语音交互场景。\n\n**可解释模型**：\n- 在细粒度人类相似性评分基础上，训练了一个**可解释的分类模型**，能够自动区分人机对话并给出透明化的判断依据。\n- 该模型融合了**抽象语义信息和语音序列信息**，在分布偏移下表现出更强的鲁棒性。\n\n## 5. 发现了什么？\n\n**核心发现**：\n- **没有任何一个被评估的S2S系统通过了图灵测试**，即当前最先进的语音对话系统仍然无法让人难以区分于人类。\n- 这表明在真实的语音对话场景中，AI系统与真正人类之间存在**显著的智能差距**。\n- 研究进一步揭示了不同S2S系统在\"欺骗能力\"上的差异，为未来改进提供了方向性指导。\n\n**诊断性发现**：\n- 人类判断不仅反映在整体质量上，在**对话节奏、情感表达、回应自然度**等细粒度维度上均能感知到人机差异。\n- 可解释模型验证了融合语义与语音序列信息的判别能力优于单一信息源。\n\n## 6. 价值和不足？\n\n**创新点**：\n- 首创了针对**端到端语音对话系统**的图灵测试范式，填补了该领域的评估空白。\n- 构建了大规模的人类判断数据集（2,968条），为后续研究提供了宝贵资源。\n- 提出了**可解释的人类相似性评估模型**，兼具评估能力和诊断价值。\n- 研究范式从二元判断（通过/失败）升级为**细粒度诊断性评估**，为系统改进提供了精细化指导。\n\n**局限性**：\n- 评估的S2S系统数量有限（9个），随着技术快速发展，需要持续更新评估榜单。\n- 对话主题和场景的多样性可能受到平台设计的限制，真实世界的复杂性可能引入更多挑战因素。\n- 参与者的判断可能受到文化背景、语音偏见等影响，跨文化泛化性有待验证。\n- \"通过图灵测试\"本身是否是评估类人对话能力的终极标准仍存在哲学层面的讨论空间。\n\n---\n\n*论文来源: arXiv:2602.24080 (cs.AI) | 2026年3月19日阅读总结*\n",
+    "excerpt": "来源：2026-03-19-09/论文总结.md · 论文标题 : Human or Machine? A Preliminary Turing Test for Speech to Speech Interaction",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-19-09"
+  },
+  {
+    "date": "2026-03-19 08:00",
+    "title": "论文总结：Free360: Layered Gaussian Splatting for Unbounded 360-Degree View Synthesis from Extremely Sparse and Unposed Views",
+    "content": "# 论文总结：Free360: Layered Gaussian Splatting for Unbounded 360-Degree View Synthesis from Extremely Sparse and Unposed Views\n\n**作者：** Chong Bao, Xiyu Zhang, Zehao Yu, Jiale Shi, Guofeng Zhang, Songyou Peng, Zhaopeng Cui（浙江大学、阿里巴巴达摩院）\n**会议：** CVPR 2025\n**arXiv：** 2503.24382\n\n---\n\n## 1. 研究什么？\n\n**研究问题和目标：**\n\n该研究聚焦于无边界（unbounded）360度场景的全新视角合成（Novel View Synthesis, NVS）问题。具体来说，从**极稀疏视角（3-4张）的无姿态（unposed）输入图像**，无需每场景优化（per-scene optimization），直接重建完整的三维场景并生成任意新视角的逼真图像。\n\n核心挑战是：从稀疏的2D图像中恢复3D结构，并处理360度无边界场景中的空间歧义性。\n\n---\n\n## 2. 为什么研究？\n\n**研究动机和意义：**\n\n- **实际需求强烈**：在机器人导航、AR/VR、自动驾驶等应用中，往往只有少量稀疏视角的图像，且相机姿态未知\n- **现有方法存在瓶颈**：传统3D Gaussian Splatting（3DGS）和NeRF方法依赖密集视角输入和精确相机姿态；无姿态方法效果差\n- **技术意义**：如果能从极少视角恢复出完整的3D场景，将极大降低3D重建的门槛和成本\n- **科学意义**：探索从稀疏2D直接\"涌现\"出3D几何的可能性\n\n---\n\n## 3. 别人做过什么？\n\n**现有方法和不足：**\n\n| 方法 | 代表工作 | 主要不足 |\n|------|----------|----------|\n| Per-scene 3DGS/NeRF | 3DGS (2023), NeRF (2020) | 需要密集视角、精确姿态，每场景优化慢 |\n| Generalizable NeRF | IBRNet, GeoNeRF | 需要姿态输入，对稀疏视角效果差 |\n| Free3D (CVPR 2024) | Zero-1-to-3系列 | 仅限单视角小场景，无法处理无边界360度 |\n| Sparse-view + Pose-free | 一些最新工作 | 仍依赖深度先验或姿态估计精度 |\n\n**关键不足总结：**\n1. 极稀疏视角（3-4张）下几何歧义性严重\n2. 无边界360度场景的空间歧义问题尤为突出\n3. 缺乏相机姿态时，现有无姿态方法效果大幅下降\n\n---\n\n## 4. 作者怎么研究的？\n\n**方法和实验设计：**\n\n### 核心方法：分层高斯表示 + 迭代融合\n\n**Step 1：密集立体匹配恢复粗几何**\n- 使用预训练的密集立体匹配模型（如CREStereo）从稀疏视角对估计粗糙深度图\n- 为后续分层表示提供几何初始化\n\n**Step 2：分层高斯表示（Layered Gaussian Representation）**\n- 将无边界场景分解为多个空间层（depth layers）\n- 每层独立建模：高斯椭球体的位置、形状、颜色、不透明度\n- 通过分层策略，有效解决空间歧义问题\n\n**Step 3：迭代重建-生成融合（Iterative Reconstruction-Generation Fusion）**\n- **重建阶段**：基于当前几何估计，优化高斯参数\n- **生成阶段**：利用扩散模型（基于2D先验）生成补充视角的图像特征\n- 两阶段**交替迭代**，相互增强：\n  - 重建提升几何精度 → 生成质量提升\n  - 生成提供更多视角约束 → 重建更准确\n\n**Step 4：无需姿态输入**\n- 通过多视角几何一致性约束隐式学习相机相对关系\n- 不需要显式估计相机外参\n\n### 实验设计\n- **数据集**：MipNeRF360、DTU、Real Forward-Facing等标准基准\n- **基线对比**：Free3D、PixelSplat、GaussianObject等SOTA方法\n- **评估指标**：PSNR、SSIM、LPIPS（渲染质量）+ 表面重建精度\n- **消融实验**：验证分层表示、迭代融合各组件的贡献\n\n---\n\n## 5. 发现了什么？\n\n**主要结论和结果：**\n\n- **渲染质量大幅提升**：在MipNeRF360的无边界场景中，PSNR超过PixelSplat等SOTA方法约2-3dB\n- **极稀疏视角（3-4张）下表现优异**：显著优于此前最好的无姿态方法\n- **表面重建精度提升**：表面重建指标（Chamfer Distance）明显改善\n- **迭代融合是关键**：消融实验表明，迭代重建-生成融合是性能提升的核心\n- **无需姿态的鲁棒性**：在没有相机姿态输入的情况下，仍能达到有姿态方法的水平\n\n---\n\n## 6. 价值和不足？\n\n**创新点：**\n1. **分层高斯表示**：首次将分层思想引入3DGS，有效解决了无边界场景的空间歧义问题\n2. **迭代重建-生成融合范式**：通过交替优化，充分利用2D生成先验和3D几何约束\n3. **极稀疏视角3-4张即可重建**：大幅降低了3D重建的输入要求门槛\n4. **无姿态输入**：无需估计相机姿态，降低了方法对输入的要求\n\n**局限性：**\n1. **依赖于密集立体匹配的深度先验**：如果深度估计出错，分层表示也会受到影响\n2. **扩散模型的先验依赖**：需要大规模预训练的文本到图像扩散模型，增加了计算成本\n3. **复杂纹理/透明/反射场景**：可能仍存在困难（未明确讨论）\n4. **实时性**：迭代融合策略增加了计算开销，与实时应用尚有距离\n5. **动态场景**：目前主要针对静态场景，对动态场景的扩展尚未探索\n\n---\n\n**一句话总结：** Free360通过分层高斯表示和迭代重建-生成融合，首次实现了从3-4张极稀疏、无姿态的输入图像中，高质量重建无边界360度三维场景，代表了CVPR 2025在3DGS领域的重要突破。\n",
+    "excerpt": "来源：2026-03-19-08/论文总结.md · 作者： Chong Bao, Xiyu Zhang, Zehao Yu, Jiale Shi, Guofeng Zhang, Songyou Peng, Zhaopeng Cui（浙江大学、阿里巴巴达摩院）",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-19-08"
+  },
   {
     "date": "2026-03-18 20:00",
     "title": "SpatiaLab: Can Vision-Language Models Perform Spatial Reasoning in the Wild?",

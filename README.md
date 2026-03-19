@@ -10,6 +10,7 @@
 - [项目结构](docs/PROJECT_STRUCTURE.md)
 - [内容同步说明](docs/CONTENT_SYNC.md)
 - [部署发布说明](docs/DEPLOYMENT.md)
+- [问题记录与修复日志](docs/ISSUE_LOG.md)
 
 ## 项目概览
 
@@ -40,6 +41,21 @@ python3 sync_from_source.py
 - `site-index.js`：首页脚本
 - `site-detail.js`：详情页脚本
 - `index.html`：网站首页
+
+## 问题记录机制
+
+从现在开始，项目里遇到的错误、bug、同步异常、部署异常，都统一记录到：
+- [问题记录与修复日志](docs/ISSUE_LOG.md)
+
+每条记录至少包含：
+- 问题现象
+- 影响范围
+- 根因判断
+- 修复动作
+- 预防措施
+- 验证结果
+
+原则上，问题修复完成后再补文档，不把经验只留在聊天记录里。
 
 ## 当前仓库状态
 

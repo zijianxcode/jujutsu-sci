@@ -245,6 +245,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta name="description" content="{subtitle}">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:{accent};">
     <aside class="detail-sidebar" id="sidebar">
@@ -729,7 +730,6 @@ def main() -> None:
         member_cards.append({'name': name, 'href': f'{name}.html', 'count': len(items), 'image': meta['image'], 'accent': meta['accent'], 'role': meta['role'], 'desc': f'来自源目录的 {len(items)} 条能力进化记录，按时间倒序排列。'})
         write_text(PROJECT_ROOT / f'{name}.html', build_detail_page(name, f'来自源目录的 {len(items)} 条能力进化记录，按时间倒序排列。', meta['accent'], items, cover_image=meta['image']))
 
-    write_text(PROJECT_ROOT / '惠_temp.html', build_detail_page('惠', '临时页已改为与惠页面同步的源驱动内容。', MEMBER_META['惠']['accent'], [item for item in records if item['member'] == '惠'], cover_image=MEMBER_META['惠']['image']))
     write_text(PROJECT_ROOT / SOURCE_PAGES['archive']['file'], build_detail_page(SOURCE_PAGES['archive']['title'], f"{SOURCE_PAGES['archive']['desc']} 共 {len(records)} 条。", SOURCE_PAGES['archive']['accent'], records))
     write_text(PROJECT_ROOT / SOURCE_PAGES['paper']['file'], build_detail_page(SOURCE_PAGES['paper']['title'], f"{SOURCE_PAGES['paper']['desc']} 共 {len(papers)} 条。", SOURCE_PAGES['paper']['accent'], papers))
     write_text(PROJECT_ROOT / SOURCE_PAGES['upgrade']['file'], build_detail_page(SOURCE_PAGES['upgrade']['title'], f"{SOURCE_PAGES['upgrade']['desc']} 共 {len(upgrades)} 条。", SOURCE_PAGES['upgrade']['accent'], upgrades))

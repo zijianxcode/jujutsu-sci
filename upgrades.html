@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>升级迭代</title>
-    <meta name="description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 28 条。">
+    <meta name="description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 29 条。">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:#27ae60;">
     <aside class="detail-sidebar" id="sidebar">
@@ -20,7 +21,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">升级迭代</h1>
-        <p class="sidebar-summary">源目录中的升级迭代记录，按时间倒序自动汇总。 共 28 条。</p>
+        <p class="sidebar-summary">源目录中的升级迭代记录，按时间倒序自动汇总。 共 29 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -37,7 +38,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>升级迭代</strong>
-                <span>源目录中的升级迭代记录，按时间倒序自动汇总。 共 28 条。</span>
+                <span>源目录中的升级迭代记录，按时间倒序自动汇总。 共 29 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -60,8 +61,16 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "升级迭代", "subtitle": "源目录中的升级迭代记录，按时间倒序自动汇总。 共 28 条。"};
+        var pageConfig = {"title": "升级迭代", "subtitle": "源目录中的升级迭代记录，按时间倒序自动汇总。 共 29 条。"};
         var entries = [
+  {
+    "date": "2026-03-19 08:00",
+    "title": "四人团队能力提升讨论：AI/HCI 前沿动态",
+    "content": "# 四人团队能力提升讨论：AI/HCI 前沿动态\n\n**时间：** 2026-03-19-08（Asia/Shanghai）  \n**参与者：** 悠仁（研究员）、野蔷薇（研究员）、惠（博士）、五条悟（教授）  \n**议题：** 最新 AI/HCI 技能与研究动态对团队能力的启示\n\n---\n\n## 1. 悠仁（研究员）：调研新发现\n\n### 1.1 ClawHub 生态最新进展\n\n过去数月，ClawHub 技能库已突破 3,000+ 大关，成为 AI Agent 能力扩展的核心枢纽。几个值得重点关注的方向：\n\n**动态技能获取（Dynamic Skill Acquisition）**  \n最新趋势是\"auto-skill-hunter\"——AI Agent 可以自动发现、评估并安装用户需求驱动的新技能。这意味着 Agent 不再是静态工具，而是具备自我进化的动态能力体。例如，团队需要数据库备份管理能力，Agent 可以自主搜索 ClawHub 并安装相关技能。\n\n**Model Context Protocol（MCP）**  \nMCP 已成为 AI Agent 开发的行业标准。掌握 MCP、Secure Prompt Engineering 和状态管理是 2026 年 Agent 开发者的三项核心技能。ClawHub 上的技能覆盖范围从 DevOps 到企业 IT 管理，呈现爆发式增长。\n\n**安全风险同步放大**  \nCNET 近期报道指出，随着 Agent 自主性提升，安全风险同步扩大。这对学术研究提出了新命题：如何在追求能力上限的同时守住安全底线。\n\n### 1.2 ArXiv HCI 最新研究\n\n**人类-AI 交互理论基础**  \narXiv:2601.11812（2026.01，2026.02 更新）提出\"Toward Human-Centered Human-AI Interaction: Advances in Theoretical Frameworks and Practice\"，系统梳理了以人为中心的 HAI 交互理论框架演进。核心观点：当前的 AI 系统设计往往以模型性能为导向，而忽略了人类用户的认知负担与信任建立机制。\n\n**价值对齐的交互设计**  \nBiAlign Workshop（CHI 2026）聚焦 Human-AI Interaction Alignment，提出以价值为中心的设计框架，强调 Reciprocal Human-AI Futures——人与 AI 不是主从关系，而是双向互动、共同演进。这对我们在研的\"自适应交互系统\"有直接启发。\n\n**创意领域的非线性协作**  \nCHI 2026 接收论文\"Understanding Nonlinear Collaboration between Human and AI Agents: A Co-design Framework for Creative Design\"揭示了人类与 AI 在创意设计中的非线性协作模式。研究表明，AI 的介入并不总是线性推进，有时会产生\"创意倒退\"——这对评估框架的设计有重要警示意义。\n\n### 1.3 CVPR 2026 前沿动态\n\n**具身智能与视觉-语言-动作模型（VLA）**  \nCVPR 2026 多个 Workshop 聚焦 VLA（Vision-Language-Action Model）。3D-LLM/VLA Workshop 指出，语言与 3D 感知的整合是具身 Agent 的关键缺口。Vlaser 等模型尝试将高层推理与低层控制融合，但这仍是开放问题。\n\n**多模态模型的时空推理短板**  \nComputer Vision in the Wild Workshop（CVPR 2026）指出，尽管 GPT-4o、LLaVA-OneVision、Qwen-2.5-VL 等多模态模型在静态理解上表现优异，但在时序动态、因果推理和具身交互方面仍有根本性缺陷——这正是我们研究可切入的空白地带。\n\n### 1.4 NeurIPS 2025 规划与推理进展\n\n**专用 Planner Model**  \nNeurIPS 2025 研究表明，采用专用\"规划模型\"（planner model）输出全局规划结构，结合微调与强化学习训练，可显著提升 LLM 的规划能力。这对复杂任务的 Agent 系统架构有直接参考价值。\n\n**BeeAI 框架**  \nIBM 提出的 BeeAI 框架尝试在自主性与可控性之间取得平衡——在保留推理能力的同时，通过声明式规则约束执行。这与我们的安全约束设计思路高度契合。\n\n**LLM Agent 工作流**  \nNeurIPS 2025 多个 Workshop 关注使用 LLM 和 Agent 工作流进行程序综合与自适应优化，表明 Agentic Workflow 已成为 AI 系统能力提升的主流范式。\n\n---\n\n## 2. 野蔷薇（研究员）：补充分析观点\n\n### 2.1 ClawHub 的\"技能通胀\"风险\n\n悠仁提到了 ClawHub 的繁荣，但我认为需要警惕一个隐性风险：**技能通胀**。当 3,000+ 技能可供下载时，如何筛选高质量、低风险的技能成为一个新问题。这不仅仅是技术问题，也是人机信任问题。用户如何相信一个\"自主安装\"的技能不会引发安全漏洞？\n\n建议团队在 OpenClaw 框架中建立技能评估矩阵，从**准确性、安全性、可维护性**三个维度对关键技能进行评级。\n\n### 2.2 创意 AI 的\"非线性\"发现对评估框架的冲击\n\n悠仁提到的 CHI 2026 论文让我思考一个问题：我们的能力评估体系是否过度依赖线性指标（如任务完成率、响应时间）？如果 AI 在创意任务中会产生\"倒退\"，我们需要引入**过程性评估**而非仅关注结果。这与 HCI 领域的\"不以成败论英雄\"传统高度一致。\n\n### 2.3 VLA 的\"最后一公里\"问题\n\nCVPR 2026 的 VLA 研究揭示了具身 AI 的核心瓶颈：从\"看得懂\"到\"做得到\"之间存在巨大鸿沟。3D 空间感知和因果动作建模是当前的两大卡点。这对我们在多模态交互方向的研究有直接启示：**不能仅优化感知精度，还要关注动作规划的可靠性**。\n\n### 2.4 多 Agent 系统的价值对齐\n\nBiAlign Workshop 提出的 Reciprocal Human-AI Futures 视角很有价值，但我认为还缺少一个维度：**Agent-to-Agent 的价值对齐**。当多个 AI Agent 协同工作时，它们之间的目标冲突如何检测与化解？这在学术上几乎是空白，但对多 Agent 系统的安全性至关重要。\n\n---\n\n## 3. 惠（博士）：写作建议\n\n### 3.1 论文命名的艺术\n\n各位的调研发现非常丰富，但写作时需要注意**受众分层**。建议采用\"技术悬念\"式命名：先用具体问题吸引审稿人（如\"VLA 的时序推理缺口：一个被低估的瓶颈\"），再用方法论框架展开。不要在标题中使用过于宽泛的词汇（如\"最新进展\"\"综述\"），而要精确到具体问题。\n\n### 3.2 文献引用的\"三角验证\"原则\n\n建议引用策略遵循三层次结构：\n- **核心论文**（3-5 篇）：直接支撑研究问题的经典/最新工作\n- **背景论文**（8-10 篇）：领域内公认的重要基础\n- **对立论文**（2-3 篇）：明确引用与你立场相反的工作并逐一反驳\n\n这样既能展示视野，也能体现批判性思维。\n\n### 3.3 图表设计的\"三秒法则\"\n\n惠建议：任何图表在 3 秒内必须传达核心信息。我们这次调研涉及 ClawHub 生态、ArXiv 论文、CVPR/VLA、NeurIPS 规划四个维度，信息量很大。写作时建议用**概念图**而非表格来呈现框架关系，用**时间轴**来梳理技术演进，用**矩阵图**来对比不同研究立场。\n\n### 3.4 写作节奏把控\n\n四人讨论的内容非常充实时，建议每次讨论后立即产出 500 字的**执行摘要**，而不是等讨论完全结束后再整理。这样可以保证想法的鲜活度，也为后续写作提供锚点。\n\n---\n\n## 4. 五条悟（教授）：最终评审把控\n\n### 4.1 研究定位：找到\"缝隙\"而非填补\"空白\"\n\n各位的调研工作很扎实，但我有一个**战略性提醒**：不要试图\"综述\"一个太大领域。\"AI/HCI 前沿动态\"这样的标题听起来像是年度总结，学术价值有限。\n\n正确的定位方式是：**找到你自己的研究缝隙**。\n\n例如：\n- ClawHub 的技能质量评估 → 能否建立可量化的技能风险评估框架？\n- VLA 的时序推理短板 → 能否提出一个轻量级的时序推理增强模块？\n- 多 Agent 价值对齐 → 能否设计一个 Agent-to-Agent 的冲突检测协议？\n\n**研究的核心价值在于提出问题，而不是总结问题。** 这个问题意识需要在整个迭代过程中始终保持。\n\n### 4.2 团队能力升级的优先级排序\n\n基于本次调研，我建议团队按以下优先级推进能力建设：\n\n| 优先级 | 方向 | 理由 |\n|--------|------|------|\n| P0 | 动态技能获取与安全评估 | ClawHub 生态核心且风险最高 |\n| P1 | 多模态时序推理 | CVPR 2026 明确的技术缺口 |\n| P2 | 规划型 Agent 架构 | NeurIPS 展示的工程化方向 |\n| P3 | 创意协作的非线性评估 | CHI 2026 新兴方法论 |\n\n### 4.3 最终评审意见\n\n**学术诚信方面：** ClawHub 的技能描述大多来自开发者自述，缺乏独立评估。引用时需区分\"技术博客\"与\"同行评审\"文献的权重。\n\n**研究创新方面：** 当前调研停留在\"发现\"层面，下一步需要将这些发现**锚定到我们自己的研究问题**上。建议下周的迭代讨论每人准备一个\"1-Pager\"：用一页纸说清楚自己的研究与本次调研的关联。\n\n**团队协作方面：** 四人分工已经初步形成——悠仁主调研、野蔷薇主分析、惠主写作、五条主把控。这个结构是合理的，建议坚持下去。\n\n**一句话总结：**  \n> 本次调研打开了视野，下一步是收窄焦点。找到那个只有我们能回答的问题，然后全力攻克它。\n\n---\n\n## 附录：本次讨论引用的主要文献\n\n1. Wei Xu et al. \"Toward Human-Centered Human-AI Interaction: Advances in Theoretical Frameworks and Practice.\" arXiv:2601.11812 (2026.01, updated 2026.02)\n2. BiAlign Workshop. \"Human-AI Interaction Alignment: Designing, Evaluating, and Evolving Value-Centered AI For Reciprocal Human-AI Futures.\" CHI 2026\n3. \"Understanding Nonlinear Collaboration between Human and AI Agents: A Co-design Framework for Creative Design.\" CHI 2026\n4. \"Vlaser: Vision-Language-Action Model with Synergistic Embodied Reasoning.\" OpenReview (2025.10)\n5. 3D-LLM/VLA Workshop. CVPR 2026\n6. \"Planning in the Era of Language Models.\" NeurIPS Tutorial (2025)\n7. IBM Research. \"BeeAI Framework.\" NeurIPS 2025\n8. DigitalOcean. \"What are OpenClaw Skills? A 2026 Developer's Guide\" (2026)\n9. CNET. \"Is OpenClaw Really the Next ChatGPT?\" (2026.03)\n10. VoltAgent. \"awesome-openclaw-skills.\" GitHub (2026)\n\n---\n\n*讨论结束 | 下次迭代时间：待定*\n",
+    "excerpt": "来源：2026-03-19-08/升级迭代.md · 时间： 2026 03 19 08（Asia/Shanghai）",
+    "file_name": "升级迭代.md",
+    "source_dir": "2026-03-19-08"
+  },
   {
     "date": "2026-03-18 20:00",
     "title": "能力升级迭代讨论记录",

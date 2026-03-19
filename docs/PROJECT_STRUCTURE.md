@@ -38,6 +38,13 @@
 ### 构建入口
 - `sync_from_source.py`：扫描源目录并重建页面
 
+### 项目文档
+- `README.md`：总览入口
+- `docs/PROJECT_STRUCTURE.md`：结构说明
+- `docs/CONTENT_SYNC.md`：同步逻辑与排查流程
+- `docs/DEPLOYMENT.md`：发布流程与线上排查
+- `docs/ISSUE_LOG.md`：问题记录与修复日志
+
 ## 推荐理解方式
 
 如果要继续维护项目，优先理解这几层关系：
@@ -45,6 +52,7 @@
 2. `sync_from_source.py` 决定页面生成规则
 3. `site.css` 决定视觉和布局
 4. `site-detail.js` / `site-index.js` 决定页面交互
+5. `docs/ISSUE_LOG.md` 记录历史问题与修复经验
 
 ## 当前项目特点
 

@@ -1,3 +1,9 @@
+function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
 function extractHeading(content) {
     const match = content.match(/^#\s+(.+)$/m);
     return match ? match[1].trim() : '未命名记录';
@@ -55,8 +61,8 @@ function normalizeText(entry) {
         navRoot.innerHTML = list.length ? list.map(({ entry, index }) => `
             <li>
                 <div class="nav-item ${index === state.activeIndex ? 'active' : ''}" data-index="${index}">
-                    <span class="nav-date">${formatDateLabel(entry.date)}</span>
-                    <span class="nav-title">${entry.title}</span>
+                    <span class="nav-date">${escapeHtml(formatDateLabel(entry.date))}</span>
+                    <span class="nav-title">${escapeHtml(entry.title)}</span>
                 </div>
             </li>
         `).join('') : '<li class="empty-state">没有找到匹配的记录，试试更短的关键词。</li>';
@@ -78,14 +84,14 @@ function normalizeText(entry) {
         const entry = entries[index];
         if (!entry) return;
 
-        articleRoot.innerHTML = marked.parse(entry.content, { breaks: false, gfm: true });
+        articleRoot.innerHTML = DOMPurify.sanitize(marked.parse(entry.content, { breaks: false, gfm: true }));
         articleTitle.textContent = entry.title;
         articleIntro.textContent = entry.excerpt || `${pageConfig.subtitle} · 当前阅读的是第 ${index + 1} 条归档记录。`;
 
         const chips = [
-            `<span class="meta-chip">${formatDateLabel(entry.date)}</span>`,
-            entry.source_dir ? `<span class="meta-chip">${entry.source_dir}</span>` : '',
-            entry.file_name ? `<span class="meta-chip">${entry.file_name}</span>` : ''
+            `<span class="meta-chip">${escapeHtml(formatDateLabel(entry.date))}</span>`,
+            entry.source_dir ? `<span class="meta-chip">${escapeHtml(entry.source_dir)}</span>` : '',
+            entry.file_name ? `<span class="meta-chip">${escapeHtml(entry.file_name)}</span>` : ''
         ].filter(Boolean);
 
         articleMeta.innerHTML = chips.join('');

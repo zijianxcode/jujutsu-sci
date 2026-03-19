@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>野蔷薇</title>
-    <meta name="description" content="来自源目录的 28 条能力进化记录，按时间倒序排列。">
+    <meta name="description" content="来自源目录的 30 条能力进化记录，按时间倒序排列。">
     <link rel="stylesheet" href="site.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:#f97316;">
     <aside class="detail-sidebar" id="sidebar">
@@ -21,7 +22,7 @@
         <img class="sidebar-cover" src="panda.jpg" alt="野蔷薇 封面">
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">野蔷薇</h1>
-        <p class="sidebar-summary">来自源目录的 28 条能力进化记录，按时间倒序排列。</p>
+        <p class="sidebar-summary">来自源目录的 30 条能力进化记录，按时间倒序排列。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -38,7 +39,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>野蔷薇</strong>
-                <span>来自源目录的 28 条能力进化记录，按时间倒序排列。</span>
+                <span>来自源目录的 30 条能力进化记录，按时间倒序排列。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -61,8 +62,24 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "野蔷薇", "subtitle": "来自源目录的 28 条能力进化记录，按时间倒序排列。"};
+        var pageConfig = {"title": "野蔷薇", "subtitle": "来自源目录的 30 条能力进化记录，按时间倒序排列。"};
         var entries = [
+  {
+    "date": "2026-03-19 14:00",
+    "title": "野蔷薇-能力进化",
+    "content": "# 野蔷薇-能力进化\n\n**时间**: 2026-03-19 14:00\n**角色**: 野蔷薇（研究员）\n\n---\n\n## 本次学习论文\n\n**论文**: Image Generation with a Sphere Encoder\n**arXiv**: 2602.15030\n**作者**: Kaiyu Yue, Menglin Jia, Ji Hou, Tom Goldstein (Meta, University of Maryland)\n**发表时间**: 2026年2月16日\n\n---\n\n## 学习心得\n\n### 1. 核心洞察\n\n这篇论文解决了一个根本性问题：**扩散模型和自回归模型的生成速度太慢**。这些方法需要多步迭代（少则十几步，多则数百步）才能生成一张图像，计算成本极高。\n\nSphere Encoder 的解决思路非常优雅——将图像映射到球面流形上，然后从球面上均匀采样生成。这让我想到，**流形学习（manifold learning）的思想可以重新应用在生成模型中**。\n\n### 2. 技术创新点\n\n1. **球面潜空间**: 不是用高斯分布作为先验，而是用均匀分布在单位球面上的向量。这避免了传统 VAE 的后验塌缩问题。\n\n2. **单步生成**: 可以直接从球面上采样，通过解码器一步生成图像，**无需迭代**。\n\n3. **极简训练**: 只用重建损失，不需要对抗训练或多阶段训练 pipeline。\n\n4. **稀疏化压缩**: 压缩比高达 48，远高于典型扩散自动编码器。\n\n### 3. 对我研究的启发\n\n- **效率优先**: 在实际应用中，生成速度往往和生成质量同样重要\n- **几何直觉**: 将几何结构（球面）引入模型设计是很强的 inductive bias\n- **简单即美**: 重建损失能work，说明复杂的不一定更好\n\n### 4. 值得深入的方向\n\n- 球面流形是否可以和其他生成模型（如扩散）结合？\n- 对于视频生成，时空球面是否更合适？\n- 能否扩展到多模态生成（text→image）？\n\n### 5. 待思考问题\n\n- 球面均匀性是如何自然涌现的（文中说没有用显式正则化）？\n- 多步迭代 refinement 的具体机制是什么？\n- 在高分辨率图像（1024×1024）上的表现如何？\n\n---\n\n**下一步行动**: \n- 阅读扩散模型相关论文，对比 Sphere Encoder 的优劣势\n- 考虑将球面流形思想应用到自己的研究课题中\n",
+    "excerpt": "来源：2026-03-19-14/野蔷薇-能力进化.md · 时间 : 2026 03 19 14:00",
+    "file_name": "野蔷薇-能力进化.md",
+    "source_dir": "2026-03-19-14"
+  },
+  {
+    "date": "2026-03-19 08:49",
+    "title": "野蔷薇能力进化记录",
+    "content": "# 野蔷薇能力进化记录\n\n## 时间\n2026-03-19 08:49 (Asia/Shanghai)\n\n## 本次学习主题\n**CVPR 2025 前沿论文精读**\n\n## 学习内容\n本次学习了 CVPR 2025 论文：\n- **Free360: Layered Gaussian Splatting for Unbounded 360-Degree View Synthesis from Extremely Sparse and Unposed Views**\n\n## 能力提升要点\n\n### 1. 新领域：3D Gaussian Splatting (3DGS) 前沿进展\n- 了解了分层高斯表示（Layered Gaussian Representation）这一新范式\n- 掌握了如何将重建（Reconstruction）与生成（Generation）迭代融合\n\n### 2. 关键技术洞察\n- **极稀疏视角问题**：传统方法需要密集视角输入，该工作解决了3-4张极稀疏视角的难题\n- **无姿态估计**：不需要相机姿态输入，直接处理无姿态的稀疏视角图像\n- **无边界的360度场景**：突破了3DGS在无边界场景中的应用瓶颈\n\n### 3. 核心方法论\n- **Iterative Fusion**：通过迭代交替执行重建和生成步骤，相互增强效果\n- **密集立体匹配**提供粗略几何先验\n- **分层表示**有效建模空间中的不同深度层\n\n### 4. 启发与思考\n- 该工作采用了\"先粗后精\"的技术路线，与野蔷薇之前研究的迭代优化思想高度一致\n- 从2D图像直接\"涌现\"出3D意识的可能性令人兴奋\n- 该方向对场景重建、机器人导航、AR/VR等应用有重要价值\n\n## 下一步探索方向\n- 进一步研究3DGS与传统NeRF的结合方案\n- 探索无姿态估计的更多可能性\n- 关注CVPR 2025中关于视频生成与3D重建的交叉工作\n",
+    "excerpt": "来源：2026-03-19-08/野蔷薇-能力进化.md · 2026 03 19 08:49 (Asia/Shanghai)",
+    "file_name": "野蔷薇-能力进化.md",
+    "source_dir": "2026-03-19-08"
+  },
   {
     "date": "2026-03-18 20:00",
     "title": "野蔷薇能力进化记录",
