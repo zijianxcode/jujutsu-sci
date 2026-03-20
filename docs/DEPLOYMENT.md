@@ -59,6 +59,7 @@
 - `bananabox.plus/academy/` 读取的是 `personal-homepage` 的发布产物，不直接读取 `jujutsu-sci`。
 - 只推 GitHub 不发布 CloudBase，会出现“GitHub Pages 新，academy 旧”的情况。
 - 只更新 `academy/` 本地目录但不推 `personal-homepage`，线上也不会变。
+- 本地生成、镜像同步和部署包准备可以先做，但 `推送 GitHub` 与 `执行 CloudBase 发布` 必须经过人工确认。
 
 ## CloudBase 发布参考
 

@@ -49,6 +49,7 @@ python3 sync_from_source.py
 - `https://zijianxcode.github.io/jujutsu-sci/` 和 `https://bananabox.plus/academy/` 不是同一条自动发布链路。
 - 推送 `jujutsu-sci` 成功，不代表 `bananabox.plus/academy/` 会自动更新。
 - 只要 `academy/` 仍然是镜像子站，就必须把“本地 / GitHub / CloudBase”三段都走完。
+- 本地生成、检查、预览可以先做，但 `GitHub 推送` 和 `CloudBase 发布` 必须经过你确认后再执行。
 
 ## 当前核心文件
 

@@ -37,6 +37,7 @@ python3 sync_from_source.py
 - `jujutsu-sci` 是学术站源码仓库。
 - `bananabox.plus/academy/` 读取的是 `personal-homepage` 仓库里的 `academy/` 镜像副本。
 - 所以“本地站已经更新”或“GitHub Pages 已经更新”都不等于 `academy/` 一定更新。
+- 默认允许先做本地同步、校验和预览，但 `GitHub 推送` 与 `CloudBase 发布` 都属于需要人工确认的步骤，未经确认不直接执行。
 
 ## 内容识别方式
 
