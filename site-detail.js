@@ -16,11 +16,18 @@ function formatDateLabel(value) {
 }
 
 function normalizeText(entry) {
-    return `${entry.date || ''} ${entry.title || ''} ${entry.content || ''} ${entry.source_dir || ''} ${entry.file_name || ''}`.toLowerCase();
+    return `${entry.date || ''} ${entry.title || ''} ${entry.content || ''} ${entry.source_dir || ''} ${entry.file_name || ''} ${entry.session_label || ''}`.toLowerCase();
 }
 
 (function initDetailPage() {
     if (!Array.isArray(entries) || !entries.length) return;
+
+    const FILTERS = [
+        { id: 'all', label: '全部' },
+        { id: 'daily', label: '日会讨论' },
+        { id: 'weekly', label: '周会讨论' },
+        { id: 'review', label: '评审会' }
+    ];
 
     const navRoot = document.getElementById('navList');
     const articleRoot = document.getElementById('content');
@@ -28,6 +35,7 @@ function normalizeText(entry) {
     const articleIntro = document.getElementById('articleIntro');
     const articleMeta = document.getElementById('articleMeta');
     const filterInput = document.getElementById('filterInput');
+    const filterTabs = document.getElementById('filterTabs');
     const resultCount = document.getElementById('resultCount');
     const latestMeta = document.getElementById('latestMeta');
     const totalMeta = document.getElementById('totalMeta');
@@ -37,7 +45,8 @@ function normalizeText(entry) {
 
     const state = {
         activeIndex: 0,
-        query: ''
+        query: '',
+        filter: 'all'
     };
 
     entries.forEach((entry, index) => {
@@ -46,14 +55,58 @@ function normalizeText(entry) {
         entry.hash = `entry-${index}`;
     });
 
+    const availableFilters = FILTERS.filter((filter) => filter.id === 'all' || entries.some((entry) => entry.session_type === filter.id));
+    const filterEnabled = availableFilters.filter((filter) => filter.id !== 'all').length > 1;
+
     if (latestMeta) latestMeta.textContent = `最新记录 ${formatDateLabel(entries[0].date)}`;
     if (totalMeta) totalMeta.textContent = `${entries.length} 条记录`;
 
+    function countForFilter(filterId) {
+        return entries.filter((entry) => {
+            const matchesFilter = filterId === 'all' ? true : entry.session_type === filterId;
+            const matchesQuery = !state.query || entry.searchText.includes(state.query);
+            return matchesFilter && matchesQuery;
+        }).length;
+    }
+
     function visibleEntries() {
-        if (!state.query) return entries.map((entry, index) => ({ entry, index }));
         return entries
             .map((entry, index) => ({ entry, index }))
-            .filter(({ entry }) => entry.searchText.includes(state.query));
+            .filter(({ entry }) => {
+                const matchesFilter = !filterEnabled || state.filter === 'all' ? true : entry.session_type === state.filter;
+                const matchesQuery = !state.query || entry.searchText.includes(state.query);
+                return matchesFilter && matchesQuery;
+            });
+    }
+
+    function renderFilterTabs() {
+        if (!filterTabs) return;
+        if (!filterEnabled) {
+            filterTabs.innerHTML = '';
+            filterTabs.hidden = true;
+            return;
+        }
+
+        filterTabs.hidden = false;
+        filterTabs.innerHTML = availableFilters.map((filter) => `
+            <button class="filter-tab ${filter.id === state.filter ? 'active' : ''}" type="button" data-filter="${filter.id}">
+                <span>${escapeHtml(filter.label)}</span>
+                <strong>${countForFilter(filter.id)}</strong>
+            </button>
+        `).join('');
+
+        filterTabs.querySelectorAll('.filter-tab').forEach((node) => {
+            node.addEventListener('click', () => {
+                state.filter = node.dataset.filter || 'all';
+                const visible = visibleEntries();
+                if (visible.length && !visible.some(({ index }) => index === state.activeIndex)) {
+                    state.activeIndex = visible[0].index;
+                }
+                renderFilterTabs();
+                renderNav();
+                renderArticle(state.activeIndex);
+            });
+        });
     }
 
     function renderNav() {
@@ -61,14 +114,18 @@ function normalizeText(entry) {
         navRoot.innerHTML = list.length ? list.map(({ entry, index }) => `
             <li>
                 <div class="nav-item ${index === state.activeIndex ? 'active' : ''}" data-index="${index}">
-                    <span class="nav-date">${escapeHtml(formatDateLabel(entry.date))}</span>
+                    <div class="nav-meta-row">
+                        <span class="nav-date">${escapeHtml(formatDateLabel(entry.date))}</span>
+                        ${entry.session_label ? `<span class="nav-badge">${escapeHtml(entry.session_label)}</span>` : ''}
+                    </div>
                     <span class="nav-title">${escapeHtml(entry.title)}</span>
                 </div>
             </li>
-        `).join('') : '<li class="empty-state">没有找到匹配的记录，试试更短的关键词。</li>';
+        `).join('') : '<li class="empty-state">没有找到匹配的记录，试试切换 tab 或输入更短的关键词。</li>';
 
         if (resultCount) {
-            resultCount.textContent = state.query ? `匹配 ${list.length} 条` : `共 ${entries.length} 条`;
+            const suffix = filterEnabled && state.filter !== 'all' ? ` · ${availableFilters.find((item) => item.id === state.filter).label}` : '';
+            resultCount.textContent = state.query || (filterEnabled && state.filter !== 'all') ? `匹配 ${list.length} 条${suffix}` : `共 ${entries.length} 条`;
         }
 
         navRoot.querySelectorAll('.nav-item').forEach((node) => {
@@ -80,9 +137,21 @@ function normalizeText(entry) {
         });
     }
 
+    function renderEmptyArticle() {
+        articleTitle.textContent = '没有匹配的记录';
+        articleIntro.textContent = '可以切换回全部标签，或者换一个更短的关键词继续找。';
+        articleMeta.innerHTML = '';
+        articleRoot.innerHTML = '<div class="empty-state">当前筛选条件下没有可展示的内容。</div>';
+        if (currentMeta) currentMeta.textContent = '当前 0/0';
+    }
+
     function renderArticle(index) {
         const entry = entries[index];
-        if (!entry) return;
+        const list = visibleEntries();
+        if (!entry || !list.some((item) => item.index === index)) {
+            renderEmptyArticle();
+            return;
+        }
 
         articleRoot.innerHTML = DOMPurify.sanitize(marked.parse(entry.content, { breaks: false, gfm: true }));
         articleTitle.textContent = entry.title;
@@ -90,6 +159,7 @@ function normalizeText(entry) {
 
         const chips = [
             `<span class="meta-chip">${escapeHtml(formatDateLabel(entry.date))}</span>`,
+            entry.session_label ? `<span class="meta-chip">${escapeHtml(entry.session_label)}</span>` : '',
             entry.source_dir ? `<span class="meta-chip">${escapeHtml(entry.source_dir)}</span>` : '',
             entry.file_name ? `<span class="meta-chip">${escapeHtml(entry.file_name)}</span>` : ''
         ].filter(Boolean);
@@ -107,7 +177,7 @@ function normalizeText(entry) {
         state.activeIndex = index;
         renderNav();
         renderArticle(index);
-        if (updateHash) {
+        if (updateHash && entries[index]) {
             history.replaceState(null, '', `#${entries[index].hash}`);
         }
     }
@@ -134,6 +204,7 @@ function normalizeText(entry) {
             if (visible.length && !visible.some(({ index }) => index === state.activeIndex)) {
                 state.activeIndex = visible[0].index;
             }
+            renderFilterTabs();
             renderNav();
             renderArticle(state.activeIndex);
         });
@@ -170,6 +241,7 @@ function normalizeText(entry) {
     });
 
     openFromHash();
+    renderFilterTabs();
     renderNav();
     renderArticle(state.activeIndex);
 })();

@@ -161,11 +161,22 @@ def detect_kind(file_name: str) -> str:
         return 'upgrade'
     if file_name == '日会记录.md':
         return 'meeting'
-    if file_name == '团队讨论.md':
+    if file_name in {'团队讨论.md', '深度讨论.md', '周会讨论.md'}:
         return 'discussion'
     if file_name.endswith('-能力进化.md'):
         return 'member'
     return 'other'
+
+
+def classify_session_type(file_name: str, content: str, kind: str) -> tuple[str, str]:
+    text = f'{file_name}\n{content}'
+    if kind == 'meeting' or '日会' in text:
+        return 'daily', '日会讨论'
+    if kind == 'discussion' or any(keyword in text for keyword in ('周会', '每周交流', '团队讨论', '深度讨论')):
+        return 'weekly', '周会讨论'
+    if kind == 'upgrade' or any(keyword in text for keyword in ('评审', '升级迭代', '评审把控', '最终评审')):
+        return 'review', '评审会'
+    return '', ''
 
 
 def extract_heading(content: str) -> str:
@@ -232,18 +243,22 @@ def load_records() -> list[dict]:
         content = path.read_text(encoding='utf-8')
         actual_dt = parse_content_timestamp(content, dt)
         file_name = path.name
+        kind = detect_kind(file_name)
+        session_type, session_label = classify_session_type(file_name, content, kind)
         record = {
             'date': actual_dt.strftime('%Y-%m-%d %H:%M'),
             'folder_name': folder_name,
             'file_name': file_name,
             'source_path': str(rel),
-            'kind': detect_kind(file_name),
+            'kind': kind,
             'member': member_name(file_name),
             'title': build_title(file_name, content),
             'content': content,
             'excerpt': build_excerpt(file_name, content, folder_name),
             'timestamp': actual_dt,
             'source_dir': folder_name,
+            'session_type': session_type,
+            'session_label': session_label,
         }
         records.append(record)
 
@@ -273,6 +288,8 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
             'excerpt': entry['excerpt'],
             'file_name': entry['file_name'],
             'source_dir': entry['source_dir'],
+            'session_type': entry.get('session_type', ''),
+            'session_label': entry.get('session_label', ''),
         }
         for entry in entries
     ]
@@ -313,6 +330,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
         </div>
         <div class="search-wrap">
             <input id="filterInput" class="search-input" type="search" placeholder="筛选日期、标题或关键词">
+            <div class="filter-tabs" id="filterTabs" aria-label="记录类型筛选"></div>
             <div class="search-help" id="resultCount">共 0 条</div>
         </div>
         <ul class="detail-nav" id="navList"></ul>
