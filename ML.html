@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML</title>
-    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 47 条。">
+    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 50 条。">
     <meta property="og:title" content="ML - 咒术SCI高专">
-    <meta property="og:description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 47 条。">
+    <meta property="og:description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 50 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -27,7 +27,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">ML</h1>
-        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 47 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 50 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -44,7 +44,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>ML</strong>
-                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 47 条。</span>
+                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 50 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -67,8 +67,32 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 47 条。"};
+        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 50 条。"};
         var entries = [
+  {
+    "date": "2026-03-19 21:00",
+    "title": "论文总结：ArtiFixer: Enhancing and Extending 3D Reconstruction with Auto-Regressive Diffusion Models",
+    "content": "# 论文总结：ArtiFixer: Enhancing and Extending 3D Reconstruction with Auto-Regressive Diffusion Models\n\n**论文信息**\n- **arXiv ID**: 2603.00492\n- **时间**: 2026 年 3 月提交\n- **类别**: cs.CV（计算机视觉）\n\n---\n\n## 1. 研究什么？\n本论文研究的是**新视角合成（Novel View Synthesis）**任务中的核心挑战：如何同时兼顾 3D 重建的几何精确性和扩散模型的生成先验。具体来说，目标是结合神经重建方法的高保真度和生成式扩散模型的强外推能力，实现对任意场景的高质量新视角渲染。\n\n## 2. 为什么研究？\n当前 3D 场景重建领域存在两条主流技术路线：\n- **3D Gaussian Splatting 等神经重建方法**：在观测充分的区域能生成极高质量的新视角，但一旦涉及未被观察过的区域（如物体背面、遮挡部分），外推质量急剧下降，产生漂浮物（floaters）和伪影。\n- **相机可控视频扩散模型**：利用互联网规模数据训练得到的生成先验，可以\"想象\"未见区域的内容，但缺乏精确的 3D 一致性，多视角之间容易出现不一致。\n\n这两条路线各有不可替代的优势，也各有根本性局限。研究者认为，如果能将两者有机结合，将突破各自的上限。\n\n## 3. 作者怎么研究的？\nArtiFixer 采用了**两阶段蒸馏**的.pipeline：\n\n**第一阶段：训练双向生成模型**\n- 基于扩散模型架构，引入了一种全新的**不透明度混合策略（Opacity Mixing Strategy）**\n- 该策略的核心设计目标是双重的：既要求模型与已有观测保持几何一致性，又要求保留对未见区域的生成外推能力\n- 具体做法是控制生成像素的不透明度和场景表征的混合权重，使模型在每个像素位置上能够同时\"看到\"真实观测和生成内容\n\n**第二阶段：蒸馏为因果自回归模型**\n- 通过 **Self Forcing 风格的 DMD（Distribution Matching Distillation）** 蒸馏技术，将第一阶段的双向（bidirectional）模型转化为因果（causal）自回归模型\n- 转化后的自回归模型可以**一次性生成数百帧**新视角视频，而非逐帧生成\n- 生成的帧序列可以直接用作新视角渲染，也可以作为**伪监督信号**重新蒸馏回底层 3D 表征（如 Gaussian Splatting），进一步提升几何精度\n\n**实验设计**：\n- 在多个标准基准数据集上对比了 ArtiFixer 与现有方法\n- 评估指标包括 PSNR、SSIM、LPIPS 等图像质量指标，以及 3D 几何一致性度量\n\n## 4. 发现了什么？\n- 提出的不透明度混合策略成功解决了神经重建和生成模型之间的核心矛盾：在保持观测一致性的同时不丧失外推能力\n- 两阶段蒸馏pipeline使得生成质量和几何精度可以同时提升，而非此消彼长\n- 自回归模型在推理速度上显著优于逐步生成方法（数百帧一次生成）\n- 作为伪监督信号使用时，可以显著改善底层 3D 重建的质量\n\n## 5. 价值和不足？\n\n**创新点：**\n- 首次系统性地将神经重建的高精度和扩散模型的强先验通过蒸馏方式融合\n- Opacity Mixing Strategy 是方法论层面的核心贡献，为类似融合任务提供了新思路\n- Self Forcing + DMD 的蒸馏组合在效率和质量之间取得了良好平衡\n\n**局限性：**\n- 两阶段训练pipeline增加了计算成本和复杂度\n- 蒸馏过程中可能存在知识损失，尤其在高度模糊（ambiguous）的场景中\n- 目前主要在合成数据和标准基准上验证，真实复杂场景的泛化能力有待进一步验证\n- 作为一种基于扩散模型的方法，对计算资源的需求仍然较高\n\n**个人点评：**\nArtiFixer 的核心价值在于它提供了一种**不选边站**的思路——不强行比较两条路线的优劣，而是通过精心设计的蒸馏管道让它们互补。对于做 3D 重建和多视角合成的从业者来说，这个两阶段框架有较高的参考价值。\n",
+    "excerpt": "来源：2026-03-19-21/论文总结.md · 论文信息",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-19-21"
+  },
+  {
+    "date": "2026-03-19 20:00",
+    "title": "Segmentation-Based Attention Entropy: Detecting and Mitigating Object Hallucinations in Large Vision-Language Models (SAE)",
+    "content": "# 论文总结\n\n**论文标题**: Segmentation-Based Attention Entropy: Detecting and Mitigating Object Hallucinations in Large Vision-Language Models (SAE)\n\n**作者**: Jiale Song, Jiaxin Luo, Xue-song Tang, Kuangrong Hao, Mingbo Zhao\n\n**arXiv ID**: 2603.16558\n\n**发表时间**: 2026年3月（3天前）\n\n---\n\n## 1. 研究什么？\n\n研究大型视觉语言模型（LVLMs）中的**物体幻觉（Object Hallucination）问题**——模型描述图像中不存在的物体。目标是检测并缓解这种幻觉现象，提升LVLM生成描述的可信度。\n\n## 2. 为什么研究？\n\nLVLMs在图像描述、视觉问答等任务上表现优异，但普遍存在\"物体幻觉\"问题：模型会自信地描述图像中根本不存在的物体（如\"图中有一只猫\"但实际没有）。这严重影响了LVLM在自动驾驶、机器人感知等高可靠性场景中的应用。现有方法要么依赖额外训练，要么检测精度不足，亟需一种无需再训练、可靠且可解释的解决方案。\n\n## 3. 别人做过什么？\n\n现有方法包括：\n- **Token级/句子级熵**：通过注意力值的概率分布计算不确定性，但缺乏语义空间的对齐\n- **SVAR**：使用中间层注意力特征训练MLP幻觉检测器\n- **HalLoc**：使用CLIP编码器的图像表示训练检测器\n- **MetaToken**：结合最终层熵、图像注意力和概率分布特征\n\n**不足**：这些方法都在token-level或image-level操作，没有在**语义分割的物体级别**上量化视觉注意力的不确定性，导致检测粒度粗糙、可解释性差。\n\n## 4. 作者怎么研究的？\n\n**核心方法：SAE（Segmentation-based Attention Entropy）**\n\n1. **语义分割阶段**：利用SAM（Segment Anything Model）将图像分割成语义一致的物体区域\n2. **注意力熵计算**：将LVLM的视觉注意力与分割掩码对齐，在物体级别计算注意力熵\n   - 高熵 = 注意力不确定 = 可能是幻觉\n   - 低熵 = 注意力集中 = 视觉一致\n3. **推理时干预**：基于SAE修改视觉注意力分布，降低高熵区域的权重\n\n**实验设计**：\n- 在公开基准（CHOI等）上评估检测精度\n- 在四足机器人具身场景中验证真实世界效果\n- 与多个LVLM架构兼容（LLaVA、InstructBLIP等）\n\n## 5. 发现了什么？\n\n- SAE在物体幻觉检测上显著优于现有方法（AUC↑约15%）\n- **核心洞察**：语义分割提供了物体级的语义空间，使注意力不确定性变得可计算、可解释\n- 无需额外训练成本，仅在推理时修改注意力即可缓解幻觉\n- 在具身AI场景中，使用SAE后机器人决策错误率明显降低\n- 可推广至多种LVLM架构，无需模型微调\n\n## 6. 价值和不足？\n\n**创新点**：\n- 首次将语义分割与注意力熵结合，在物体级别量化视觉不确定性\n- 推理时干预，无需额外训练，部署友好\n- 可解释性强：直接指出哪些物体区域导致幻觉\n\n**局限性**：\n- 依赖SAM模型，分割质量影响检测精度\n- 主要针对\"物体存在性\"幻觉，其他类型（如属性幻觉）覆盖不足\n- 计算开销：每次推理需额外运行SAM分割\n- 在极高分辨率图像上实时性挑战\n\n---\n\n**个人评价**：这篇论文切入点务实——LVLM幻觉是工程落地痛点，作者用\"语义分割+注意力熵\"这个组合给出了一个巧妙的解法。无需训练的推理时方案很有工程价值，但依赖SAM的额外计算成本是实际部署中需要权衡的点。\n",
+    "excerpt": "来源：2026-03-19-20/论文总结.md · 论文标题 : Segmentation Based Attention Entropy: Detecting and Mitigating Object Hallucinations in Large Vision Language Models (SAE)",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-19-20"
+  },
+  {
+    "date": "2026-03-19 15:00",
+    "title": "论文总结：VGGT: Visual Geometry Grounded Transformer",
+    "content": "# 论文总结：VGGT: Visual Geometry Grounded Transformer\n\n**论文信息**\n- 标题: VGGT: Visual Geometry Grounded Transformer\n- 作者: Jianyuan Wang, Minghao Chen, Nikita Karaev, Andrea Vedaldi, Christian Rupprecht, David Novotny (Meta FAIR, University of Oxford等)\n- 会议: CVPR 2025 (Best Paper Award)\n- arXiv: 2503.11651\n\n---\n\n## 1. 研究什么？\n\n研究目标是构建一个能够从一张、少量或数百张图像中**直接前向推理**出场景全部关键3D属性的统一神经网络，包括：\n\n- 内外相机参数（extrinsic & intrinsic camera parameters）\n- 稠密点云图（point maps）\n- 深度图（depth maps）\n- 3D点轨迹（3D point tracks）\n\n即：输入多视角图像，输出完整的3D几何结构，无需任何测试时优化或后处理步骤。\n\n---\n\n## 2. 为什么研究？\n\n在3D计算机视觉中，传统方法（如COLMAP、Structure-from-Motion）需要复杂的特征匹配、几何验证和束调整（Bundle Adjustment），计算量大且速度慢。\n\n基于学习的方法（如DUSt3R、MASt3R）虽有进步，但存在两大根本缺陷：\n- **MASt3R** 每次只能处理**两张图像**，多图重建依赖成对匹配后融合，计算碎片化\n- **DUSt3R/MASt3R** 仍需要**测试时全局优化（test-time optimization）**，无法做到纯前向推理\n\n因此，领域需要一种**端到端、前向、多图同时处理**的3D感知模型，实现\"输入图像，即出3D结构\"的理想范式。\n\n---\n\n## 3. 别人做过什么？\n\n| 方法 | 主要思路 | 局限性 |\n|------|---------|--------|\n| COLMAP / SfM | 传统几何 pipeline，特征匹配+束调整 | 慢、需要充足重叠区域 |\n| DUSt3R | 双图回归点云+深度，用全局对齐融合 | 需后处理优化，两两匹配效率低 |\n| MASt3R | 在DUSt3R基础上加匹配头，也只能双图 | 成对处理，多图融合困难 |\n| 其他并发工作 | 尝试用神经网络替代测试时优化 | 性能仅与DUSt3R持平或更差 |\n\n核心不足：**无一能做到纯前向、多图、一次性输出所有3D属性**。\n\n---\n\n## 4. 作者怎么研究的？\n\n### 核心方法：Visual Geometry Grounded Transformer\n\n**架构设计**：\n- 大型 **Transformer** 网络，minimal 3D inductive biases（几乎不预设几何约束）\n- 通过海量3D标注数据驱动，让网络自行学习几何结构\n- 支持**任意数量图像**（1张~数百张）同时输入\n\n**输入**：任意数量图像（如手机拍摄的不同角度照片）\n**输出**：相机内外参数、稠密点云、深度图、3D点轨迹，全部一次性生成\n\n**训练数据**：\n- Co3Dv2（大规模多视角视频数据集）\n- RealEstate10K\n- 等海量具有3D标注的数据\n\n**多任务损失函数**：\n- Camera loss（相机参数损失）\n- Depth loss（深度损失）\n- Point map loss（点图损失）\n- Tracking loss（点轨迹损失，权重需调低）\n\n**推理速度**：全流程**不到1秒**，远快于DUSt3R/MASt3R的10秒+后处理\n\n### 实验设计\n\n在多个标准benchmark上评估：\n- **Co3Dv2**: 相机位姿估计、多视角深度估计\n- **RealEstate10K**: 同上\n- **Image Matching Challenge (IMC)**: 摄影旅游场景的相机位姿估计\n- **下游任务**: 非刚性点追踪、前馈式新视角合成（Novel View Synthesis）\n\n---\n\n## 5. 发现了什么？\n\n### 主要结果\n\n| 任务 | VGGT表现 | 对比 |\n|------|---------|------|\n| 相机位姿估计 | **SOTA**，大幅领先 | 超越DUSt3R、MASt3R及COLMAP |\n| 多视角深度估计 | **SOTA** | 精度显著优于MASt3R |\n| 稠密点云重建 | **SOTA** | 质量和完整性更高 |\n| 3D点追踪 | **SOTA** | 准确且稳定 |\n| 非刚性点追踪（下驱任务） | 显著提升 | 用预训练VGGT做backbone效果突出 |\n| 前馈式新视角合成（下驱任务） | 显著提升 | 同上 |\n\n**关键发现**：\n1. 仅用前向传播（无任何测试时优化），VGGT即可**大幅超越**需要后处理的DUSt3R和MASt3R\n2. VGGT作为**特征backbone**能显著提升下游任务（非刚性追踪、新视角合成）\n3. 模型能处理**单张图像**（单目3D感知）、少量图像和多图像场景，具有极强的通用性\n4. 在Image Matching Challenge（传统几何方法主导的基准）上也取得了竞争力结果\n\n---\n\n## 6. 价值和不足？\n\n### 创新点\n\n1. **纯前向、多图、一次性**：首次实现无需测试时优化的多图3D感知，改变了该领域的范式\n2. **极简归纳偏置**：充分展示\"大数据+大模型\"路线的优越性，Transformer自学几何\n3. **多任务统一**：用一个模型覆盖相机估计、深度、点云、追踪四大任务\n4. **作为通用backbone**：预训练VGGT可迁移到非刚性追踪、新视角合成等下游任务\n\n### 局限性\n\n1. **标注数据依赖**：训练需要大规模3D标注数据，数据获取成本高，泛化到无标注新场景仍需探索\n2. **小规模场景优势明显，大规模场景仍有提升空间**：在超大规模场景（如城市级别）中性能可能受限于内存\n3. **动态场景处理**：主要针对静态场景，对非刚性或动态场景的实时处理能力待进一步验证\n4. **实时性仍有优化空间**：虽然远快于传统方法，但在边缘设备上的实时部署仍需模型压缩或蒸馏\n\n---\n\n*总结：VGGT是3D视觉领域的重要里程碑，展示了前向Transformer在大规模3D感知中的巨大潜力，对AR/VR、机器人、自动驾驶等需要实时3D理解的应用有直接影响。*\n",
+    "excerpt": "来源：2026-03-19-15/论文总结.md · 论文信息",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-19-15"
+  },
   {
     "date": "2026-03-19 14:00",
     "title": "Image Generation with a Sphere Encoder",
