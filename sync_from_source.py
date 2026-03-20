@@ -59,6 +59,7 @@ MEMBER_META = {
 SOURCE_PAGES = {
     'archive': {'file': 'archive.html', 'title': '全部记录', 'accent': '#ff6b35', 'desc': '源目录中的全部 Markdown 记录，按时间倒序自动汇总。'},
     'paper': {'file': 'papers.html', 'title': '论文总结', 'accent': '#ff8c42', 'desc': '源目录中的论文总结，按时间倒序自动汇总。'},
+    'starred': {'file': 'starred.html', 'title': '高星论文', 'accent': '#ffd166', 'desc': '汇总各角色打星过的论文，按综合星级和角色数排序。'},
     'upgrade': {'file': 'upgrades.html', 'title': '升级迭代', 'accent': '#27ae60', 'desc': '源目录中的升级迭代记录，按时间倒序自动汇总。'},
     'meeting': {'file': 'meetings.html', 'title': '日会记录', 'accent': '#88ccff', 'desc': '源目录中的日会记录，按时间倒序自动汇总。'},
     'discussion': {'file': 'discussion.html', 'title': '团队讨论', 'accent': '#9b59b6', 'desc': '源目录中的团队讨论记录，按时间倒序自动汇总。'},
@@ -226,6 +227,259 @@ def build_excerpt(file_name: str, content: str, folder_name: str) -> str:
     if line:
         return f'来源：{folder_name}/{file_name} · {line}'
     return f'来源：{folder_name}/{file_name}'
+
+
+def clean_inline_text(text: str) -> str:
+    text = re.sub(r'[`*_>#-]+', ' ', text)
+    text = re.sub(r'\[(.*?)\]\(.*?\)', r'\1', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+
+def extract_arxiv_id(text: str) -> str:
+    match = re.search(r'(?i)(?:arxiv(?:\s*id)?\s*[:：]?\s*)?`?((?:19|20|21|22|23|24|25|26)\d{2}\.\d{4,5})`?', text)
+    return match.group(1) if match else ''
+
+
+def parse_star_score(text: str) -> float | None:
+    preferred_patterns = [
+        r'(?:综合推荐指数|综合评分|综合推荐|综合|悟评|评分|打星|星级)[^\n|]{0,40}?([0-5](?:\.\d+)?)\s*/\s*5',
+        r'→\s*\*{0,2}\s*综合\s*([0-5](?:\.\d+)?)',
+        r'\|\s*\*{0,2}综合\*{0,2}\s*\|\s*\*{0,2}([0-5](?:\.\d+)?)\s*/\s*5',
+        r'(?:综合推荐指数|综合评分|综合推荐|综合)\s*[:：]?\s*([0-5](?:\.\d+)?)\b',
+    ]
+    for pattern in preferred_patterns:
+        match = re.search(pattern, text, re.I)
+        if match:
+            return float(match.group(1))
+
+    keyword_lines = [
+        line for line in text.splitlines()
+        if any(keyword in line for keyword in ('悟评', '综合', '评分', '打星', '星级', '推荐指数'))
+    ]
+    for line in keyword_lines:
+        match = re.search(r'([0-5](?:\.\d+)?)\s*/\s*5', line)
+        if match:
+            return float(match.group(1))
+        star_match = re.search(r'([★⭐☆]{3,5})', line)
+        if star_match:
+            stars = star_match.group(1)
+            return float(stars.count('★') + stars.count('⭐'))
+    return None
+
+
+def format_star_score(score: float) -> str:
+    return f'{score:.1f}'.rstrip('0').rstrip('.')
+
+
+def score_to_stars(score: float) -> str:
+    rounded = max(0, min(5, round(score)))
+    return '★' * rounded + '☆' * (5 - rounded)
+
+
+def normalize_paper_key(title: str, arxiv_id: str = '') -> str:
+    if arxiv_id:
+        return arxiv_id.lower()
+    normalized = clean_inline_text(title).lower()
+    normalized = re.sub(r'^[^a-z0-9\u4e00-\u9fff]+', '', normalized)
+    normalized = re.sub(r'[^\w\u4e00-\u9fff]+', ' ', normalized)
+    return re.sub(r'\s+', ' ', normalized).strip()
+
+
+def clean_section_heading(title: str) -> str:
+    title = clean_inline_text(title)
+    title = re.sub(r'^(?:课题|论文)\s*[A-Za-z0-9一二三四五六七八九十]+\s*[：:]\s*', '', title)
+    title = title.lstrip('📄📚💡🔬🔥🚨⭐ ')
+    return title.strip()
+
+
+def extract_paper_title_from_text(text: str, fallback: str = '') -> str:
+    patterns = [
+        r'(?:^|\n)-\s*\*\*论文\*\*\s*[:：]\s*(.+)',
+        r'(?:^|\n)\*\*论文标题\*\*\s*[:：]\s*(.+)',
+        r'(?:^|\n)\*\*论文\*\*\s*[:：]\s*(.+)',
+        r'(?:^|\n)论文\s*[:：]\s*(.+)',
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.I)
+        if match:
+            candidate = clean_inline_text(match.group(1).split('—')[-1].split('--')[-1])
+            if candidate:
+                return candidate
+    return clean_section_heading(fallback)
+
+
+def extract_rating_excerpt(text: str) -> str:
+    for raw_line in text.splitlines():
+        line = clean_inline_text(raw_line)
+        if not line:
+            continue
+        if any(keyword in line for keyword in ('论文', '来源', '评分', '综合', '时间', '状态', '训练类型', '身份', 'ArXiv', 'arXiv')):
+            continue
+        if len(line) >= 12:
+            return line[:140]
+    return ''
+
+
+def split_level3_sections(content: str) -> list[tuple[str, str]]:
+    matches = list(re.finditer(r'^###\s+(.+)$', content, re.M))
+    sections: list[tuple[str, str]] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        heading = match.group(1).strip()
+        block = content[match.start():end].strip()
+        sections.append((heading, block))
+    return sections
+
+
+def extract_star_candidates_from_member(record: dict) -> list[dict]:
+    candidates: list[dict] = []
+    member = record.get('member') or '成员'
+    content = record['content']
+    sections = split_level3_sections(content)
+
+    for heading, block in sections:
+        score = parse_star_score(block)
+        if score is None:
+            continue
+        title = extract_paper_title_from_text(block, heading)
+        heading_clean = clean_section_heading(heading)
+        has_paper_marker = any(token in block for token in ('**论文', '- **来源**', 'arXiv', 'ArXiv'))
+        if not title or title in {'论文信息', '自评结果', '筛选理由', '核心收获', '反思与改进', '下一步研究方向'}:
+            continue
+        if not has_paper_marker and heading_clean == title and not re.match(r'^(?:课题|论文|📄)', heading):
+            continue
+        candidates.append({
+            'title': title,
+            'arxiv_id': extract_arxiv_id(block),
+            'score': score,
+            'role': member,
+            'date': record['date'],
+            'timestamp': record['timestamp'],
+            'excerpt': extract_rating_excerpt(block),
+            'source_dir': record['source_dir'],
+            'source_file': record['file_name'],
+            'source_page': f'{member}.html',
+        })
+
+    if not candidates:
+        score = parse_star_score(content)
+        title = extract_paper_title_from_text(content)
+        if score is not None and title:
+            candidates.append({
+                'title': title,
+                'arxiv_id': extract_arxiv_id(content),
+                'score': score,
+                'role': member,
+                'date': record['date'],
+                'timestamp': record['timestamp'],
+                'excerpt': extract_rating_excerpt(content),
+                'source_dir': record['source_dir'],
+                'source_file': record['file_name'],
+                'source_page': f'{member}.html',
+            })
+
+    deduped: list[dict] = []
+    seen: set[tuple[str, str, str, str, str]] = set()
+    for item in candidates:
+        key = (
+            item['role'],
+            normalize_paper_key(item['title'], item['arxiv_id']),
+            item['date'],
+            item['source_file'],
+            format_star_score(item['score']),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped
+
+
+def build_starred_markdown(title: str, arxiv_id: str, ratings: list[dict], average_score: float) -> str:
+    overview = [
+        f'# {title}',
+        '',
+        '## 星级概览',
+        f'- 综合星级：**{format_star_score(average_score)}/5 {score_to_stars(average_score)}**',
+        f'- 打星角色：**{len(ratings)} 位**',
+        f'- 最近更新时间：**{ratings[0]["date"]}**',
+    ]
+    if arxiv_id:
+        overview.append(f'- arXiv：`{arxiv_id}`')
+
+    table = [
+        '',
+        '## 角色打星',
+        '| 角色 | 星级 | 时间 | 来源 |',
+        '| --- | --- | --- | --- |',
+    ]
+    for rating in ratings:
+        table.append(
+            f'| {rating["role"]} | {format_star_score(rating["score"])}/5 {score_to_stars(rating["score"])} | {rating["date"]} | [{rating["source_dir"]}/{rating["source_file"]}]({rating["source_page"]}) |'
+        )
+
+    quotes = ['', '## 角色摘录']
+    for rating in ratings:
+        quotes.append(f'### {rating["role"]} · {format_star_score(rating["score"])}/5')
+        if rating['excerpt']:
+            quotes.append(f'> {rating["excerpt"]}')
+        quotes.append(f'- 来源记录：[{rating["source_dir"]}/{rating["source_file"]}]({rating["source_page"]})')
+        quotes.append('')
+
+    return '\n'.join(overview + table + quotes).strip()
+
+
+def build_starred_entries(records: list[dict]) -> list[dict]:
+    candidates: list[dict] = []
+    for record in records:
+        if record['kind'] == 'member' and record.get('member'):
+            candidates.extend(extract_star_candidates_from_member(record))
+
+    grouped: dict[str, dict] = {}
+    for item in candidates:
+        key = normalize_paper_key(item['title'], item['arxiv_id'])
+        if not key:
+            continue
+        bucket = grouped.setdefault(key, {
+            'title': item['title'],
+            'arxiv_id': item['arxiv_id'],
+            'ratings': [],
+        })
+        if item['arxiv_id'] and not bucket['arxiv_id']:
+            bucket['arxiv_id'] = item['arxiv_id']
+        if len(item['title']) > len(bucket['title']):
+            bucket['title'] = item['title']
+        bucket['ratings'].append(item)
+
+    entries: list[dict] = []
+    for bucket in grouped.values():
+        ratings = sorted(bucket['ratings'], key=lambda item: (item['score'], item['timestamp']), reverse=True)
+        average_score = round(sum(item['score'] for item in ratings) / len(ratings), 1)
+        latest = max(ratings, key=lambda item: item['timestamp'])
+        rating_summary = ' / '.join(
+            f'{item["role"]} {format_star_score(item["score"])}'
+            for item in sorted(ratings, key=lambda entry: (entry['score'], entry['timestamp']), reverse=True)[:4]
+        )
+        content = build_starred_markdown(bucket['title'], bucket['arxiv_id'], ratings, average_score)
+        entries.append({
+            'date': latest['date'],
+            'folder_name': latest['source_dir'],
+            'file_name': '角色打星汇总',
+            'source_path': latest['source_file'],
+            'kind': 'other',
+            'member': None,
+            'title': bucket['title'],
+            'content': content,
+            'excerpt': f'综合 {format_star_score(average_score)}/5 · {len(ratings)} 位角色打星 · {rating_summary}',
+            'timestamp': latest['timestamp'],
+            'source_dir': latest['source_dir'],
+            'session_type': '',
+            'session_label': f'{format_star_score(average_score)}★ · {len(ratings)}人',
+        })
+
+    entries.sort(key=lambda item: (float(re.search(r'([0-5](?:\.\d+)?)', item['session_label']).group(1)), item['timestamp']), reverse=True)
+    return entries
 
 
 def load_records() -> list[dict]:
@@ -434,6 +688,16 @@ def render_member_cards(items: list[dict]) -> str:
     return '\n'.join(html)
 
 
+def render_home_filter_tags(items: list[dict]) -> str:
+    markup = []
+    for item in items:
+        markup.append(f'''                    <a class="quick-filter-chip" href="{item['href']}" style="--accent:{item['accent']};">
+                        <span class="quick-filter-label">{html.escape(item['label'])}</span>
+                        <strong>{item['count']}</strong>
+                    </a>''')
+    return '\n'.join(markup)
+
+
 def render_line_chart_card(title: str, subtitle: str, labels: list[str], series: list[dict], wide: bool = False) -> str:
     if not labels or not series:
         return ''
@@ -610,7 +874,7 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
     return render_bar_chart_card('成员活跃度', '按成员页自动汇总的记录量，方便在首页看到谁最近更新更密集。', items[:6])
 
 
-def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict]) -> str:
+def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     academic_records = [item for item in records if item['kind'] in {'paper', 'member'}]
     latest = render_entry_cards(academic_records[:8])
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
@@ -623,6 +887,20 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
         build_activity_chart(records),
         build_topic_chart(domain_cards),
     ])
+    quick_filters = [
+        {
+            'label': '周会讨论',
+            'href': 'archive.html?filter=weekly',
+            'count': sum(1 for item in records if item.get('session_type') == 'weekly'),
+            'accent': '#9b59b6',
+        },
+        {
+            'label': '每日评审',
+            'href': 'archive.html?filter=review',
+            'count': sum(1 for item in records if item.get('session_type') == 'review'),
+            'accent': '#27ae60',
+        },
+    ]
 
     focus_cards = [
         {
@@ -638,6 +916,13 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             'count': len(domain_cards),
             'accent': '#f59e0b',
             'desc': '从论文总结中自动归类出 AI、NLP、CV、ML、HCI、UX 等方向。'
+        },
+        {
+            'name': '高星论文',
+            'href': SOURCE_PAGES['starred']['file'],
+            'count': len(starred_entries),
+            'accent': SOURCE_PAGES['starred']['accent'],
+            'desc': '把各角色打过星的论文汇总在一起，按综合星级优先排序。'
         },
         {
             'name': '成员进展',
@@ -682,6 +967,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             <div class="topbar-links">
                 <a class="pill-link" href="#recent">最新更新</a>
                 <a class="pill-link" href="#topics">研究主题</a>
+                <a class="pill-link" href="{SOURCE_PAGES['starred']['file']}">高星论文</a>
                 <a class="pill-link" href="#members">成员进展</a>
                 <a class="pill-link" href="archive.html">全部归档</a>
             </div>
@@ -727,6 +1013,16 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                 <p class="panel-subtitle">首页保留最常用的学术浏览入口，并补回图表概览，让第一页既清爽也有信息密度。</p>
                 <div class="topic-grid">
 {render_topic_cards(focus_cards)}
+                </div>
+                <div class="quick-filter-strip">
+                    <div class="quick-filter-copy">
+                        <div class="section-kicker">Meeting Tags</div>
+                        <h3 class="quick-filter-title">协作讨论快捷筛选</h3>
+                        <p class="quick-filter-text">需要回看过程记录时，可以直接从首页切到周会与评审脉络，不必先进入总归档再二次筛选。</p>
+                    </div>
+                    <div class="quick-filter-list">
+{render_home_filter_tags(quick_filters)}
+                    </div>
                 </div>
                 <div class="chart-grid">
 {chart_markup}
@@ -775,6 +1071,7 @@ def write_text(path: Path, content: str) -> None:
 def main() -> None:
     records = load_records()
     papers = [item for item in records if item['kind'] == 'paper']
+    starred_entries = build_starred_entries(records)
     upgrades = [item for item in records if item['kind'] == 'upgrade']
     meetings = [item for item in records if item['kind'] == 'meeting']
     discussions = [item for item in records if item['kind'] == 'discussion']
@@ -801,10 +1098,11 @@ def main() -> None:
 
     write_text(PROJECT_ROOT / SOURCE_PAGES['archive']['file'], build_detail_page(SOURCE_PAGES['archive']['title'], f"{SOURCE_PAGES['archive']['desc']} 共 {len(records)} 条。", SOURCE_PAGES['archive']['accent'], records))
     write_text(PROJECT_ROOT / SOURCE_PAGES['paper']['file'], build_detail_page(SOURCE_PAGES['paper']['title'], f"{SOURCE_PAGES['paper']['desc']} 共 {len(papers)} 条。", SOURCE_PAGES['paper']['accent'], papers))
+    write_text(PROJECT_ROOT / SOURCE_PAGES['starred']['file'], build_detail_page(SOURCE_PAGES['starred']['title'], f"{SOURCE_PAGES['starred']['desc']} 当前共 {len(starred_entries)} 篇。", SOURCE_PAGES['starred']['accent'], starred_entries))
     write_text(PROJECT_ROOT / SOURCE_PAGES['upgrade']['file'], build_detail_page(SOURCE_PAGES['upgrade']['title'], f"{SOURCE_PAGES['upgrade']['desc']} 共 {len(upgrades)} 条。", SOURCE_PAGES['upgrade']['accent'], upgrades))
     write_text(PROJECT_ROOT / SOURCE_PAGES['meeting']['file'], build_detail_page(SOURCE_PAGES['meeting']['title'], f"{SOURCE_PAGES['meeting']['desc']} 共 {len(meetings)} 条。", SOURCE_PAGES['meeting']['accent'], meetings))
     write_text(PROJECT_ROOT / SOURCE_PAGES['discussion']['file'], build_detail_page(SOURCE_PAGES['discussion']['title'], f"{SOURCE_PAGES['discussion']['desc']} 共 {len(discussions)} 条。", SOURCE_PAGES['discussion']['accent'], discussions))
-    write_text(PROJECT_ROOT / 'index.html', build_index(records, papers, source_cards, domain_cards, member_cards))
+    write_text(PROJECT_ROOT / 'index.html', build_index(records, papers, source_cards, domain_cards, member_cards, starred_entries))
     print(f'Generated {len(records)} records from {SOURCE_ROOT}')
 
 
