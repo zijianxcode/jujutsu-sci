@@ -20,7 +20,23 @@ python3 sync_from_source.py
 - 忽略 `html/` 子目录
 - 读取时间目录并按倒序排序
 - 优先解析正文中的真实时间信息，再回退到目录时间
-- 自动生成首页、主题页、成员页和归档页
+- 自动生成首页、主题页、成员页、归档页和 `高星论文` 页
+
+## 三段同步规则
+
+以后只要这个学术站发生改动，默认按三段一起同步：
+
+1. 本地生成：
+   在 [学术小龙虾-web](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web) 运行 `python3 sync_from_source.py`。
+2. GitHub 同步：
+   把本地生成结果提交并推送到 [zijianxcode/jujutsu-sci](https://github.com/zijianxcode/jujutsu-sci)。
+3. CloudBase 同步：
+   如果 [bananabox.plus/academy/](https://bananabox.plus/academy/) 也要保持一致，必须把最新静态产物同步到 `personal-homepage` 仓库的 `academy/` 子目录，并重新执行 CloudBase 发布。
+
+补充说明：
+- `jujutsu-sci` 是学术站源码仓库。
+- `bananabox.plus/academy/` 读取的是 `personal-homepage` 仓库里的 `academy/` 镜像副本。
+- 所以“本地站已经更新”或“GitHub Pages 已经更新”都不等于 `academy/` 一定更新。
 
 ## 内容识别方式
 
@@ -74,8 +90,10 @@ python3 sync_from_source.py
 2. 运行 `python3 sync_from_source.py`
 3. 检查生成结果里的 `index.html` 是否已经变化
 4. 检查 Git 是否有待提交变更
-5. 推送到 GitHub 后等待 Pages 完成刷新
-6. 浏览器强制刷新，排除缓存或旧页面
+5. 检查 `jujutsu-sci` 是否已经推到远端
+6. 如果目标地址是 `bananabox.plus/academy/`，继续检查 `personal-homepage/academy/` 是否已同步
+7. 确认 CloudBase 是否已经重新发布
+8. 最后再排查浏览器缓存或 CDN 缓存
 
 ## 记录要求
 

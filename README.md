@@ -32,7 +32,23 @@
 python3 sync_from_source.py
 ```
 
-执行后会自动刷新首页、主题页、成员页和归档页。
+执行后会自动刷新首页、主题页、成员页、归档页和高星论文页。
+
+## 同步发布规则
+
+以后涉及站点更新时，必须按下面这条链路一起同步，不能只更新其中一段：
+
+1. 本地项目同步：
+   在 [学术小龙虾-web](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web) 运行 `python3 sync_from_source.py`，确认生成页已经更新。
+2. GitHub 仓库同步：
+   把本地生成结果提交并推送到 [zijianxcode/jujutsu-sci](https://github.com/zijianxcode/jujutsu-sci)。
+3. CloudBase 子站同步：
+   如果 `bananabox.plus/academy/` 也要反映这次更新，必须把最新静态产物同步到 `personal-homepage` 仓库的 `academy/` 子目录，并重新发布 CloudBase。
+
+规则说明：
+- `https://zijianxcode.github.io/jujutsu-sci/` 和 `https://bananabox.plus/academy/` 不是同一条自动发布链路。
+- 推送 `jujutsu-sci` 成功，不代表 `bananabox.plus/academy/` 会自动更新。
+- 只要 `academy/` 仍然是镜像子站，就必须把“本地 / GitHub / CloudBase”三段都走完。
 
 ## 当前核心文件
 
