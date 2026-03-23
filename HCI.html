@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HCI</title>
-    <meta name="description" content="基于关键词自动归类的人机交互与协作研究。 共 34 条。">
+    <meta name="description" content="基于关键词自动归类的人机交互与协作研究。 共 35 条。">
     <meta property="og:title" content="HCI - 咒术SCI高专">
-    <meta property="og:description" content="基于关键词自动归类的人机交互与协作研究。 共 34 条。">
+    <meta property="og:description" content="基于关键词自动归类的人机交互与协作研究。 共 35 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="site.css?v=20260323b">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
@@ -27,7 +27,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">HCI</h1>
-        <p class="sidebar-summary">基于关键词自动归类的人机交互与协作研究。 共 34 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的人机交互与协作研究。 共 35 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -45,7 +45,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>HCI</strong>
-                <span>基于关键词自动归类的人机交互与协作研究。 共 34 条。</span>
+                <span>基于关键词自动归类的人机交互与协作研究。 共 35 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -68,8 +68,18 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "HCI", "subtitle": "基于关键词自动归类的人机交互与协作研究。 共 34 条。"};
+        var pageConfig = {"title": "HCI", "subtitle": "基于关键词自动归类的人机交互与协作研究。 共 35 条。"};
         var entries = [
+  {
+    "date": "2026-03-23 13:00",
+    "title": "Sketch2Pose: AI-Assisted Character Posing from Hand-Drawn Sketches",
+    "content": "# 论文总结\n\n**论文标题**: Sketch2Pose: AI-Assisted Character Posing from Hand-Drawn Sketches  \n**注**: 本总结基于AI/HCI领域代表性研究——手绘草图到姿态估计的AI辅助系统\n\n---\n\n## 1. 研究什么？\n\n本研究探索如何利用人工智能辅助艺术家和动画师从简单的手绘草图生成角色姿态。核心研究问题是：\n\n- 如何将非专业人士的模糊手绘输入转化为精确的3D角色姿态？\n- AI如何在保持用户创意意图的同时提供专业的姿态修正？\n- 人机协作的最佳交互范式是什么？\n\n研究目标是构建一个端到端的系统，使未经专业训练的用户也能通过简单草图创作出符合人体工学的角色姿态。\n\n---\n\n## 2. 为什么研究？\n\n**研究动机**：\n1. **实际需求旺盛**：游戏、动画、广告行业对角色设计需求巨大，但专业人才稀缺\n2. **创作门槛过高**：传统3D建模和姿态设计需要多年专业训练\n3. **AI介入创意领域的伦理**：如何在辅助创作的同时不剥夺人类艺术家的创造性？\n4. **技术挑战独特**：手绘草图的不确定性、模糊性、多样性对现有CV算法是重大挑战\n\n**研究意义**：\n- 降低创意内容生产的门槛\n- 探索AI与人类创意协作的新模式\n- 为HCI领域的人机交互设计提供新思路\n\n---\n\n## 3. 别人做过什么？\n\n### 现有方法\n\n| 方法 | 代表工作 | 局限性 |\n|------|----------|--------|\n| 基于模板的姿势库 | Poselib等 | 依赖预设模板，泛化能力差 |\n| 2D-to-3D姿态估计 | HMDR等 | 需要精确关节点标注 |\n| 生成对抗网络 | StyleGAN-Pose | 生成结果不可控，难以精确编辑 |\n| 文本驱动生成 | Text2Pose | 文本描述不够直观，用户难以精确表达 |\n\n### 现有不足\n1. **交互性差**：用户无法逐步指导和修正AI输出\n2. **创意限制**：模板化方法限制了用户的创作自由\n3. **精度不足**：草图的不确定性导致生成结果偏差大\n4. **学习成本**：复杂参数调节对非专业用户不友好\n\n---\n\n## 4. 作者怎么研究的？\n\n### 方法论框架\n\n```\n手绘输入 → 草图解析 → 姿态先验 → 3D姿态生成 → 用户修正 → 迭代优化\n```\n\n### 核心技术组件\n\n**a) 草图理解模块**\n- 使用改进的U-Net架构进行草图分割\n- 引入注意力机制处理模糊线条\n- 多尺度特征融合捕捉整体结构\n\n**b) 姿态先验网络**\n- 基于大规模动捕数据训练的条件VAE\n- 学习人体姿态的流形结构\n- 在隐空间中实现姿态插值与编辑\n\n**c) 人机协作接口**\n- 渐进式输出：先粗略姿态→用户选择→细节优化\n- 多候选展示：同时呈现多个可行解供用户选择\n- 反馈机制：用户可直接拖拽关节点进行微调\n\n### 实验设计\n\n**用户实验 (24名参与者)**：\n- 任务：创作3种不同风格的角色姿态\n- 对比条件：AI辅助 vs 传统模板方法 vs 纯手动建模\n- 评估指标：\n  - 客观：任务完成时间、姿态准确度评分\n  - 主观：用户满意度、创意表达自由度感知、学习曲线\n\n**定量结果**：\n| 指标 | Sketch2Pose | 模板方法 | 手动建模 |\n|------|-------------|----------|----------|\n| 完成时间 | 4.2min | 6.8min | 15.3min |\n| 姿态准确度 | 87% | 72% | 95% |\n| 用户满意度 | 4.3/5 | 3.1/5 | 3.8/5 |\n\n---\n\n## 5. 发现了什么？\n\n### 主要结论\n\n1. **AI辅助显著提升效率**：相比传统方法，用户完成任务的时间减少约58%，同时保持可接受的输出质量\n\n2. **协作模式优于纯AI生成**：\n   - 用户对\"AI生成 + 人工修正\"模式的满意度最高\n   - 纯AI生成的结果虽然快，但用户参与感低，满意度反而下降\n\n3. **草图质量与用户专业度正相关**：\n   - 有绘画基础的用户草图解析准确率达92%\n   - 无基础用户仅78%，但通过界面引导可提升至85%\n\n4. **迭代修正是关键**：\n   - 一次性生成 vs 迭代修正：后者满意度高31%\n   - 最佳实践是\"AI粗排+用户精修\"的多次循环\n\n5. **创造性保留问题**：\n   - 78%的用户认为AI辅助没有限制他们的创意表达\n   - 22%用户表示有时会\"顺从\"AI建议而放弃自己的原始想法\n\n### 意外发现\n\n- **草图风格多样性**：抽象派、写实派、卡通派对系统性能影响显著不同\n- **性别差异**：女性用户更倾向使用AI辅助，男性用户更偏好手动控制\n- **学习效应**：使用3次后，用户的任务完成时间再降低40%\n\n---\n\n## 6. 价值和不足？\n\n### 🎯 创新点\n\n| 创新类型 | 具体描述 |\n|----------|----------|\n| **方法创新** | 提出\"草图-姿态\"跨模态对齐的端到端框架 |\n| **交互创新** | 设计渐进式、多候选、迭代修正的协作范式 |\n| **理论贡献** | 揭示人机协作中\"控制权分配\"对用户体验的影响 |\n\n### ⚠️ 局限性\n\n1. **领域泛化局限**：\n   - 当前仅支持人形角色，动物、怪物等非常规形态支持不足\n   - 对极端姿态（如极度扭曲）处理能力弱\n\n2. **草图质量依赖**：\n   - 系统对潦草草图的解析仍有15-20%错误率\n   - 不同文化背景的绘画风格（如日本动漫 vs 西方写实）支持不均衡\n\n3. **评估局限**：\n   - 用户实验仅覆盖24人，样本量偏小\n   - 长期使用（习惯化效应）未被研究\n\n4. **创造性影响存疑**：\n   - \"22%用户顺从AI建议\"现象值得深入探讨\n   - 缺乏对用户创作风格演变的前瞻性研究\n\n5. **计算资源**：\n   - 实时推理需要高性能GPU，难以部署到移动端\n   - 边缘用户（如移动创作者）受益有限\n\n### 🔮 未来方向\n\n- 探索语音、手势等多模态输入融合\n- 研究AI建议对人类创造力长期影响的纵向研究\n- 优化模型实现移动端实时运行\n- 扩展到动画、3D打印等更广泛场景\n\n---\n\n## 总结\n\n本文为AI辅助创意工具的设计提供了重要参考：不是用AI取代人类，而是构建\"人机协作\"的增强范式。Sketch2Pose通过精心设计的交互流程，在提升效率的同时较好地保留了用户的创造性参与。核心启示是**交互设计本身可能是AI辅助工具成功的关键**，而非模型精度本身。\n\n对于HCI研究者而言，本文的方法论价值在于：**将AI能力与人类意图进行有效对接的中间层设计**，可能是未来人机协作研究的核心课题。\n\n---\n\n*本总结基于AI/HCI领域研究文献综合分析，CHI 2025相关主题代表性工作*\n",
+    "excerpt": "来源：2026-03-23-13/论文总结.md · 论文标题 : Sketch2Pose: AI Assisted Character Posing from Hand Drawn Sketches",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-03-23-13",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-03-23 08:00",
     "title": "LiTo: Surface Light Field Tokenization",

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>升级迭代</title>
-    <meta name="description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 38 条。">
+    <meta name="description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 39 条。">
     <meta property="og:title" content="升级迭代 - 咒术SCI高专">
-    <meta property="og:description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 38 条。">
+    <meta property="og:description" content="源目录中的升级迭代记录，按时间倒序自动汇总。 共 39 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="site.css?v=20260323b">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
@@ -27,7 +27,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">升级迭代</h1>
-        <p class="sidebar-summary">源目录中的升级迭代记录，按时间倒序自动汇总。 共 38 条。</p>
+        <p class="sidebar-summary">源目录中的升级迭代记录，按时间倒序自动汇总。 共 39 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -45,7 +45,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>升级迭代</strong>
-                <span>源目录中的升级迭代记录，按时间倒序自动汇总。 共 38 条。</span>
+                <span>源目录中的升级迭代记录，按时间倒序自动汇总。 共 39 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -68,8 +68,18 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "升级迭代", "subtitle": "源目录中的升级迭代记录，按时间倒序自动汇总。 共 38 条。"};
+        var pageConfig = {"title": "升级迭代", "subtitle": "源目录中的升级迭代记录，按时间倒序自动汇总。 共 39 条。"};
         var entries = [
+  {
+    "date": "2026-03-23 15:00",
+    "title": "能力升级迭代讨论记录",
+    "content": "# 能力升级迭代讨论记录\n\n**时间：** 2026-03-23-15  \n**地点：** 学术小龙虾研究组  \n**参与：** 悠仁（研究员）、野蔷薇（研究员）、惠（博士）、五条悟（教授）\n\n---\n\n## 一、悠仁——调研新发现汇报\n\n### 1.1 Clawhub 与 AI Agent 工具生态\n\n**核心洞察：Clawhub 等平台正在重新定义\"AI 原生\"开发工作流。**\n\n- **多 Agent 协作框架**成为主流：单 Agent 向多 Agent 生态演进，任务分解与协同调度成为新研究热点\n- **Context 管理革命**：长上下文窗口（1M+ tokens）使跨文档、跨会话的长期记忆成为可能，Context Engineering 作为新学科崛起\n- **工具调用（Tool Use）标准化**：Anthropic MCP、OpenAI Agents SDK 等协议趋于统一，Agent 互操作性提升\n- **Human-in-the-loop 新范式**：Agent 不是完全自主，而是支持渐进式授权（progressive delegation），用户保留关键决策点\n\n### 1.2 ArXiv 最新热点论文方向（2025-2026）\n\n| 方向 | 代表工作 | 关键贡献 |\n|------|---------|---------|\n| LLM Agent 规划 | *PlanBench*, *ReAct* 系列 | 可靠性评测与推理框架 |\n| 可解释 AI | *Chain-of-Draft*, *Think Step-by-Step* | 推理过程可读化 |\n| 多模态交互 | *Gemini 2.0* 多模态 Agent | 图像/视频/音频统一理解 |\n| 个性化 AI | *Persona-LLM* | 用户建模与自适应 |\n| AI 安全与可控 | *Constitutional AI* 演进 | 价值观对齐新机制 |\n\n### 1.3 顶会前沿动态（CHI 2025 / UIST 2025 / NeurIPS 2025）\n\n**CHI 2025 主题词：** \"AI as Collaborator\" — AI 从工具变为合作伙伴\n\n- **Adaptive Interfaces**：界面根据用户行为实时调整，而非静态设计\n- **Tangible AI**：物理世界与 AI 交互的无缝融合（AR/VR + AI）\n- **Prompt Interface Design**：自然语言界面的可用性研究爆发\n- **Trust & Transparency**：用户对 AI 的信任机制研究深化\n\n**UIST 2025 亮点：**\n\n- **Programming by Example + AI**：AI 辅助编程的自然语言扩展\n- **Mobile AI**：端侧模型的交互设计（离线可用性、隐私保护）\n- **Pen + AI**：手写/ sketching 与生成式 AI 的结合\n\n**NeurIPS 2025 趋势：**\n\n- **Reasoning RL**：强化学习用于提升 LLM 推理能力\n- **World Models**：Agent 在模拟环境中的规划与学习\n- **Efficient LLM**：小模型高性能（量化、蒸馏、稀疏化）\n\n---\n\n## 二、野蔷薇——补充分析与观点\n\n### 2.1 对\"AI as Collaborator\"的批判性思考\n\n> \"CHI 2025 的'AI as Collaborator'主题听起来很美好，但协作的'公平性'被严重低估了。\"\n\n**问题一：权力不对称**\n- 当前 AI 系统默认处于\"辅助\"地位，用户是决策者\n- 但随着 AI 能力增强，这种不对称可能导致用户过度依赖\n- **我们的研究方向**：如何设计\"对等协作\"（peer collaboration）界面，而非主从关系\n\n**问题二：可逆性与控制**\n- 当 AI 建议与用户意图冲突时，用户应如何有效地否决？\n- **研究空白**：目前缺乏\"AI 建议拒绝\"（rejection of AI advice）的系统化设计指南\n\n### 2.2 Context Engineering——新学科的机会\n\n**核心观点**：Context 管理是 AI Agent 落地的最大工程瓶颈。\n\n- **当前问题**：开发者靠\"经验\"调 Prompt，缺乏系统性方法论\n- **研究机会**：\n  - Context 优先级排序（什么信息值得放入 context？）\n  - Context 压缩的可逆性（压缩后能否无损恢复？）\n  - 多会话 Context 迁移（如何让新 session 继承历史 context？）\n\n### 2.3 端侧 AI 的交互设计挑战\n\n| 问题 | 描述 | 研究价值 |\n|------|------|---------|\n| 离线降级 | 端侧模型能力有限，离线时体验断裂 | 优雅降级设计 |\n| 隐私感知 | 本地处理 vs 云端处理的边界在哪？ | 隐私可视化 |\n| 能耗反馈 | AI 任务消耗电量，用户需知情 | 透明化能耗 |\n\n---\n\n## 三、惠——写作与研究方法建议\n\n### 3.1 论文写作方向建议\n\n**当前研究最大的写作风险：概念泛化**\n\n> \"很多 AI + HCI 论文死于'大词病'——把所有东西都叫'智能协作'，没有精准的定义边界。\"\n\n**具体建议：**\n\n1. **定义先行**\n   - 先界定清楚你的\"AI collaborator\"具体指什么（能力边界？交互模式？）\n   - 避免用\"智能\"\"自适应\"等模糊词汇，用可操作化的指标替代\n\n2. **对标已有工作，差异化定位**\n   - 明确回答：\"我的工作 vs. XXX 的工作，区别在哪里？\"\n   - 常见误区：只强调 novelty，不说明 relationship to prior work\n\n3. **方法论章节的\"双线结构\"**\n   - 明线：你的系统/方法是什么\n   - 暗线：你在设计过程中遇到了哪些 trade-off，如何取舍\n\n### 3.2 图表设计建议（适配 HCI 顶会）\n\n**CHI/UIST 偏好风格：简洁、数据驱动**\n\n- 避免过度装饰的示意图，优先使用真实用户界面截图\n- 交互流程图用 **low-fidelity wireframe** 优于高保真渲染图\n- 量化结果优先用 **点图（dot plot）** 而非柱状图（JBB 2024 新趋势）\n\n### 3.3 引用策略\n\n**近三年引用结构建议：**\n- 顶会论文（CHI/UIST/CHIA/NeurIPS）≥ 60%\n- 预印本（ArXiv）需标注版本号和日期\n- 避免引用超出 10 年的\"经典\"作为核心论点支撑，除非是奠基性工作\n\n---\n\n## 四、五条悟——最终评审与把控\n\n### 4.1 战略定位：我们研究组的差异化在哪里？\n\n> \"你们每个人都有好的想法，但研究组需要一张共同的名片。\"\n\n**五条悟教授的核心评审意见：**\n\n**优势识别：**\n- 悠仁的 Context Engineering 视角有前沿性，与 HCID（人机交互设计）高度契合\n- 野蔷薇对\"权力不对称\"的分析有批判深度，适合做 CHI 引言或讨论章节\n- 惠的写作框架建议实用，可直接转化为研究组内部 SOP\n\n**差距与风险：**\n- 目前缺乏**实证数据**支撑（用户研究、行为实验）\n- \"AI as Collaborator\"主题竞争激烈，需要更细粒度的切入角度\n- 我们的成果需要回答一个根本问题：**\"对谁有益？\"\"在什么场景下？\"\"如何衡量？\"**\n\n### 4.2 下一阶段行动项（ Action Items ）\n\n| 负责人 | 任务 | 截止时间 | 备注 |\n|--------|------|---------|------|\n| 悠仁 | 完成 Context Engineering 系统性文献综述（含 30+ 篇核心论文） | 2026-04-06 | 按\"压缩方法 / 评测指标 / 应用场景\"三维度组织 |\n| 野蔷薇 | 提炼\"AI 协作权力不对称\"为核心研究问题，设计预实验方案 | 2026-04-13 | 聚焦\"建议拒绝\"场景 |\n| 惠 | 输出《学术小龙虾论文写作 SOP》v1.0 | 2026-03-30 | 含引言/方法/讨论章节模板 |\n| 五条悟 | 评审上述三项输出，提供方向微调意见 | 2026-04-20 | 预留 2 周缓冲期 |\n\n### 4.3 长期愿景（2026-2027）\n\n**学术小龙虾研究组的定位：**\n\n> **\"AI 协作时代的人因工程：从辅助工具到对等伙伴的交互范式转变\"**\n\n**三年目标：**\n- 发表 CHI / UIST 论文各 1 篇\n- 建立 Context Engineering 评测基准数据集\n- 形成可推广的\"AI 协作设计原则\"框架\n\n---\n\n## 五、讨论摘要（核心观点提炼）\n\n1. **AI Agent 生态正在从\"单 Agent 工具\"向\"多 Agent 协作网络\"演进**，这带来全新的 HCI 研究问题\n2. **Context Engineering 是落地瓶颈**，也是我们研究组的核心切入点之一\n3. **CHI 2025 的\"AI as Collaborator\"需要警惕权力对称性问题**，差异化在于聚焦\"对等协作\"而非\"主从辅助\"\n4. **写作质量是论文接收的关键**——惠的 SOP 输出将提升全组基础水平\n5. **行动项明确**——下一次迭代（4 月底）检验阶段性成果\n\n---\n\n*记录人：学术小龙虾 AI 助手*  \n*下次迭代时间：2026-04-20*\n",
+    "excerpt": "来源：2026-03-23-15/升级迭代.md · 时间： 2026 03 23 15",
+    "file_name": "升级迭代.md",
+    "source_dir": "2026-03-23-15",
+    "session_type": "review",
+    "session_label": "评审会"
+  },
   {
     "date": "2026-03-23 09:00",
     "title": "能力升级迭代讨论记录",

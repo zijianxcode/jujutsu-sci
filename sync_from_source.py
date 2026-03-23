@@ -7,6 +7,7 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = SCRIPT_DIR / 'config.json'
@@ -559,7 +560,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="site.css?v=20260323b">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
@@ -696,6 +697,66 @@ def render_home_filter_tags(items: list[dict]) -> str:
                         <strong>{item['count']}</strong>
                     </a>''')
     return '\n'.join(markup)
+
+
+def home_search_label(item: dict) -> str:
+    if item['kind'] == 'paper':
+        return '论文总结'
+    if item['kind'] == 'member':
+        return f"{item['member']} · 成员进展" if item.get('member') else '成员进展'
+    if item['kind'] == 'upgrade':
+        return item.get('session_label') or '评审会'
+    if item['kind'] == 'discussion':
+        return item.get('session_label') or '周会讨论'
+    if item['kind'] == 'meeting':
+        return item.get('session_label') or '日会记录'
+    return '全部归档'
+
+
+def home_search_href(item: dict, query: str | None = None) -> str:
+    base = card_link(item)
+    if not query:
+        return base
+    connector = '&' if '?' in base else '?'
+    return f'{base}{connector}search={quote(query)}'
+
+
+def build_home_search_payload(records: list[dict], starred_entries: list[dict]) -> list[dict]:
+    payload = []
+    seen: set[tuple[str, str, str]] = set()
+
+    for item in starred_entries:
+        title = item['title'].strip()
+        key = ('starred', title.lower(), item['date'])
+        if key in seen:
+            continue
+        seen.add(key)
+        payload.append({
+            'title': title,
+            'date': item['date'],
+            'excerpt': item['excerpt'],
+            'label': '高星论文',
+            'href': home_search_href({'kind': 'other'}, title),
+            'keywords': f"{title} {item['excerpt']} {clean_inline_text(item['content'])[:3200]} 高星论文 打星 综合星级 角色评分",
+        })
+
+    for item in records:
+        title = item['title'].strip()
+        key = (item['kind'], title.lower(), item['date'])
+        if key in seen:
+            continue
+        seen.add(key)
+        payload.append({
+            'title': title,
+            'date': item['date'],
+            'excerpt': item['excerpt'],
+            'label': home_search_label(item),
+            'href': home_search_href(item, title),
+            'keywords': f"{title} {item['excerpt']} {clean_inline_text(item['content'])[:3200]} {item['file_name']} {item['source_dir']} {item.get('member') or ''} {item.get('session_label') or ''}",
+        })
+
+    payload.sort(key=lambda item: item['date'], reverse=True)
+    return payload
 
 
 def render_line_chart_card(title: str, subtitle: str, labels: list[str], series: list[dict], wide: bool = False) -> str:
@@ -901,6 +962,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             'accent': '#27ae60',
         },
     ]
+    search_payload = build_home_search_payload(records, starred_entries)
 
     focus_cards = [
         {
@@ -964,6 +1026,14 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                     <span>宗旨与简介</span>
                 </div>
             </div>
+            <form class="topbar-search" id="homeSearchForm" role="search">
+                <div class="topbar-search-shell">
+                    <input id="homeSearchInput" class="topbar-search-input" type="search" placeholder="搜索论文、成员、主题或讨论关键词" aria-label="首页搜索">
+                    <button class="topbar-search-button" type="submit" aria-label="提交搜索">
+                        <img class="topbar-search-icon" src="search-icon.svg" alt="" aria-hidden="true">
+                    </button>
+                </div>
+            </form>
             <div class="topbar-links">
                 <a class="pill-link" href="#recent">最新更新</a>
                 <a class="pill-link" href="#topics">研究主题</a>
@@ -1017,8 +1087,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                 <div class="quick-filter-strip">
                     <div class="quick-filter-copy">
                         <div class="section-kicker">Meeting Tags</div>
-                        <h3 class="quick-filter-title">协作讨论快捷筛选</h3>
-                        <p class="quick-filter-text">需要回看过程记录时，可以直接从首页切到周会与评审脉络，不必先进入总归档再二次筛选。</p>
+                        <h3 class="quick-filter-title">周会讨论区</h3>
                     </div>
                     <div class="quick-filter-list">
 {render_home_filter_tags(quick_filters)}
@@ -1058,6 +1127,10 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 
         <p class="footer-note">首页已收敛为学术视图。日会、升级迭代、团队讨论等内容仍保留在 <a href="archive.html">全部归档</a> 中。</p>
     </div>
+    <script>
+        var homeSearchIndex = {json.dumps(search_payload, ensure_ascii=False, indent=2)};
+    </script>
+    <script src="site-index.js"></script>
 </body>
 </html>
 '''
