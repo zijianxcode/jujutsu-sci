@@ -1,5 +1,69 @@
 # 问题记录与修复日志
 
+## 2026-03-23：定时任务存在，但学术站与 `academy/` 仍然停在 2026-03-20
+
+### 问题现象
+
+- 源目录已经更新到 `2026-03-23`
+- 本地生成站与线上 `academy/` 仍显示 `2026-03-20 21:00`
+- 用户误以为“已经配置了每日同步，所以应该自动变新”
+
+### 根因判断
+
+这次不同步不是单点问题，而是三层叠加：
+
+1. 每日定时任务确实存在，但执行失败  
+   `daily-sci-sync` 自动化已创建并处于 `ACTIVE`，但 2026-03-20 与 2026-03-22 两次运行都在第一步 `git pull --ff-only origin main` 失败，原因是 `Could not resolve host: github.com`。因此后续 `sync_from_source.py`、提交、推送都没有发生。
+2. 定时脚本只覆盖了 `jujutsu-sci` 仓库  
+   [auto_sync_site.sh](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web/auto_sync_site.sh) 只会：
+   - `git pull`
+   - `python3 sync_from_source.py`
+   - 提交并推送 HTML 到 `jujutsu-sci`
+   
+   它并不会把内容镜像到 `personal-homepage/academy/`。
+3. `academy/` 当前生产链路是 GitHub Pages，而不是 CloudBase 直接出内容  
+   2026-03-23 核查结果显示：
+   - `bananabox.plus` 的 Pages 配置为 `main /`
+   - `https://bananabox.plus/academy/` 响应头 `server: GitHub.com`
+   
+   这说明当前 `academy/` 想变新，必须：
+   - 先同步 `personal-homepage` 仓库里的 `academy/`
+   - 再等待 GitHub Pages 构建完成
+   
+   仅仅跑 `jujutsu-sci` 定时任务，或者仅做 CloudBase 发布，都不足以保证 `academy/` 变新。
+
+### 修复动作
+
+1. 在 [学术小龙虾-web](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web) 重新执行 `python3 sync_from_source.py`
+2. 将最新生成内容提交并推送到 [zijianxcode/jujutsu-sci](https://github.com/zijianxcode/jujutsu-sci)，提交 `09872a5`
+3. 将最新静态页面同步到 `personal-homepage/academy/`
+4. 推送 [zijianxcode/personal-homepage](https://github.com/zijianxcode/personal-homepage) 的 `academy` 更新，提交 `c0eaa10`
+5. 等待 GitHub Pages 构建成功后复核 [https://bananabox.plus/academy/](https://bananabox.plus/academy/)
+
+### 验证结果
+
+- `https://zijianxcode.github.io/jujutsu-sci/` 已更新为：
+  - `论文总结 63`
+  - `成员记录 162`
+  - `最新时间 2026-03-23 09:07`
+- `https://bananabox.plus/academy/` 已更新为：
+  - `论文总结 63`
+  - `成员记录 162`
+  - `最新时间 2026-03-23 09:07`
+- `academy` 首页包含：
+  - `高星论文`
+  - `周会讨论`
+  - `每日评审`
+
+### 预防措施
+
+- 以后不要把“定时任务存在”视为“内容一定已上线”，必须检查执行结果和失败日志
+- `jujutsu-sci` 自动任务只代表学术站源码仓库同步，不代表 `academy/` 已同步
+- 只要目标是 `bananabox.plus/academy/`，发布检查必须覆盖：
+  - `personal-homepage/academy/` 是否已更新
+  - GitHub Pages 构建是否成功
+  - 线上页面是否已返回最新时间
+- 如果继续保留 CloudBase，也只能把它视为并行发布目标，不能默认等同于当前 `academy` 生产源
 ## 2026-03-20：GitHub 已更新，但 `bananabox.plus/academy/` 仍然是旧版
 
 ### 问题现象

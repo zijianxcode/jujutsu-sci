@@ -30,14 +30,16 @@ python3 sync_from_source.py
    在 [学术小龙虾-web](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web) 运行 `python3 sync_from_source.py`。
 2. GitHub 同步：
    把本地生成结果提交并推送到 [zijianxcode/jujutsu-sci](https://github.com/zijianxcode/jujutsu-sci)。
-3. CloudBase 同步：
-   如果 [bananabox.plus/academy/](https://bananabox.plus/academy/) 也要保持一致，必须把最新静态产物同步到 `personal-homepage` 仓库的 `academy/` 子目录，并重新执行 CloudBase 发布。
+3. `academy` 发布同步：
+   如果 [bananabox.plus/academy/](https://bananabox.plus/academy/) 也要保持一致，必须把最新静态产物同步到 `personal-homepage` 仓库的 `academy/` 子目录，并完成当前实际生产链路的发布。
 
 补充说明：
 - `jujutsu-sci` 是学术站源码仓库。
 - `bananabox.plus/academy/` 读取的是 `personal-homepage` 仓库里的 `academy/` 镜像副本。
-- 所以“本地站已经更新”或“GitHub Pages 已经更新”都不等于 `academy/` 一定更新。
+- 2026-03-23 核查结果显示，`bananabox.plus` 当前使用的是 GitHub Pages 自定义域名，Pages 配置为 `main /`。
+- 所以“本地站已经更新”或“jujutsu-sci 已经更新”都不等于 `academy/` 一定更新。
 - 默认允许先做本地同步、校验和预览，但 `GitHub 推送` 与 `CloudBase 发布` 都属于需要人工确认的步骤，未经确认不直接执行。
+- 如果 CloudBase 仍保留为并行环境，也要单独同步，但不能把它当作 `academy/` 当前唯一生产源。
 
 ## 内容识别方式
 
@@ -93,8 +95,9 @@ python3 sync_from_source.py
 4. 检查 Git 是否有待提交变更
 5. 检查 `jujutsu-sci` 是否已经推到远端
 6. 如果目标地址是 `bananabox.plus/academy/`，继续检查 `personal-homepage/academy/` 是否已同步
-7. 确认 CloudBase 是否已经重新发布
-8. 最后再排查浏览器缓存或 CDN 缓存
+7. 检查 `personal-homepage` 的 GitHub Pages 构建是否成功
+8. 如果 CloudBase 也需要跟进，再检查 CloudBase 是否重新发布
+9. 最后再排查浏览器缓存或 CDN 缓存
 
 ## 记录要求
 
