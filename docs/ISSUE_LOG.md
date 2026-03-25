@@ -1,5 +1,54 @@
 # 问题记录与修复日志
 
+## 2026-03-25：每日自动同步任务存在，但没有自动把最新内容发布上线
+
+### 问题现象
+
+- 用户已经要求配置“每天同步一次”
+- 但 2026-03-25 核查时，线上内容并没有按预期自动更新
+- 用户误以为自动化没有创建，或者根本没有执行
+
+### 根因判断
+
+这次问题主要有三层：
+
+1. 自动化确实存在，但最近运行失败  
+   [daily-sci-sync automation](/Users/zijian/.codex/automations/daily-sci-sync/automation.toml) 仍是 `ACTIVE`，而且最近一次运行记录写在 [memory.md](/Users/zijian/.codex/automations/daily-sci-sync/memory.md) 中。  
+   失败点是 `git pull --ff-only origin main`，错误为 `Could not resolve host: github.com`。
+2. 老脚本把 `git pull` 作为硬前置步骤  
+   旧版 [auto_sync_site.sh](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web/auto_sync_site.sh) 里，只要 GitHub 网络解析失败，脚本就会立即退出，导致后面的 `python3 sync_from_source.py` 根本不会执行。
+3. 老脚本会自动提交推送，和“发布必须先确认”的规则冲突  
+   用户后续又明确要求：GitHub 推送和生产发布必须先经过确认。  
+   这意味着“每天自动发布”本身不应再是默认行为，自动化应该改成“每天自动检查并汇报”。
+
+### 修复动作
+
+1. 将 [auto_sync_site.sh](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web/auto_sync_site.sh) 改为：
+   - 默认 `check` 模式
+   - 即使 GitHub 暂时不可达，也继续执行本地源目录生成
+   - 自动检测 `html/css/js/svg/jpg/png` 等生成资源差异
+   - 仅输出变化清单，不自动提交推送
+   - 只有显式执行 `./auto_sync_site.sh publish` 才会提交并推送
+2. 将 `daily-sci-sync` 自动化提示词改为：
+   - 每天拉取可拉取的远端状态
+   - 本地重新生成
+   - 报告是否有变化或失败
+   - 不自动发布
+3. 将本次故障与修复逻辑补记到问题日志，避免后续再次误判
+
+### 预防措施
+
+- 以后把“自动同步”理解为“自动检查与生成”，不是“未经确认自动上线”
+- 即使 GitHub 网络暂时失败，也不应阻止本地源内容生成检查
+- 自动任务输出必须明确区分：
+  - 远端拉取状态
+  - 本地生成是否成功
+  - 是否检测到待发布变化
+- 真正上线仍然走人工确认：
+  - 推 `jujutsu-sci`
+  - 同步 `personal-homepage/academy`
+  - 再检查 Pages/生产环境
+
 ## 2026-03-23：定时任务存在，但学术站与 `academy/` 仍然停在 2026-03-20
 
 ### 问题现象
