@@ -12,8 +12,11 @@ TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 REMOTE_STATUS="not_checked"
 ACADEMY_REMOTE_STATUS="not_started"
 ACADEMY_COMMIT_STATUS="not_started"
+HTML_FILES=()
 
-mapfile -t HTML_FILES < <(find "$PROJECT_ROOT" -maxdepth 1 -type f -name '*.html' -print | sed "s|$PROJECT_ROOT/||" | sort)
+while IFS= read -r html_file; do
+  HTML_FILES+=("$html_file")
+done < <(find "$PROJECT_ROOT" -maxdepth 1 -type f -name '*.html' -print | sed "s|$PROJECT_ROOT/||" | sort)
 
 cd "$PROJECT_ROOT"
 
