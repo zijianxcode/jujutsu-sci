@@ -38,7 +38,10 @@ python3 sync_from_source.py
 - `bananabox.plus/academy/` 读取的是 `personal-homepage` 仓库里的 `academy/` 镜像副本。
 - 2026-03-23 核查结果显示，`bananabox.plus` 当前使用的是 GitHub Pages 自定义域名，Pages 配置为 `main /`。
 - 所以“本地站已经更新”或“jujutsu-sci 已经更新”都不等于 `academy/` 一定更新。
-- 默认允许先做本地同步、校验和预览，但 `GitHub 推送` 与 `CloudBase 发布` 都属于需要人工确认的步骤，未经确认不直接执行。
+- 数据同步与功能发布要分开理解：
+  - 来自源文件夹的内容更新，允许自动同步到 `jujutsu-sci` 与 `academy`
+  - UI、样式、脚本、交互和新功能改动，仍然属于需要人工确认的发布范围
+- 当前每日自动任务默认只会自动发布数据页 HTML 变化；如果检测到非 HTML 改动，会停止并汇报，不自动上线。
 - 如果 CloudBase 仍保留为并行环境，也要单独同步，但不能把它当作 `academy/` 当前唯一生产源。
 
 ## 内容识别方式
