@@ -158,6 +158,7 @@ python3 sync_from_source.py
 
 核心文件：
 - `sync_from_source.py`：整站内容同步与生成入口
+- `organize_source.py`：源内容目录整理工具，负责把散乱时间目录归档到 `records/YYYY/MM/DD/slot/`
 - `site.css`：共享样式
 - `site-index.js`：首页交互
 - `site-detail.js`：详情页交互
@@ -190,6 +191,33 @@ python3 sync_from_source.py
 - `jujutsu-sci` 更新，不等于 `academy` 自动更新
 - 本地生成和检查可以先做
 - `GitHub 推送` 与生产发布必须经过确认后再执行
+
+## 源目录整理规则
+
+源目录统一保持为：
+
+```text
+学术小龙虾/
+├── records/YYYY/MM/DD/slot/
+├── attachments/
+├── inbox/
+└── legacy-html/
+```
+
+`records/` 才是正式同步入口；`attachments/`、`inbox/`、`legacy-html/` 默认不参与页面生成。
+
+如果源目录又出现新的顶层日期目录，先运行：
+
+```bash
+python3 organize_source.py
+```
+
+确认预览无冲突后，再运行：
+
+```bash
+python3 organize_source.py --apply
+python3 sync_from_source.py
+```
 
 ## 问题记录机制
 

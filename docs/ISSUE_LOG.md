@@ -1,5 +1,58 @@
 # 问题记录与修复日志
 
+## 2026-04-27：源目录过于扁平且命名不一致，导致同步容易漏扫或误判
+
+### 问题现象
+
+- 源目录 `2026sci1/学术小龙虾` 根部堆积大量 `YYYY-MM-DD` / `YYYY-MM-DD-HH` 时间目录。
+- 目录中还混有旧版 `html/` 产物、顶层附件和顶层 Markdown。
+- 带中文后缀的目录，例如 `2026-03-22-反思`、`2026-04-19-团队反思`，旧同步逻辑没有稳定纳入正式记录。
+- 用户怀疑文件结构复杂是同步不顺畅的原因。
+
+### 根因判断
+
+旧同步脚本主要按“根目录下直接放时间目录”的结构工作，只稳定识别：
+- `YYYY-MM-DD`
+- `YYYY-MM-DD-HH`
+
+当源目录继续增长后，这种扁平结构会带来三个问题：
+- 根目录过长，人工核查困难。
+- 带中文后缀的有效记录容易被漏掉。
+- 旧产物和散落文件混在根部，容易干扰“哪些内容应该进入网站”的判断。
+
+### 修复动作
+
+1. 新增 [organize_source.py](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web/organize_source.py)，用于整理源目录。
+2. 将源目录整理为：
+   - `records/YYYY/MM/DD/HH/`
+   - `records/YYYY/MM/DD/daily/`
+   - `records/YYYY/MM/DD/中文后缀/`
+   - `attachments/`
+   - `inbox/`
+   - `legacy-html/`
+3. 修改 [sync_from_source.py](/Users/zijian/Library/Mobile%20Documents/com~apple~CloudDocs/SCI/%E5%AD%A6%E6%9C%AF%E5%B0%8F%E9%BE%99%E8%99%BE-web/sync_from_source.py)，让它同时兼容旧结构和新 `records/` 结构。
+4. 将 `html/`、`legacy-html/`、`attachments/`、`inbox/` 加入忽略名单，避免非正式记录误入页面。
+5. 更新 [内容同步说明](CONTENT_SYNC.md)，把源目录整理和排查步骤写入文档。
+
+### 验证结果
+
+- 整理前 dry-run 检出 `2026-03-26` 与 `2026-03-26-00` 等默认槽位冲突，已改为把无小时目录归入 `daily/`，避免覆盖。
+- 正式整理后，源目录根部只剩：
+  - `records/`
+  - `attachments/`
+  - `inbox/`
+  - `legacy-html/`
+  - `.DS_Store`
+- 再次运行 `python3 organize_source.py` 显示 `Planned moves: 0`。
+- 运行 `python3 sync_from_source.py` 成功生成 `525` 条记录。
+
+### 预防措施
+
+- 以后新增内容优先进入 `records/YYYY/MM/DD/slot/`。
+- 如果源目录根部再次出现大量时间目录，先运行 `python3 organize_source.py` 预览，再确认是否 `--apply`。
+- 整理脚本必须先 dry-run，发现冲突时停止，不能覆盖已有目录。
+- 同步脚本只读取正式记录目录，附件、收件箱和旧 HTML 归档默认不进站点。
+
 ## 2026-03-25：每日自动同步任务存在，但没有自动把最新内容发布上线
 
 ### 问题现象

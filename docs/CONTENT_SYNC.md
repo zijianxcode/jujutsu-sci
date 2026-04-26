@@ -17,10 +17,45 @@ python3 sync_from_source.py
 
 脚本会：
 - 扫描源目录中的 Markdown 文件
-- 忽略 `html/` 子目录
+- 忽略 `html/`、`legacy-html/`、`attachments/`、`inbox/` 等非正式记录目录
 - 读取时间目录并按倒序排序
 - 优先解析正文中的真实时间信息，再回退到目录时间
 - 自动生成首页、主题页、成员页、归档页和 `高星论文` 页
+
+## 源目录整理规则
+
+源目录已整理成下面的稳定结构：
+
+```text
+学术小龙虾/
+├── records/
+│   └── YYYY/MM/DD/slot/*.md
+├── attachments/
+├── inbox/
+└── legacy-html/
+```
+
+含义：
+- `records/YYYY/MM/DD/HH/`：正式小时记录，例如 `records/2026/04/21/11/`
+- `records/YYYY/MM/DD/daily/`：原来只有日期、没有小时的日记录
+- `records/YYYY/MM/DD/中文后缀/`：原来带后缀的反思、团队反思等记录
+- `attachments/`：顶层散落的 PDF、DOCX 等附件
+- `inbox/`：顶层散落但暂未归档的 Markdown
+- `legacy-html/`：旧版 HTML 产物归档，不参与同步
+
+如源目录后续又出现新的顶层时间目录或散落文件，可以先预览整理计划：
+
+```bash
+python3 organize_source.py
+```
+
+确认没有冲突后再执行：
+
+```bash
+python3 organize_source.py --apply
+```
+
+整理脚本只移动文件，不生成网页；整理后仍需运行 `python3 sync_from_source.py`。
 
 ## 三段同步规则
 
@@ -93,14 +128,15 @@ python3 sync_from_source.py
 
 如果你发现“内容明明更新了，但网站没变”，按下面顺序排查：
 1. 先确认源目录里是否真的有新文件或新时间字段
-2. 运行 `python3 sync_from_source.py`
-3. 检查生成结果里的 `index.html` 是否已经变化
-4. 检查 Git 是否有待提交变更
-5. 检查 `jujutsu-sci` 是否已经推到远端
-6. 如果目标地址是 `bananabox.plus/academy/`，继续检查 `personal-homepage/academy/` 是否已同步
-7. 检查 `personal-homepage` 的 GitHub Pages 构建是否成功
-8. 如果 CloudBase 也需要跟进，再检查 CloudBase 是否重新发布
-9. 最后再排查浏览器缓存或 CDN 缓存
+2. 如果源目录根部重新堆了很多时间目录，先运行 `python3 organize_source.py` 检查结构
+3. 运行 `python3 sync_from_source.py`
+4. 检查生成结果里的 `index.html` 是否已经变化
+5. 检查 Git 是否有待提交变更
+6. 检查 `jujutsu-sci` 是否已经推到远端
+7. 如果目标地址是 `bananabox.plus/academy/`，继续检查 `personal-homepage/academy/` 是否已同步
+8. 检查 `personal-homepage` 的 GitHub Pages 构建是否成功
+9. 如果 CloudBase 也需要跟进，再检查 CloudBase 是否重新发布
+10. 最后再排查浏览器缓存或 CDN 缓存
 
 ## 记录要求
 

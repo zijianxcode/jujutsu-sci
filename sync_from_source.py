@@ -49,6 +49,7 @@ def resolve_paths() -> tuple[Path, Path]:
 
 
 SOURCE_ROOT, PROJECT_ROOT = resolve_paths()
+IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
     '悠仁': {'image': 'yujin.jpg', 'accent': '#ff6b35', 'role': '跨领域追踪'},
@@ -85,11 +86,38 @@ KEYWORDS = {
 
 
 def parse_folder_timestamp(folder_name: str) -> datetime | None:
-    for fmt in ('%Y-%m-%d-%H', '%Y-%m-%d'):
+    match = re.match(r'^(20\d{2}-\d{2}-\d{2})(?:-(\d{2}))?(?:-.+)?$', folder_name)
+    if match:
+        hour = match.group(2) or '00'
         try:
-            return datetime.strptime(folder_name, fmt)
+            return datetime.strptime(f'{match.group(1)} {hour}:00', '%Y-%m-%d %H:%M')
         except ValueError:
-            continue
+            return None
+    return None
+
+
+def record_context(path: Path) -> tuple[str, datetime] | None:
+    rel = path.relative_to(SOURCE_ROOT)
+    parts = rel.parts
+    if any(part in IGNORED_SOURCE_PARTS for part in parts) or not path.name.endswith('.md'):
+        return None
+
+    if len(parts) >= 6 and parts[0] == 'records':
+        year, month, day, slot = parts[1:5]
+        if not re.fullmatch(r'20\d{2}', year) or not re.fullmatch(r'\d{2}', month) or not re.fullmatch(r'\d{2}', day):
+            return None
+        hour = slot if re.fullmatch(r'\d{2}', slot) else '00'
+        try:
+            return '/'.join(parts[:-1]), datetime.strptime(f'{year}-{month}-{day} {hour}:00', '%Y-%m-%d %H:%M')
+        except ValueError:
+            return None
+
+    if len(parts) >= 2:
+        folder_name = parts[0]
+        dt = parse_folder_timestamp(folder_name)
+        if dt:
+            return folder_name, dt
+
     return None
 
 
@@ -486,15 +514,11 @@ def build_starred_entries(records: list[dict]) -> list[dict]:
 def load_records() -> list[dict]:
     records = []
     for path in SOURCE_ROOT.rglob('*.md'):
-        if 'html' in path.parts:
-            continue
         rel = path.relative_to(SOURCE_ROOT)
-        if len(rel.parts) < 2:
+        context = record_context(path)
+        if not context:
             continue
-        folder_name = rel.parts[0]
-        dt = parse_folder_timestamp(folder_name)
-        if not dt:
-            continue
+        source_dir, dt = context
         content = path.read_text(encoding='utf-8')
         actual_dt = parse_content_timestamp(content, dt)
         file_name = path.name
@@ -502,16 +526,16 @@ def load_records() -> list[dict]:
         session_type, session_label = classify_session_type(file_name, content, kind)
         record = {
             'date': actual_dt.strftime('%Y-%m-%d %H:%M'),
-            'folder_name': folder_name,
+            'folder_name': source_dir,
             'file_name': file_name,
             'source_path': str(rel),
             'kind': kind,
             'member': member_name(file_name),
             'title': build_title(file_name, content),
             'content': content,
-            'excerpt': build_excerpt(file_name, content, folder_name),
+            'excerpt': build_excerpt(file_name, content, source_dir),
             'timestamp': actual_dt,
-            'source_dir': folder_name,
+            'source_dir': source_dir,
             'session_type': session_type,
             'session_label': session_label,
         }
