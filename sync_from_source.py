@@ -75,8 +75,7 @@ SOURCE_PAGES = {
     'paper': {'file': 'papers.html', 'title': '论文总结', 'accent': '#ff8c42', 'desc': '源目录中的论文总结，按时间倒序自动汇总。'},
     'starred': {'file': 'starred.html', 'title': '高星论文', 'accent': '#ffd166', 'desc': '汇总各角色打星过的论文，按综合星级和角色数排序。'},
     'upgrade': {'file': 'upgrades.html', 'title': '升级迭代', 'accent': '#27ae60', 'desc': '源目录中的升级迭代记录，按时间倒序自动汇总。'},
-    'meeting': {'file': 'meetings.html', 'title': '日会记录', 'accent': '#88ccff', 'desc': '源目录中的日会记录，按时间倒序自动汇总。'},
-    'discussion': {'file': 'discussion.html', 'title': '团队讨论', 'accent': '#9b59b6', 'desc': '源目录中的团队讨论记录，按时间倒序自动汇总。'},
+    'discussion': {'file': 'discussion.html', 'title': '周会讨论', 'accent': '#9b59b6', 'desc': '源目录中的周会讨论记录，按时间倒序自动汇总。'},
 }
 
 DOMAIN_META = {
@@ -203,8 +202,6 @@ def detect_kind(file_name: str) -> str:
         return 'paper'
     if file_name == '升级迭代.md':
         return 'upgrade'
-    if file_name == '日会记录.md':
-        return 'meeting'
     if file_name in {'团队讨论.md', '深度讨论.md', '周会讨论.md'}:
         return 'discussion'
     if file_name.endswith('-能力进化.md'):
@@ -214,8 +211,6 @@ def detect_kind(file_name: str) -> str:
 
 def classify_session_type(file_name: str, content: str, kind: str) -> tuple[str, str]:
     text = f'{file_name}\n{content}'
-    if kind == 'meeting' or '日会' in text:
-        return 'daily', '日会讨论'
     if kind == 'discussion' or any(keyword in text for keyword in ('周会', '每周交流', '团队讨论', '深度讨论')):
         return 'weekly', '周会讨论'
     if kind == 'upgrade' or any(keyword in text for keyword in ('评审', '升级迭代', '评审把控', '最终评审')):
@@ -555,7 +550,7 @@ def load_records() -> list[dict]:
         }
         records.append(record)
 
-    order = {'paper': 0, 'member': 1, 'upgrade': 2, 'meeting': 3, 'discussion': 4, 'other': 5}
+    order = {'paper': 0, 'member': 1, 'upgrade': 2, 'discussion': 3, 'other': 4}
     records.sort(key=lambda item: (item['timestamp'], -order.get(item['kind'], 9), item['file_name']), reverse=True)
     return records
 
@@ -670,8 +665,6 @@ def card_link(item: dict) -> str:
         return 'papers.html'
     if item['kind'] == 'upgrade':
         return 'upgrades.html'
-    if item['kind'] == 'meeting':
-        return 'meetings.html'
     if item['kind'] == 'discussion':
         return 'discussion.html'
     if item['kind'] == 'member' and item['member']:
@@ -746,8 +739,6 @@ def home_search_label(item: dict) -> str:
         return item.get('session_label') or '评审会'
     if item['kind'] == 'discussion':
         return item.get('session_label') or '周会讨论'
-    if item['kind'] == 'meeting':
-        return item.get('session_label') or '日会记录'
     return '全部归档'
 
 
@@ -1036,7 +1027,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             'href': archive_link,
             'count': len(records),
             'accent': '#88ccff',
-            'desc': '日会、升级迭代、团队讨论等归档仍然保留，但统一收进总归档页。'
+            'desc': '周会、升级迭代等内容仍然保留，但统一收进总归档页。'
         },
     ]
 
@@ -1163,7 +1154,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             </div>
         </section>
 
-        <p class="footer-note">首页已收敛为学术视图。日会、升级迭代、团队讨论等内容仍保留在 <a href="archive.html">全部归档</a> 中。</p>
+        <p class="footer-note">首页已收敛为学术视图。周会、升级迭代等内容仍保留在 <a href="archive.html">全部归档</a> 中。</p>
     </div>
     <script>
         var homeSearchIndex = {json.dumps(search_payload, ensure_ascii=False, indent=2)};
@@ -1184,14 +1175,12 @@ def main() -> None:
     papers = [item for item in records if item['kind'] == 'paper']
     starred_entries = build_starred_entries(records)
     upgrades = [item for item in records if item['kind'] == 'upgrade']
-    meetings = [item for item in records if item['kind'] == 'meeting']
     discussions = [item for item in records if item['kind'] == 'discussion']
 
     source_cards = [
         {'name': SOURCE_PAGES['archive']['title'], 'href': SOURCE_PAGES['archive']['file'], 'count': len(records), 'accent': SOURCE_PAGES['archive']['accent'], 'desc': SOURCE_PAGES['archive']['desc']},
         {'name': SOURCE_PAGES['paper']['title'], 'href': SOURCE_PAGES['paper']['file'], 'count': len(papers), 'accent': SOURCE_PAGES['paper']['accent'], 'desc': SOURCE_PAGES['paper']['desc']},
         {'name': SOURCE_PAGES['upgrade']['title'], 'href': SOURCE_PAGES['upgrade']['file'], 'count': len(upgrades), 'accent': SOURCE_PAGES['upgrade']['accent'], 'desc': SOURCE_PAGES['upgrade']['desc']},
-        {'name': SOURCE_PAGES['meeting']['title'], 'href': SOURCE_PAGES['meeting']['file'], 'count': len(meetings), 'accent': SOURCE_PAGES['meeting']['accent'], 'desc': SOURCE_PAGES['meeting']['desc']},
         {'name': SOURCE_PAGES['discussion']['title'], 'href': SOURCE_PAGES['discussion']['file'], 'count': len(discussions), 'accent': SOURCE_PAGES['discussion']['accent'], 'desc': SOURCE_PAGES['discussion']['desc']},
     ]
 
@@ -1211,7 +1200,6 @@ def main() -> None:
     write_text(PROJECT_ROOT / SOURCE_PAGES['paper']['file'], build_detail_page(SOURCE_PAGES['paper']['title'], f"{SOURCE_PAGES['paper']['desc']} 共 {len(papers)} 条。", SOURCE_PAGES['paper']['accent'], papers))
     write_text(PROJECT_ROOT / SOURCE_PAGES['starred']['file'], build_detail_page(SOURCE_PAGES['starred']['title'], f"{SOURCE_PAGES['starred']['desc']} 当前共 {len(starred_entries)} 篇。", SOURCE_PAGES['starred']['accent'], starred_entries))
     write_text(PROJECT_ROOT / SOURCE_PAGES['upgrade']['file'], build_detail_page(SOURCE_PAGES['upgrade']['title'], f"{SOURCE_PAGES['upgrade']['desc']} 共 {len(upgrades)} 条。", SOURCE_PAGES['upgrade']['accent'], upgrades))
-    write_text(PROJECT_ROOT / SOURCE_PAGES['meeting']['file'], build_detail_page(SOURCE_PAGES['meeting']['title'], f"{SOURCE_PAGES['meeting']['desc']} 共 {len(meetings)} 条。", SOURCE_PAGES['meeting']['accent'], meetings))
     write_text(PROJECT_ROOT / SOURCE_PAGES['discussion']['file'], build_detail_page(SOURCE_PAGES['discussion']['title'], f"{SOURCE_PAGES['discussion']['desc']} 共 {len(discussions)} 条。", SOURCE_PAGES['discussion']['accent'], discussions))
     write_text(PROJECT_ROOT / 'index.html', build_index(records, papers, source_cards, domain_cards, member_cards, starred_entries))
     print(f'Generated {len(records)} records from {SOURCE_ROOT}')
