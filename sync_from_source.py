@@ -225,8 +225,11 @@ def extract_heading(content: str) -> str:
 
 def extract_paper_title(content: str) -> str:
     patterns = [
+        r'\*\*论文标题\s*[：:]\*\*(.+)',
         r'\*\*论文标题\*\*[：:](.+)',
+        r'\*\*标题\s*[：:]\*\*(.+)',
         r'\*\*标题\*\*[：:](.+)',
+        r'\*\*论文\s*[：:]\*\*(.+)',
         r'\*\*论文\*\*[：:](.+)',
     ]
     for pattern in patterns:
@@ -686,6 +689,87 @@ def render_entry_cards(items: list[dict]) -> str:
     return '\n'.join(html)
 
 
+def paper_package_key(record: dict) -> str:
+    return record['source_dir'] if record['kind'] == 'paper' else ''
+
+
+def member_package_key(record: dict) -> str:
+    if record['kind'] != 'member':
+        return ''
+    parts = record['source_dir'].split('/')
+    if len(parts) >= 6 and parts[0] == 'records':
+        return record['source_dir']
+    return ''
+
+
+def build_research_packages(records: list[dict]) -> list[dict]:
+    buckets: dict[str, dict] = {}
+
+    for record in records:
+        if record['kind'] == 'paper':
+            key = paper_package_key(record)
+            if not key:
+                continue
+            bucket = buckets.setdefault(key, {'paper': None, 'members': []})
+            bucket['paper'] = record
+
+    for record in records:
+        key = member_package_key(record)
+        if not key or key not in buckets:
+            continue
+        buckets[key]['members'].append(record)
+
+    packages = []
+    for key, bucket in buckets.items():
+        paper = bucket['paper']
+        if not paper:
+            continue
+        members = sorted(bucket['members'], key=lambda item: (item.get('member') or '', item['timestamp']))
+        packages.append({
+            'key': key,
+            'paper': paper,
+            'members': members,
+            'date': paper['date'],
+            'timestamp': paper['timestamp'],
+            'title': paper['title'],
+        })
+
+    packages.sort(key=lambda item: item['timestamp'], reverse=True)
+    return packages
+
+
+def render_research_package_cards(packages: list[dict]) -> str:
+    if not packages:
+        return '<div class="empty-state">还没有可展示的论文研究包。</div>'
+
+    cards = []
+    for package in packages:
+        paper = package['paper']
+        members = package['members']
+        member_names = [item['member'] for item in members if item.get('member')]
+        member_label = '、'.join(member_names[:4]) if member_names else '暂无角色短评'
+        if len(member_names) > 4:
+            member_label += f' 等 {len(member_names)} 位'
+        member_count = len(members)
+        member_count_label = f'角色短评 {member_count}' if member_count else '等待短评'
+        tags = []
+        for domain in DOMAIN_META:
+            if domain_records(domain, [paper]):
+                tags.append(domain)
+        tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:4])
+        cards.append(f'''                    <article class="research-package-card">
+                        <div class="research-package-date">{html.escape(package['date'])}</div>
+                        <a class="research-package-title" href="papers.html?search={quote(paper['title'])}">{html.escape(paper['title'])}</a>
+                        <div class="research-package-meta">来源：{html.escape(package['key'])} · {member_count_label}</div>
+                        <div class="research-package-roles">{html.escape(member_label)}</div>
+                        <div class="research-chip-row">
+                            {tags_markup}
+                            <a class="research-chip link-chip" href="archive.html?search={quote(package['key'])}">查看研究包</a>
+                        </div>
+                    </article>''')
+    return '\n'.join(cards)
+
+
 def render_topic_cards(items: list[dict]) -> str:
     html = []
     for item in items:
@@ -728,6 +812,52 @@ def render_home_filter_tags(items: list[dict]) -> str:
                         <strong>{item['count']}</strong>
                     </a>''')
     return '\n'.join(markup)
+
+
+PROBLEM_LENSES = {
+    'Agent': {
+        'keywords': ['agent', 'agentic', 'multi-agent', 'tool use', 'workflow', '智能体', '代理', '工具调用'],
+        'accent': '#f97316',
+        'desc': '自主规划、工具调用、多 Agent 协作与执行链路。'
+    },
+    'UX / HCI': {
+        'keywords': ['hci', 'ux', 'interaction', 'user', 'interface', 'usability', 'experience', '交互', '用户', '体验', '界面'],
+        'accent': '#88ccff',
+        'desc': '用户体验、人机协作、界面理解与设计方法。'
+    },
+    'Evaluation': {
+        'keywords': ['benchmark', 'evaluation', 'dataset', 'metric', '评估', '基准', '数据集', '指标'],
+        'accent': '#ffd166',
+        'desc': '基准、指标、可复现性和评测方法。'
+    },
+    'Fairness': {
+        'keywords': ['fairness', 'bias', 'accountability', 'ethic', 'trust', '公平', '偏见', '问责', '伦理', '信任'],
+        'accent': '#27ae60',
+        'desc': '公平性、信任、问责与敏感场景边界。'
+    },
+    'Multimodal': {
+        'keywords': ['multimodal', 'vision-language', 'visual', 'image', 'video', '多模态', '视觉', '图像'],
+        'accent': '#cc88ff',
+        'desc': '多模态理解、视觉语言模型与跨模态推理。'
+    },
+}
+
+
+def build_problem_lens_cards(papers: list[dict]) -> list[dict]:
+    cards = []
+    for name, meta in PROBLEM_LENSES.items():
+        matches = [paper for paper in papers if matches_keywords(f"{paper['title']}\n{paper['content']}", meta['keywords'])]
+        if not matches:
+            continue
+        cards.append({
+            'name': name,
+            'href': f'papers.html?search={quote(name)}',
+            'count': len(matches),
+            'accent': meta['accent'],
+            'desc': meta['desc'],
+        })
+    cards.sort(key=lambda item: item['count'], reverse=True)
+    return cards
 
 
 def home_search_label(item: dict) -> str:
@@ -965,14 +1095,17 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
 
 
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
-    academic_records = [item for item in records if item['kind'] in {'paper', 'member'}]
-    latest = render_entry_cards(academic_records[:8])
+    research_packages = build_research_packages(records)
+    latest_packages = render_research_package_cards(research_packages[:6])
+    problem_lenses = build_problem_lens_cards(papers)
+    problem_lens_markup = render_topic_cards(problem_lenses[:6])
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
     archive_card = next((item for item in source_cards if item['name'] == '全部记录'), None)
     archive_link = archive_card['href'] if archive_card else 'archive.html'
     paper_count = paper_card['count'] if paper_card else len(papers)
     member_count = sum(1 for item in records if item['kind'] == 'member')
     topic_count = len(domain_cards)
+    package_count = len(research_packages)
     chart_markup = '\n'.join([
         build_activity_chart(records),
         build_topic_chart(domain_cards),
@@ -1065,6 +1198,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             </form>
             <div class="topbar-links">
                 <a class="pill-link" href="#recent">最新更新</a>
+                <a class="pill-link" href="#lenses">问题索引</a>
                 <a class="pill-link" href="#topics">研究主题</a>
                 <a class="pill-link" href="{SOURCE_PAGES['starred']['file']}">高星论文</a>
                 <a class="pill-link" href="#members">成员进展</a>
@@ -1074,17 +1208,17 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 
         <section class="hero">
             <div class="hero-panel" style="--accent:#ff6b35;">
-                <div class="section-kicker">Academic Front Page</div>
+                <div class="section-kicker">Research Dashboard</div>
                 <div class="hero-copy">
                     <h1>咒术SCI高专</h1>
                     <p>本主页以追踪前沿论文、沉淀研究主题、记录成员能力进化为核心，构建一个持续更新的学术协作场。我们希望把阅读、总结、讨论与写作连接成清晰可浏览的知识流，让每一次学习都能被积累、被连接、被推进。</p>
                 </div>
                 <div class="hero-actions">
-                    <a class="action-link primary" href="papers.html">查看论文总结</a>
-                    <a class="action-link secondary" href="archive.html">进入全部归档</a>
+                    <a class="action-link primary" href="#recent">查看最新研究包</a>
+                    <a class="action-link secondary" href="{SOURCE_PAGES['starred']['file']}">进入高星论文</a>
                 </div>
                 <div class="hero-tags">
-                    <span class="hero-tag">论文总结 {paper_count}</span>
+                    <span class="hero-tag">研究包 {package_count}</span>
                     <span class="hero-tag">成员记录 {member_count}</span>
                     <span class="hero-tag">研究主题 {topic_count}</span>
                 </div>
@@ -1097,7 +1231,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                     <p class="panel-subtitle">数据来自源目录实时扫描，按时间倒序组织。首页优先展示更适合学术浏览的内容层级。</p>
                     <div class="status-grid">
                         <div class="status-item"><div class="status-value">{len(records)}</div><div class="kpi-label">总记录</div></div>
-                        <div class="status-item"><div class="status-value">{paper_count}</div><div class="kpi-label">论文总结</div></div>
+                        <div class="status-item"><div class="status-value">{package_count}</div><div class="kpi-label">研究包</div></div>
                         <div class="status-item"><div class="status-value">{member_count}</div><div class="kpi-label">成员记录</div></div>
                         <div class="status-item"><div class="status-value">{records[0]['date'] if records else '-'}</div><div class="kpi-label">最新时间</div></div>
                     </div>
@@ -1127,12 +1261,21 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                 </div>
             </div>
             <div class="section-panel" id="recent" style="--accent:#88ccff;">
-                <div class="section-kicker">Latest Updates</div>
-                <h2 class="section-title">最近更新</h2>
-                <p class="panel-subtitle">按时间倒序提取的最新学术记录，优先展示你最近在看什么、写什么、总结了什么。</p>
-                <div class="entry-list">
-{latest}
+                <div class="section-kicker">Research Packages</div>
+                <h2 class="section-title">最新研究包</h2>
+                <p class="panel-subtitle">同一论文目录下的总结和角色短评合并展示，首页不再让短评挤掉论文入口。</p>
+                <div class="research-package-list">
+{latest_packages}
                 </div>
+            </div>
+        </section>
+
+        <section class="section-panel" id="lenses" style="margin-top:22px; --accent:#88ccff;">
+            <div class="section-kicker">Problem Index</div>
+            <h2 class="section-title">问题索引</h2>
+            <p class="panel-subtitle">在学科分类之外，再按研究问题组织入口。适合从“我要找 Agent / 评估 / 公平性材料”这类真实任务进入。</p>
+            <div class="topic-grid">
+{problem_lens_markup}
             </div>
         </section>
 

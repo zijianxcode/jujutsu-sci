@@ -78,7 +78,75 @@ class SyncFromSourceHermesTests(unittest.TestCase):
             self.assertIn('Hermes Paper Contract', (project / 'papers.html').read_text(encoding='utf-8'))
             self.assertIn('records/2026/04/27/16/2604.08362', (project / 'papers.html').read_text(encoding='utf-8'))
             self.assertIn('五条悟短评', (project / '五条悟.html').read_text(encoding='utf-8'))
-            self.assertIn('论文总结 1', (project / 'index.html').read_text(encoding='utf-8'))
+            self.assertIn('研究包 1', (project / 'index.html').read_text(encoding='utf-8'))
+
+    def test_home_page_groups_papers_and_role_notes_into_research_packages(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = root / 'project'
+            source = root / 'source'
+            project.mkdir()
+
+            shutil.copy2(REPO_ROOT / 'sync_from_source.py', project / 'sync_from_source.py')
+            (project / 'config.json').write_text(
+                json.dumps({'source_root': str(source), 'project_root': str(project)}),
+                encoding='utf-8',
+            )
+
+            first = source / 'records' / '2026' / '04' / '27' / '17' / 'mta-agent'
+            first.mkdir(parents=True)
+            (first / '论文总结.md').write_text(
+                '\n'.join([
+                    '# 论文总结',
+                    '',
+                    '**论文标题：** MTA-Agent: An Open Recipe for Multimodal Deep Search Agents',
+                    '**作者：** Salesforce AI Research',
+                    '**领域标签：** AI, Agent, Multimodal',
+                    '',
+                    '## 1. 研究什么？',
+                    '研究多模态深度搜索 Agent。',
+                ]),
+                encoding='utf-8',
+            )
+            (first / '五条悟-能力进化.md').write_text(
+                '# 五条悟 · 前沿评审\n\n综合 4.7/5，适合放入高优先级 Agent 研究包。',
+                encoding='utf-8',
+            )
+
+            second = source / 'records' / '2026' / '04' / '27' / '16' / 'wiserui-bench'
+            second.mkdir(parents=True)
+            (second / '论文总结.md').write_text(
+                '\n'.join([
+                    '# 论文总结',
+                    '',
+                    '**论文标题：** WiserUI-Bench',
+                    '**领域标签：** UX, HCI, Benchmark',
+                    '',
+                    '## 1. 研究什么？',
+                    '研究 UI/UX 行为理解。',
+                ]),
+                encoding='utf-8',
+            )
+
+            result = subprocess.run(
+                [sys.executable, 'sync_from_source.py'],
+                cwd=project,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            index = (project / 'index.html').read_text(encoding='utf-8')
+            self.assertIn('最新研究包', index)
+            self.assertIn('MTA-Agent: An Open Recipe for Multimodal Deep Search Agents', index)
+            self.assertIn('角色短评 1', index)
+            self.assertIn('五条悟', index)
+            self.assertIn('问题索引', index)
+            self.assertIn('Agent', index)
+            self.assertIn('UX / HCI', index)
+            self.assertIn('research-package-card', index)
+            self.assertNotIn('<article class="entry-card">', index)
 
 
 if __name__ == '__main__':
