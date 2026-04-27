@@ -11,22 +11,34 @@ from urllib.parse import quote
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = SCRIPT_DIR / 'config.json'
+LOCAL_CONFIG_PATH = SCRIPT_DIR / 'config.local.json'
 
 DEFAULT_CONFIG = {
     'source_root': '/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/2026sci1/学术小龙虾',
-    'project_root': '/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/学术小龙虾-web',
+    'project_root': '.',
 }
 
 
 def load_config() -> dict:
     if CONFIG_PATH.exists():
         with open(CONFIG_PATH, encoding='utf-8') as f:
-            return json.load(f)
+            config = json.load(f)
+        if LOCAL_CONFIG_PATH.exists():
+            with open(LOCAL_CONFIG_PATH, encoding='utf-8') as f:
+                config.update(json.load(f))
+        return config
     with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
         json.dump(DEFAULT_CONFIG, f, ensure_ascii=False, indent=2)
     print(f'已生成默认配置文件: {CONFIG_PATH}')
     print(f'如需修改路径，请编辑 config.json 后重新运行。')
     return DEFAULT_CONFIG
+
+
+def path_from_config(value: str, *, base: Path = SCRIPT_DIR) -> Path:
+    path = Path(value).expanduser()
+    if path.is_absolute():
+        return path
+    return base / path
 
 
 def resolve_paths() -> tuple[Path, Path]:
@@ -35,15 +47,15 @@ def resolve_paths() -> tuple[Path, Path]:
     parser.add_argument('--source', type=str, default=None, help='源内容目录路径')
     parser.add_argument('--project', type=str, default=None, help='网页项目输出目录路径')
     args = parser.parse_args()
-    source = Path(args.source if args.source else config.get('source_root', DEFAULT_CONFIG['source_root']))
-    project = Path(args.project if args.project else config.get('project_root', DEFAULT_CONFIG['project_root']))
+    source = Path(args.source).expanduser() if args.source else path_from_config(config.get('source_root', DEFAULT_CONFIG['source_root']))
+    project = Path(args.project).expanduser() if args.project else path_from_config(config.get('project_root', DEFAULT_CONFIG['project_root']))
     if not source.exists():
         print(f'错误: 源目录不存在 → {source}')
-        print(f'请检查 config.json 中的 source_root 配置。')
+        print(f'请检查 config.json 或 config.local.json 中的 source_root 配置。')
         sys.exit(1)
     if not project.exists():
         print(f'错误: 项目目录不存在 → {project}')
-        print(f'请检查 config.json 中的 project_root 配置。')
+        print(f'请检查 config.json 或 config.local.json 中的 project_root 配置。')
         sys.exit(1)
     return source, project
 
@@ -108,6 +120,8 @@ def record_context(path: Path) -> tuple[str, datetime] | None:
             return None
         hour = slot if re.fullmatch(r'\d{2}', slot) else '00'
         try:
+            # Supports both legacy records/YYYY/MM/DD/HH/file.md and
+            # Hermes records/YYYY/MM/DD/HH/<paper-key>/file.md records.
             return '/'.join(parts[:-1]), datetime.strptime(f'{year}-{month}-{day} {hour}:00', '%Y-%m-%d %H:%M')
         except ValueError:
             return None

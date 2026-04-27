@@ -25,8 +25,8 @@
 
 ## 内容来源
 
-当前网页项目目录：
-`/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/学术小龙虾-web`
+推荐网页项目目录：
+`/Users/zijian/Documents/Code/jujutsu-sci`
 
 源内容目录：
 `/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/2026sci1/学术小龙虾`
@@ -59,6 +59,8 @@ python3 sync_from_source.py
    同步异常、排序错误、搜索 bug、部署偏差、镜像不一致等问题，修完后必须补到 [问题记录与修复日志](docs/ISSUE_LOG.md)，不能只留在聊天记录里。
 8. `academy` 不是自动跟随主仓库  
    `bananabox.plus/academy` 是镜像子页，更新 `jujutsu-sci` 后如果需要同步到主站，还要更新 `personal-homepage` 里的 `academy/`。
+9. Hermes 只写源 Markdown
+   Hermes 采集结果进入 `records/YYYY/MM/DD/HH/<paper-key>/论文总结.md`，不直接修改 HTML、不提交、不发布。
 
 如果只想记住一条，那就是：
 
@@ -167,6 +169,8 @@ python3 sync_from_source.py
 文档入口：
 - [项目结构](docs/PROJECT_STRUCTURE.md)
 - [内容同步说明](docs/CONTENT_SYNC.md)
+- [Hermes 采集迁移说明](docs/HERMES_MIGRATION.md)
+- [内容采集规则](docs/COLLECTION_POLICY.md)
 - [部署发布说明](docs/DEPLOYMENT.md)
 - [问题记录与修复日志](docs/ISSUE_LOG.md)
 
@@ -199,6 +203,7 @@ python3 sync_from_source.py
 ```text
 学术小龙虾/
 ├── records/YYYY/MM/DD/slot/
+├── records/YYYY/MM/DD/slot/<paper-key>/论文总结.md
 ├── attachments/
 ├── inbox/
 └── legacy-html/

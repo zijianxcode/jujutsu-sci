@@ -13,6 +13,8 @@ python3 sync_from_source.py
 源目录路径：
 `/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/2026sci1/学术小龙虾`
 
+仓库里的 `config.json` 保存可共享默认值。机器本地路径差异写入 `config.local.json`，它会覆盖 `config.json`，并且不会提交到 Git。
+
 ## 同步规则
 
 脚本会：
@@ -30,6 +32,7 @@ python3 sync_from_source.py
 学术小龙虾/
 ├── records/
 │   └── YYYY/MM/DD/slot/*.md
+│   └── YYYY/MM/DD/slot/<paper-key>/论文总结.md
 ├── attachments/
 ├── inbox/
 └── legacy-html/
@@ -37,6 +40,7 @@ python3 sync_from_source.py
 
 含义：
 - `records/YYYY/MM/DD/HH/`：正式小时记录，例如 `records/2026/04/21/11/`
+- `records/YYYY/MM/DD/HH/<paper-key>/`：Hermes 单篇论文采集目录，例如 `records/2026/04/27/16/2604.08362/`
 - `records/YYYY/MM/DD/daily/`：原来只有日期、没有小时的日记录
 - `records/YYYY/MM/DD/中文后缀/`：原来带后缀的反思、团队反思等记录
 - `attachments/`：顶层散落的 PDF、DOCX 等附件
@@ -87,6 +91,8 @@ python3 organize_source.py --apply
 - `日会记录.md` -> 日会记录
 - `团队讨论.md` -> 团队讨论
 - `*-能力进化.md` -> 成员页内容
+
+Hermes 采集时，每篇论文必须写入独立 `<paper-key>/论文总结.md`。角色短评可以放在同一个目录下，命名为 `五条悟-能力进化.md`、`野蔷薇-能力进化.md` 等。带角色前缀的 `*-论文总结.md` 不作为 canonical 论文总结识别。
 
 ## 时间解析规则
 

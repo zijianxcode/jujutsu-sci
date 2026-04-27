@@ -1,5 +1,36 @@
 # 问题记录与修复日志
 
+## 2026-04-27：Hermes 采集需要一篇一档，并且仓库要脱离 iCloud Git 元数据
+
+### 问题现象
+
+- 旧 OpenClaw 定时任务曾在 iCloud 项目路径中运行 Git 操作。
+- 自动化记录显示失败点为 `.git/worktrees/.../FETCH_HEAD: Operation not permitted`。
+- 信息采集产物存在重复：同一篇论文可能同时出现在完整论文总结、角色长文、团队讨论和升级迭代中。
+
+### 根因判断
+
+Git 仓库和 `.git/worktrees` 放在 iCloud Drive 中，容易和 iCloud 同步、权限与文件占用机制冲突。
+
+内容层面的问题则来自采集契约不够窄：角色输出承担了完整摘要、评分、讨论和行动建议多种职责，导致网页同步时难以区分“事实源”和“判断源”。
+
+### 修复动作
+
+1. 将推荐仓库位置调整为 `/Users/zijian/Documents/Code/jujutsu-sci`。
+2. `sync_from_source.py` 支持 `config.local.json` 覆盖本机路径，并把默认 `project_root` 设为脚本所在仓库。
+3. 明确支持 Hermes 深层记录目录：
+   - `records/YYYY/MM/DD/HH/<paper-key>/论文总结.md`
+   - 同目录可选 `<角色>-能力进化.md`
+4. 新增 [Hermes 采集迁移说明](HERMES_MIGRATION.md) 与 [内容采集规则](COLLECTION_POLICY.md)。
+5. 增加回归测试，验证 Hermes 深层论文目录能生成论文页、归档页、成员页，并且 `*-论文总结.md` 不作为 canonical 论文总结计数。
+
+### 预防措施
+
+- Hermes 只写源 Markdown，不直接修改网页产物。
+- 每篇论文只允许一个 canonical `论文总结.md`。
+- 角色短评只写评分、批判、关联和下一步动作，不重复完整摘要。
+- 定时检查默认只运行 `./auto_sync_site.sh check`，不自动提交和发布。
+
 ## 2026-04-27：源目录过于扁平且命名不一致，导致同步容易漏扫或误判
 
 ### 问题现象
