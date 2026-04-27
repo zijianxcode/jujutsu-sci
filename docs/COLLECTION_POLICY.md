@@ -45,3 +45,31 @@ records/YYYY/MM/DD/HH/<paper-key>/论文总结.md
 角色短评不得复制 `论文总结.md` 的完整内容。它只保留角色自己的判断。
 
 `*-论文总结.md` 这类带角色前缀的文件不再作为新采集格式使用。
+
+## 角色采集范围与质量门槛
+
+### 各角色优先采集方向
+
+| 角色 | 优先采集方向 | 采集原则 |
+|------|------------|---------|
+| 悠仁 | 跨领域追踪、AI+X 交叉创新 | 鼓励多领域探索 |
+| 野蔷薇 | HCI、AI Ethics、批判性研究 | 鼓励批判性视角 |
+| 惠 | Learning Analytics、教育AI方法论 | 鼓励方法论深耕 |
+| 五条悟 | LLM/Agent/多模态/前沿SOTA | 鼓励追踪最新突破 |
+
+### ML / CV / NLP 质量门槛（重要）
+
+ML、CV、NLP 已高度拥挤，论文产出量大但同质化严重。因此：
+- **降低 ML/CV/NLP 基础方向的比例要求**
+- **只采集最好的**：顶会 Best Paper / Oral / Outstanding，或者方法有根本性创新的工作
+- **跳过标准**：没有显著方法创新的 Incremental work、standard benchmark + 1% improvement 类论文一律跳过
+- **如果当月没有值得采集的 ML/CV/NLP 论文，该角色当月可不提交此类论文**
+
+判断标准：
+- 是否是 Best Paper / Oral / Outstanding Paper？
+- 方法创新是否属于该领域的 "first" 或 "breakthrough"？
+- 是否解决了该领域长期存在的 open problem？
+
+### 其他方向（HCI、AI Ethics、Learning Analytics、AI Agent、跨领域应用等）
+
+维持正常采集标准，质量优先但鼓励探索。
