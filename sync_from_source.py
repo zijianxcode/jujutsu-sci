@@ -5,7 +5,7 @@ import html
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import quote
 
@@ -770,6 +770,86 @@ def render_research_package_cards(packages: list[dict]) -> str:
     return '\n'.join(cards)
 
 
+def gojo_rating_for_package(package: dict) -> dict | None:
+    ratings = []
+    for member in package['members']:
+        if member.get('member') != '五条悟':
+            continue
+        score = parse_star_score(member['content'])
+        if score is None:
+            continue
+        ratings.append({
+            'score': score,
+            'date': member['date'],
+            'timestamp': member['timestamp'],
+        })
+    if not ratings:
+        return None
+    return max(ratings, key=lambda item: (item['score'], item['timestamp']))
+
+
+def build_gojo_recent_rankings(packages: list[dict], *, days: int = 3) -> list[dict]:
+    if not packages:
+        return []
+
+    latest = max(package['timestamp'] for package in packages)
+    cutoff = latest - timedelta(days=days)
+    ranked = []
+
+    for package in packages:
+        if package['timestamp'] < cutoff:
+            continue
+        rating = gojo_rating_for_package(package)
+        ranked.append({
+            **package,
+            'gojo_rating': rating,
+            'gojo_score': rating['score'] if rating else None,
+        })
+
+    ranked.sort(
+        key=lambda item: (
+            item['gojo_score'] is not None,
+            item['gojo_score'] or 0,
+            item['timestamp'],
+        ),
+        reverse=True,
+    )
+    return ranked
+
+
+def render_gojo_ranking_cards(packages: list[dict]) -> str:
+    if not packages:
+        return '<div class="empty-state">近 3 天还没有可展示的论文研究包。</div>'
+
+    cards = []
+    for index, package in enumerate(packages, start=1):
+        paper = package['paper']
+        rating = package.get('gojo_rating')
+        score_label = f"五条老师评定 {format_star_score(rating['score'])}/5" if rating else '待五条老师评定'
+        score_stars = score_to_stars(rating['score']) if rating else '未评分'
+        tags = []
+        for domain in DOMAIN_META:
+            if domain_records(domain, [paper]):
+                tags.append(domain)
+        tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:4])
+        cards.append(f'''                    <article class="research-package-card ranking-card">
+                        <div class="ranking-head">
+                            <div class="ranking-position">#{index}</div>
+                            <div>
+                                <div class="research-package-date">{html.escape(package['date'])}</div>
+                                <div class="ranking-score">{html.escape(score_label)} · {html.escape(score_stars)}</div>
+                            </div>
+                        </div>
+                        <a class="research-package-title" href="papers.html?search={quote(paper['title'])}">{html.escape(paper['title'])}</a>
+                        <div class="research-package-meta">来源：{html.escape(package['key'])}</div>
+                        <div class="research-chip-row">
+                            {tags_markup}
+                            <a class="research-chip link-chip" href="archive.html?search={quote(package['key'])}">查看研究包</a>
+                        </div>
+                    </article>''')
+    return '\n'.join(cards)
+
+
 def render_topic_cards(items: list[dict]) -> str:
     html = []
     for item in items:
@@ -1096,7 +1176,8 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
 
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     research_packages = build_research_packages(records)
-    latest_packages = render_research_package_cards(research_packages[:6])
+    gojo_rankings = build_gojo_recent_rankings(research_packages, days=3)
+    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:6])
     problem_lenses = build_problem_lens_cards(papers)
     problem_lens_markup = render_topic_cards(problem_lenses[:6])
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
@@ -1214,7 +1295,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                     <p>本主页以追踪前沿论文、沉淀研究主题、记录成员能力进化为核心，构建一个持续更新的学术协作场。我们希望把阅读、总结、讨论与写作连接成清晰可浏览的知识流，让每一次学习都能被积累、被连接、被推进。</p>
                 </div>
                 <div class="hero-actions">
-                    <a class="action-link primary" href="#recent">查看最新研究包</a>
+                    <a class="action-link primary" href="#recent">查看论文排行榜</a>
                     <a class="action-link secondary" href="{SOURCE_PAGES['starred']['file']}">进入高星论文</a>
                 </div>
                 <div class="hero-tags">
@@ -1261,11 +1342,11 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                 </div>
             </div>
             <div class="section-panel" id="recent" style="--accent:#88ccff;">
-                <div class="section-kicker">Research Packages</div>
-                <h2 class="section-title">最新研究包</h2>
-                <p class="panel-subtitle">同一论文目录下的总结和角色短评合并展示，首页不再让短评挤掉论文入口。</p>
+                <div class="section-kicker">Gojo Ranking</div>
+                <h2 class="section-title">近 3 天论文排行榜</h2>
+                <p class="panel-subtitle">收录近 3 天采集的论文研究包，由五条老师的前沿评审评分决定排序；未评分论文保留在榜单后方等待评定。</p>
                 <div class="research-package-list">
-{latest_packages}
+{gojo_ranking_markup}
                 </div>
             </div>
         </section>

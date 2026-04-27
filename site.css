@@ -784,6 +784,38 @@ input {
     background: rgba(255, 255, 255, 0.07);
 }
 
+.ranking-card {
+    position: relative;
+}
+
+.ranking-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ranking-position {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 20%, rgba(255, 255, 255, 0.06));
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, rgba(255, 255, 255, 0.12));
+    color: var(--text);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.ranking-score {
+    margin-top: 6px;
+    color: color-mix(in srgb, var(--accent) 72%, white);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
 .research-package-date,
 .research-package-meta,
 .research-package-roles {

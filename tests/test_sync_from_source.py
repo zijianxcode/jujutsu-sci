@@ -138,15 +138,20 @@ class SyncFromSourceHermesTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             index = (project / 'index.html').read_text(encoding='utf-8')
-            self.assertIn('最新研究包', index)
+            self.assertIn('近 3 天论文排行榜', index)
             self.assertIn('MTA-Agent: An Open Recipe for Multimodal Deep Search Agents', index)
-            self.assertIn('角色短评 1', index)
-            self.assertIn('五条悟', index)
+            self.assertIn('五条老师评定 4.7/5', index)
+            self.assertIn('待五条老师评定', index)
             self.assertIn('问题索引', index)
             self.assertIn('Agent', index)
             self.assertIn('UX / HCI', index)
             self.assertIn('research-package-card', index)
+            self.assertIn('ranking-card', index)
             self.assertNotIn('<article class="entry-card">', index)
+            self.assertLess(
+                index.index('MTA-Agent: An Open Recipe for Multimodal Deep Search Agents'),
+                index.index('WiserUI-Bench'),
+            )
 
 
 if __name__ == '__main__':
