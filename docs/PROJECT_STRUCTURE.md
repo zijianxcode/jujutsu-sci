@@ -43,7 +43,13 @@
 - `docs/PROJECT_STRUCTURE.md`：结构说明
 - `docs/CONTENT_SYNC.md`：同步逻辑与排查流程
 - `docs/DEPLOYMENT.md`：发布流程与线上排查
+- `docs/VERSION_HISTORY.md`：版本定位、更新说明和发包校验信息
 - `docs/ISSUE_LOG.md`：问题记录与修复日志
+- `releases/README.md`：发包归档规则与 zip 清单
+
+### 版本归档
+- `releases/packages/jujutsu-sci-v1.0.0.zip`：v1.0.0 完整静态站点发包
+- `releases/packages/jujutsu-sci-v2.0.0.zip`：v2.0.0 完整静态站点发包
 
 ## 推荐理解方式
 

@@ -172,6 +172,8 @@ python3 sync_from_source.py
 - [Hermes 采集迁移说明](docs/HERMES_MIGRATION.md)
 - [内容采集规则](docs/COLLECTION_POLICY.md)
 - [部署发布说明](docs/DEPLOYMENT.md)
+- [版本历史](docs/VERSION_HISTORY.md)
+- [发包归档](releases/README.md)
 - [问题记录与修复日志](docs/ISSUE_LOG.md)
 
 如果你是第一次接手，建议先看：
