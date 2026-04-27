@@ -16,6 +16,8 @@ LOCAL_CONFIG_PATH = SCRIPT_DIR / 'config.local.json'
 DEFAULT_CONFIG = {
     'source_root': '/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/2026sci1/学术小龙虾',
     'project_root': '.',
+    'obsidian_vault': '',
+    'obsidian_folder': '',
 }
 
 
@@ -41,7 +43,7 @@ def path_from_config(value: str, *, base: Path = SCRIPT_DIR) -> Path:
     return base / path
 
 
-def resolve_paths() -> tuple[Path, Path]:
+def resolve_paths() -> tuple[Path, Path, dict]:
     config = load_config()
     parser = argparse.ArgumentParser(description='从源目录同步内容并生成静态页面')
     parser.add_argument('--source', type=str, default=None, help='源内容目录路径')
@@ -57,10 +59,10 @@ def resolve_paths() -> tuple[Path, Path]:
         print(f'错误: 项目目录不存在 → {project}')
         print(f'请检查 config.json 或 config.local.json 中的 project_root 配置。')
         sys.exit(1)
-    return source, project
+    return source, project, config
 
 
-SOURCE_ROOT, PROJECT_ROOT = resolve_paths()
+SOURCE_ROOT, PROJECT_ROOT, APP_CONFIG = resolve_paths()
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
@@ -270,6 +272,37 @@ def build_excerpt(file_name: str, content: str, folder_name: str) -> str:
     return f'来源：{folder_name}/{file_name}'
 
 
+def detail_content(content: str) -> str:
+    lines = content.splitlines()
+    while lines and not lines[0].strip():
+        lines.pop(0)
+
+    if lines and re.match(r'^#\s+', lines[0].strip()):
+        lines.pop(0)
+        while lines and not lines[0].strip():
+            lines.pop(0)
+
+    metadata_pattern = re.compile(
+        r'^(?:论文标题|标题|论文|作者|会议/期刊|会议|期刊|来源|arxiv(?:\s*id)?|doi|url|日期|领域标签|综合评分)\s*[：:]',
+        re.I,
+    )
+    while lines:
+        text = lines[0].strip()
+        if not text:
+            lines.pop(0)
+            continue
+        if re.match(r'^#{2,6}\s+', text):
+            break
+        plain_text = re.sub(r'^[-*]\s*', '', text)
+        plain_text = re.sub(r'[`*_]+', '', plain_text).strip()
+        if metadata_pattern.match(plain_text):
+            lines.pop(0)
+            continue
+        break
+
+    return '\n'.join(lines).strip() or content
+
+
 def clean_inline_text(text: str) -> str:
     text = re.sub(r'[`*_>#-]+', ' ', text)
     text = re.sub(r'\[(.*?)\]\(.*?\)', r'\1', text)
@@ -280,6 +313,55 @@ def clean_inline_text(text: str) -> str:
 def extract_arxiv_id(text: str) -> str:
     match = re.search(r'(?i)(?:arxiv(?:\s*id)?\s*[:：]?\s*)?`?((?:19|20|21|22|23|24|25|26)\d{2}\.\d{4,5})`?', text)
     return match.group(1) if match else ''
+
+
+def clean_external_url(url: str) -> str:
+    return url.strip().strip('.,，。；;>)）】]')
+
+
+def extract_doi(text: str) -> str:
+    match = re.search(r'\b(10\.\d{4,9}/[-._;()/:A-Z0-9]+)\b', text, re.I)
+    return match.group(1).rstrip('.,，。；;') if match else ''
+
+
+def extract_original_link(content: str) -> tuple[str, str]:
+    url_pattern = re.compile(r'https?://[^\s<>)）】]+', re.I)
+    preferred_keywords = ('原文', '论文链接', '论文地址', '来源', 'url', 'doi', 'arxiv', 'paper', 'link')
+
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        urls = url_pattern.findall(line)
+        if not urls:
+            continue
+        line_lower = line.lower()
+        if any(keyword in line_lower for keyword in preferred_keywords):
+            url = clean_external_url(urls[0])
+            if 'doi.org' in url.lower():
+                return url, 'DOI'
+            if 'arxiv.org' in url.lower():
+                return url, 'arXiv'
+            return url, '原文'
+
+    doi = extract_doi(content)
+    if doi:
+        return f'https://doi.org/{doi}', 'DOI'
+
+    arxiv_id = extract_arxiv_id(content)
+    if arxiv_id:
+        return f'https://arxiv.org/abs/{arxiv_id}', 'arXiv'
+
+    urls = url_pattern.findall(content)
+    for raw_url in urls:
+        url = clean_external_url(raw_url)
+        lower_url = url.lower()
+        if 'doi.org' in lower_url:
+            return url, 'DOI'
+        if 'arxiv.org' in lower_url:
+            return url, 'arXiv'
+    if urls:
+        return clean_external_url(urls[0]), '原文'
+
+    return '', ''
 
 
 def parse_star_score(text: str) -> float | None:
@@ -535,6 +617,7 @@ def load_records() -> list[dict]:
         actual_dt = parse_content_timestamp(content, dt)
         file_name = path.name
         kind = detect_kind(file_name)
+        original_url, original_label = extract_original_link(content)
         session_type, session_label = classify_session_type(file_name, content, kind)
         record = {
             'date': actual_dt.strftime('%Y-%m-%d %H:%M'),
@@ -546,6 +629,8 @@ def load_records() -> list[dict]:
             'title': build_title(file_name, content),
             'content': content,
             'excerpt': build_excerpt(file_name, content, source_dir),
+            'original_url': original_url,
+            'original_label': original_label,
             'timestamp': actual_dt,
             'source_dir': source_dir,
             'session_type': session_type,
@@ -571,14 +656,20 @@ def domain_records(domain: str, papers: list[dict]) -> list[dict]:
 
 def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict], cover_image: str | None = None) -> str:
     cover_markup = f'        <img class="sidebar-cover" src="{cover_image}" alt="{title} 封面" loading="lazy">\n' if cover_image else ''
+    obsidian_config = {
+        'vault': APP_CONFIG.get('obsidian_vault', ''),
+        'folder': APP_CONFIG.get('obsidian_folder', ''),
+    }
     payload = [
         {
             'date': entry['date'],
             'title': entry['title'],
-            'content': entry['content'],
+            'content': detail_content(entry['content']),
             'excerpt': entry['excerpt'],
             'file_name': entry['file_name'],
             'source_dir': entry['source_dir'],
+            'original_url': entry.get('original_url', ''),
+            'original_label': entry.get('original_label', ''),
             'session_type': entry.get('session_type', ''),
             'session_label': entry.get('session_label', ''),
         }
@@ -596,7 +687,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css?v=20260323b">
+    <link rel="stylesheet" href="site.css?v=20260427-quiet-detail1">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 </head>
@@ -640,24 +731,30 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
         </div>
 
         <div class="detail-main-inner">
-            <div class="article-wrap">
-                <div class="article-actions">
-                    <button class="ghost-link" id="closeMenu" type="button">收起侧栏</button>
+            <div class="reader-tools" id="readerTools" hidden>
+                <div class="reader-tools-head">
+                    <span class="section-kicker">段落导航</span>
+                    <span class="reader-tools-count" id="readerToolsCount"></span>
                 </div>
-                <div class="section-kicker">Reading Panel</div>
+                <nav class="reader-toc" id="readerToc" aria-label="正文快速定位"></nav>
+            </div>
+            <div class="article-wrap">
                 <h1 class="article-title" id="articleTitle">载入中...</h1>
-                <p class="article-intro" id="articleIntro">正在整理当前记录内容。</p>
-                <div class="article-meta meta-row" id="articleMeta"></div>
+                <div class="article-tool-row">
+                    <a class="article-tool-link" id="originalLink" href="#" target="_blank" rel="noopener noreferrer" hidden>原文链接</a>
+                    <button class="article-tool-link" id="obsidianButton" type="button">复制到 Obsidian</button>
+                    <span class="obsidian-status" id="obsidianStatus" aria-live="polite"></span>
+                </div>
                 <article class="markdown-body" id="content"></article>
             </div>
         </div>
     </main>
 
     <script>
-        var pageConfig = {json.dumps({'title': title, 'subtitle': subtitle}, ensure_ascii=False)};
+        var pageConfig = {json.dumps({'title': title, 'subtitle': subtitle, 'obsidian': obsidian_config}, ensure_ascii=False)};
         var entries = {json.dumps(payload, ensure_ascii=False, indent=2)};
     </script>
-    <script src="site-detail.js"></script>
+    <script src="site-detail.js?v=20260427-quiet-detail1"></script>
 </body>
 </html>
 '''
@@ -817,6 +914,33 @@ def build_gojo_recent_rankings(packages: list[dict], *, days: int = 3) -> list[d
     return ranked
 
 
+def package_domain_tags(paper: dict) -> list[str]:
+    tags = []
+    for domain in DOMAIN_META:
+        if domain_records(domain, [paper]):
+            tags.append(domain)
+    return tags
+
+
+def ranking_reason(package: dict, tags: list[str], rating: dict | None) -> str:
+    if rating:
+        tag_text = ' / '.join(tags[:2]) if tags else '前沿'
+        return f'五条老师给到 {format_star_score(rating["score"])}/5，适合作为 {tag_text} 方向的灵感线索。'
+    if tags:
+        return f'已进入近 3 天资讯池，可先按 {" / ".join(tags[:2])} 方向暂存观察。'
+    return '已进入近 3 天资讯池，等待五条老师补充前沿判断。'
+
+
+def ranking_next_action(rating: dict | None) -> str:
+    if not rating:
+        return '下一步：等待五条老师评定'
+    if rating['score'] >= 4.5:
+        return '下一步：优先精读，提炼可迁移研究问题'
+    if rating['score'] >= 4:
+        return '下一步：加入候选池，观察是否能连接现有课题'
+    return '下一步：暂存归档，保留为背景材料'
+
+
 def render_gojo_ranking_cards(packages: list[dict]) -> str:
     if not packages:
         return '<div class="empty-state">近 3 天还没有可展示的论文研究包。</div>'
@@ -827,10 +951,9 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
         rating = package.get('gojo_rating')
         score_label = f"五条老师评定 {format_star_score(rating['score'])}/5" if rating else '待五条老师评定'
         score_stars = score_to_stars(rating['score']) if rating else '未评分'
-        tags = []
-        for domain in DOMAIN_META:
-            if domain_records(domain, [paper]):
-                tags.append(domain)
+        tags = package_domain_tags(paper)
+        reason = ranking_reason(package, tags, rating)
+        next_action = ranking_next_action(rating)
         tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:4])
         cards.append(f'''                    <article class="research-package-card ranking-card">
                         <div class="ranking-head">
@@ -842,6 +965,8 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
                         </div>
                         <a class="research-package-title" href="papers.html?search={quote(paper['title'])}">{html.escape(paper['title'])}</a>
                         <div class="research-package-meta">来源：{html.escape(package['key'])}</div>
+                        <div class="ranking-insight">{html.escape(reason)}</div>
+                        <div class="ranking-action">{html.escape(next_action)}</div>
                         <div class="research-chip-row">
                             {tags_markup}
                             <a class="research-chip link-chip" href="archive.html?search={quote(package['key'])}">查看研究包</a>
@@ -863,6 +988,126 @@ def render_topic_cards(items: list[dict]) -> str:
                         </div>
                     </a>''')
     return '\n'.join(html)
+
+
+def render_compact_topic_cards(items: list[dict]) -> str:
+    cards = []
+    for item in items:
+        cards.append(f'''                        <a class="direction-card" href="{item['href']}" style="--accent:{item['accent']};">
+                            <div>
+                                <div class="direction-name">{html.escape(item['name'])}</div>
+                                <div class="direction-desc">{html.escape(item['desc'])}</div>
+                            </div>
+                            <div class="direction-count">{item['count']}</div>
+                        </a>''')
+    return '\n'.join(cards)
+
+
+def build_domain_track_cards(domain_cards: list[dict]) -> list[dict]:
+    lookup = {item['name']: item for item in domain_cards}
+    hci_count = lookup.get('HCI', {}).get('count', 0)
+    ux_count = lookup.get('UX', {}).get('count', 0)
+    tracks: list[dict] = []
+
+    for name in ('AI', 'NLP', 'CV', 'ML'):
+        item = lookup.get(name)
+        if item:
+            tracks.append(item)
+
+    if hci_count or ux_count:
+        tracks.append({
+            'name': 'UX / HCI',
+            'href': 'papers.html?search=UX%20/%20HCI',
+            'count': max(hci_count, ux_count),
+            'accent': '#88ccff',
+            'desc': '合并人机交互、用户体验、界面理解和设计方法相关材料。',
+        })
+
+    return sorted(tracks, key=lambda item: item['count'], reverse=True)
+
+
+def build_trend_filter_cards(papers: list[dict], *, days: int = 14) -> list[dict]:
+    if not papers:
+        return []
+
+    latest = max(paper['timestamp'] for paper in papers)
+    recent_cutoff = latest - timedelta(days=days)
+    previous_cutoff = latest - timedelta(days=days * 2)
+    recent_papers = [paper for paper in papers if paper['timestamp'] >= recent_cutoff]
+    previous_papers = [paper for paper in papers if previous_cutoff <= paper['timestamp'] < recent_cutoff]
+
+    candidates: list[dict] = []
+    for name, meta in PROBLEM_LENSES.items():
+        recent_count = sum(1 for paper in recent_papers if matches_keywords(f"{paper['title']}\n{paper['content']}", meta['keywords']))
+        previous_count = sum(1 for paper in previous_papers if matches_keywords(f"{paper['title']}\n{paper['content']}", meta['keywords']))
+        if not recent_count:
+            continue
+        delta = recent_count - previous_count
+        candidates.append({
+            'name': name,
+            'href': f'papers.html?search={quote(name)}',
+            'count': recent_count,
+            'delta': delta,
+            'accent': meta['accent'],
+            'desc': meta['desc'],
+            'kind': '问题',
+            'score': recent_count * 2 + max(delta, 0),
+        })
+
+    for item in build_domain_track_cards([
+        {
+            'name': name,
+            'href': meta['file'],
+            'count': len(domain_records(name, recent_papers)),
+            'accent': meta['accent'],
+            'desc': meta['desc'],
+        }
+        for name, meta in DOMAIN_META.items()
+    ]):
+        previous_count = 0
+        if item['name'] == 'UX / HCI':
+            previous_count = max(len(domain_records('HCI', previous_papers)), len(domain_records('UX', previous_papers)))
+        else:
+            previous_count = len(domain_records(item['name'], previous_papers))
+        if not item['count']:
+            continue
+        delta = item['count'] - previous_count
+        candidates.append({
+            **item,
+            'delta': delta,
+            'kind': '方向',
+            'score': item['count'] * 2 + max(delta, 0),
+        })
+
+    deduped: dict[str, dict] = {}
+    for item in candidates:
+        current = deduped.get(item['name'])
+        if not current or (item['score'], item['count'], item['delta']) > (current['score'], current['count'], current['delta']):
+            deduped[item['name']] = item
+
+    merged = list(deduped.values())
+    merged.sort(key=lambda item: (item['score'], item['count'], item['delta']), reverse=True)
+    return merged[:8]
+
+
+def render_trend_filter_cards(items: list[dict]) -> str:
+    if not items:
+        return '<div class="empty-state">暂无可展示的热点趋势。</div>'
+
+    cards = []
+    for item in items:
+        if item['delta'] > 0:
+            delta_label = f"+{item['delta']}"
+        elif item['delta'] < 0:
+            delta_label = str(item['delta'])
+        else:
+            delta_label = '持平'
+        cards.append(f'''                    <a class="trend-chip" href="{item['href']}" style="--accent:{item['accent']};">
+                        <span class="trend-kind">{html.escape(item['kind'])}</span>
+                        <strong>{html.escape(item['name'])}</strong>
+                        <span>近 14 天 {item['count']} · {html.escape(delta_label)}</span>
+                    </a>''')
+    return '\n'.join(cards)
 
 
 def render_member_cards(items: list[dict]) -> str:
@@ -1128,10 +1373,10 @@ def render_rank_chart_card(title: str, subtitle: str, items: list[dict], note: s
         </div>'''
         )
 
+    subtitle_markup = f'\n        <p class="chart-subtitle">{html.escape(subtitle)}</p>' if subtitle else ''
     note_markup = f'<div class="topic-rank-note">{html.escape(note)}</div>' if note else ''
     return f'''<article class="chart-card chart-card--rank">
-        <h3 class="chart-title">{html.escape(title)}</h3>
-        <p class="chart-subtitle">{html.escape(subtitle)}</p>
+        <h3 class="chart-title">{html.escape(title)}</h3>{subtitle_markup}
         <div class="topic-rank-list">{''.join(rows)}</div>
         {note_markup}
     </article>'''
@@ -1162,7 +1407,7 @@ def build_topic_chart(domain_cards: list[dict]) -> str:
     ][:6]
     leader = items[0] if items else None
     note = f"当前最活跃方向：{leader['label']} · {leader['value']} 条" if leader else ''
-    return render_rank_chart_card('研究主题分布', '改成首页更友好的主题排行视图，阅读更轻，判断更快。', items, note)
+    return render_rank_chart_card('研究主题分布', '', items, note)
 
 
 def build_member_activity_chart(member_cards: list[dict]) -> str:
@@ -1177,9 +1422,12 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     research_packages = build_research_packages(records)
     gojo_rankings = build_gojo_recent_rankings(research_packages, days=3)
-    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:6])
+    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:3])
     problem_lenses = build_problem_lens_cards(papers)
-    problem_lens_markup = render_topic_cards(problem_lenses[:6])
+    problem_lens_markup = render_compact_topic_cards(problem_lenses[:6])
+    domain_tracks = build_domain_track_cards(domain_cards)
+    domain_topic_markup = render_compact_topic_cards(domain_tracks)
+    trend_filter_markup = render_trend_filter_cards(build_trend_filter_cards(papers, days=14))
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
     archive_card = next((item for item in source_cards if item['name'] == '全部记录'), None)
     archive_link = archive_card['href'] if archive_card else 'archive.html'
@@ -1187,10 +1435,8 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     member_count = sum(1 for item in records if item['kind'] == 'member')
     topic_count = len(domain_cards)
     package_count = len(research_packages)
-    chart_markup = '\n'.join([
-        build_activity_chart(records),
-        build_topic_chart(domain_cards),
-    ])
+    activity_chart_markup = build_activity_chart(records)
+    topic_chart_markup = build_topic_chart(domain_cards)
     quick_filters = [
         {
             'label': '周会讨论',
@@ -1209,32 +1455,32 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 
     focus_cards = [
         {
-            'name': '论文总结',
+            'name': '论文资讯',
             'href': 'papers.html',
             'count': paper_count,
             'accent': '#ff8c42',
-            'desc': '汇总源目录中的论文总结，适合作为首页第一入口。'
+            'desc': '按时间浏览全部论文总结，用来快速了解最近收集了什么。'
         },
         {
-            'name': '研究主题',
-            'href': 'AI.html',
-            'count': len(domain_cards),
-            'accent': '#f59e0b',
-            'desc': '从论文总结中自动归类出 AI、NLP、CV、ML、HCI、UX 等方向。'
-        },
-        {
-            'name': '高星论文',
-            'href': SOURCE_PAGES['starred']['file'],
+            'name': '精选论文',
+            'href': '#recent',
             'count': len(starred_entries),
-            'accent': SOURCE_PAGES['starred']['accent'],
-            'desc': '把各角色打过星的论文汇总在一起，按综合星级优先排序。'
+            'accent': '#88ccff',
+            'desc': '合并近 3 天五条榜单和历史高星库，用来判断优先阅读顺序。'
         },
         {
-            'name': '成员进展',
-            'href': '惠.html',
+            'name': '研究方向雷达',
+            'href': '#directions',
+            'count': len(domain_tracks),
+            'accent': '#f59e0b',
+            'desc': '合并主题分布、问题索引和热点筛选，用来发现可延展方向。'
+        },
+        {
+            'name': '成员判断',
+            'href': '#members',
             'count': member_count,
             'accent': '#9b59b6',
-            'desc': '按成员查看能力进化记录，追踪个人研究与写作成长。'
+            'desc': '按角色查看短评和能力进化，追踪谁给出了哪些研究判断。'
         },
         {
             'name': '全部归档',
@@ -1279,8 +1525,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             </form>
             <div class="topbar-links">
                 <a class="pill-link" href="#recent">最新更新</a>
-                <a class="pill-link" href="#lenses">问题索引</a>
-                <a class="pill-link" href="#topics">研究主题</a>
+                <a class="pill-link" href="#directions">研究方向</a>
                 <a class="pill-link" href="{SOURCE_PAGES['starred']['file']}">高星论文</a>
                 <a class="pill-link" href="#members">成员进展</a>
                 <a class="pill-link" href="archive.html">全部归档</a>
@@ -1324,7 +1569,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             <div class="section-panel" style="--accent:#ff8c42;">
                 <div class="section-kicker">Quick Access</div>
                 <h2 class="section-title">核心学术入口</h2>
-                <p class="panel-subtitle">首页保留最常用的学术浏览入口，并补回图表概览，让第一页既清爽也有信息密度。</p>
+                <p class="panel-subtitle">按你的实际使用路径组织：先看资讯，再找灵感，最后沉淀成可追踪的研究方向。</p>
                 <div class="topic-grid">
 {render_topic_cards(focus_cards)}
                 </div>
@@ -1338,7 +1583,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
                     </div>
                 </div>
                 <div class="chart-grid">
-{chart_markup}
+{activity_chart_markup}
                 </div>
             </div>
             <div class="section-panel" id="recent" style="--accent:#88ccff;">
@@ -1351,21 +1596,34 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             </div>
         </section>
 
-        <section class="section-panel" id="lenses" style="margin-top:22px; --accent:#88ccff;">
-            <div class="section-kicker">Problem Index</div>
-            <h2 class="section-title">问题索引</h2>
-            <p class="panel-subtitle">在学科分类之外，再按研究问题组织入口。适合从“我要找 Agent / 评估 / 公平性材料”这类真实任务进入。</p>
-            <div class="topic-grid">
-{problem_lens_markup}
+        <section class="section-panel direction-radar" id="directions" style="margin-top:22px; --accent:#f59e0b;">
+            <div class="section-kicker">Research Radar</div>
+            <h2 class="section-title">研究方向雷达</h2>
+            <div class="section-kicker" style="margin-top:18px;">Trend Filters</div>
+            <h3 class="direction-group-title">热点筛选</h3>
+            <div class="trend-filter-strip">
+{trend_filter_markup}
             </div>
-        </section>
-
-        <section class="section-panel" id="topics" style="margin-top:22px; --accent:#f59e0b;">
-            <div class="section-kicker">Research Topics</div>
-            <h2 class="section-title">按研究主题浏览</h2>
-            <p class="panel-subtitle">这些主题页基于源目录中的 <code>论文总结.md</code> 自动归类，同样按时间倒序展示。</p>
-            <div class="topic-grid">
-{render_topic_cards(domain_cards)}
+            <div class="direction-radar-grid">
+                <div class="direction-chart">
+{topic_chart_markup}
+                </div>
+                <div class="direction-groups">
+                    <div class="direction-group">
+                        <div class="section-kicker">Idea Lenses</div>
+                        <h3 class="direction-group-title">按问题找灵感</h3>
+                        <div class="direction-card-list">
+{problem_lens_markup}
+                        </div>
+                    </div>
+                    <div class="direction-group">
+                        <div class="section-kicker">Topic Tracks</div>
+                        <h3 class="direction-group-title">按主题找积累</h3>
+                        <div class="direction-card-list">
+{domain_topic_markup}
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
