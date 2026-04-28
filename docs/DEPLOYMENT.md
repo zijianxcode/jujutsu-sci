@@ -61,18 +61,36 @@
 - 只更新 `academy/` 本地目录但不推 `personal-homepage`，线上也不会变。
 - 本地生成、镜像同步和部署包准备可以先做，但 `推送 GitHub` 与 `执行 CloudBase 发布` 必须经过人工确认。
 
+## academy 镜像同步范围
+
+如果只是定时内容同步，并且确认只有生成的 HTML 数据页变化，可以只同步 HTML。
+
+但凡涉及首页 UI、CSS、详情页交互、搜索脚本、图片或评分展示逻辑，不能只同步 `*.html`。至少需要同步：
+
+```bash
+rsync -a \
+  *.html site.css site-detail.js site-index.js gojo.jpg \
+  /Users/zijian/Documents/Code/personal-homepage/academy/
+```
+
+避坑说明：
+- `index.html` 内容更新但 `site.css` 未同步，会导致 CloudBase 线上仍呈现旧布局。
+- `site-detail.js` 或 `site-index.js` 未同步，会导致详情页目录、搜索、Obsidian 复制等交互停留在旧逻辑。
+- 同步后要在 `personal-homepage` 中提交并推送，再执行 CloudBase 发布。
+- 发布前建议用 `rg` 检查 `.cloudbase-deploy/academy/index.html` 是否包含本次关键文本，例如 `五条老师评定 8.5/10`。
+
 ## CloudBase 发布参考
 
 个人主页项目路径：
-`/tmp/personal-homepage-preview`
+`/Users/zijian/Documents/Code/personal-homepage`
 
 常用流程：
 ```bash
-cd /tmp/personal-homepage-preview
+cd /Users/zijian/Documents/Code/personal-homepage
 rm -rf .cloudbase-deploy
 mkdir -p .cloudbase-deploy
-cp *.html CNAME .cloudbase-deploy/
-cp -r Assets projects documents academy .cloudbase-deploy/
+cp *.html CNAME .nojekyll .cloudbase-deploy/
+cp -r Assets projects documents academy time-ink .cloudbase-deploy/
 TCB_ENV_ID='homepage-1gthisc4771d43ac' \
   npm exec --yes --package @cloudbase/cli@2.12.2 -- \
   tcb hosting deploy .cloudbase-deploy .
