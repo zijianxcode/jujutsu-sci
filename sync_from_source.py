@@ -154,7 +154,7 @@ def record_context(path: Path) -> tuple[str, datetime] | None:
                 slot = parts[2]
                 hour = slot if re.fullmatch(r'\d{2}', slot) else '00'
                 dt = datetime.strptime(f'{year}-{month}-{day} {hour}:00', '%Y-%m-%d %H:%M')
-                return f"records/{parts[1]}/{parts[2]}", dt
+                return f"records/{parts[1]}/{parts[2]}/{parts[3]}", dt
             return folder_name, dt
 
     return None
@@ -1446,7 +1446,7 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     research_packages = build_research_packages(records)
     gojo_rankings = build_gojo_recent_rankings(research_packages, days=3)
-    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:3])
+    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:8])
     problem_lenses = build_problem_lens_cards(papers)
     problem_lens_markup = render_compact_topic_cards(problem_lenses[:6])
     domain_tracks = build_domain_track_cards(domain_cards)
