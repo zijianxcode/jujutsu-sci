@@ -167,6 +167,7 @@ python3 sync_from_source.py
 - `index.html`：首页产物
 
 文档入口：
+- [文档导航](docs/README.md)
 - [项目结构](docs/PROJECT_STRUCTURE.md)
 - [内容同步说明](docs/CONTENT_SYNC.md)
 - [Hermes 采集迁移说明](docs/HERMES_MIGRATION.md)
@@ -177,9 +178,9 @@ python3 sync_from_source.py
 - [问题记录与修复日志](docs/ISSUE_LOG.md)
 
 如果你是第一次接手，建议先看：
-1. [项目结构](docs/PROJECT_STRUCTURE.md)
-2. [内容同步说明](docs/CONTENT_SYNC.md)
-3. [问题记录与修复日志](docs/ISSUE_LOG.md)
+1. [文档导航](docs/README.md)
+2. [项目结构](docs/PROJECT_STRUCTURE.md)
+3. [内容同步说明](docs/CONTENT_SYNC.md)
 4. [部署发布说明](docs/DEPLOYMENT.md)
 
 ## 同步与发布规则

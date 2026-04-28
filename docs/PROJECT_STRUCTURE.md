@@ -40,6 +40,7 @@
 
 ### 项目文档
 - `README.md`：总览入口
+- `docs/README.md`：文档导航，说明不同问题应该先看哪份文档
 - `docs/PROJECT_STRUCTURE.md`：结构说明
 - `docs/CONTENT_SYNC.md`：同步逻辑与排查流程
 - `docs/DEPLOYMENT.md`：发布流程与线上排查
@@ -54,11 +55,12 @@
 ## 推荐理解方式
 
 如果要继续维护项目，优先理解这几层关系：
-1. 源目录里的 Markdown 决定内容
-2. `sync_from_source.py` 决定页面生成规则
-3. `site.css` 决定视觉和布局
-4. `site-detail.js` / `site-index.js` 决定页面交互
-5. `docs/ISSUE_LOG.md` 记录历史问题与修复经验
+1. 先看 [文档导航](README.md)，确认当前问题归属哪份文档。
+2. 源目录里的 Markdown 决定内容。
+3. `sync_from_source.py` 决定页面生成规则。
+4. `site.css` 决定视觉和布局。
+5. `site-detail.js` / `site-index.js` 决定页面交互。
+6. `docs/ISSUE_LOG.md` 只记录历史问题与修复经验，不承载常规规则。
 
 ## 当前项目特点
 
