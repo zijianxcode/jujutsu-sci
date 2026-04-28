@@ -99,11 +99,20 @@ KEYWORDS = {
 
 
 def parse_folder_timestamp(folder_name: str) -> datetime | None:
+    # Try YYYY-MM-DD format first (e.g. "2026-04-28")
     match = re.match(r'^(20\d{2}-\d{2}-\d{2})(?:-(\d{2}))?(?:-.+)?$', folder_name)
     if match:
         hour = match.group(2) or '00'
         try:
             return datetime.strptime(f'{match.group(1)} {hour}:00', '%Y-%m-%d %H:%M')
+        except ValueError:
+            return None
+    # Try YYYYMMDD format (e.g. "20260428")
+    match2 = re.match(r'^(20\d{2})(\d{2})(\d{2})(?:-(\d{2}))?(?:-.+)?$', folder_name)
+    if match2:
+        hour = match2.group(4) or '00'
+        try:
+            return datetime.strptime(f'{match2.group(1)}-{match2.group(2)}-{match2.group(3)} {hour}:00', '%Y-%m-%d %H:%M')
         except ValueError:
             return None
     return None
@@ -128,9 +137,24 @@ def record_context(path: Path) -> tuple[str, datetime] | None:
             return None
 
     if len(parts) >= 2:
-        folder_name = parts[0]
+        # Determine which part contains the date: in YYYYMMDD/HH/<key>/ format it's parts[1],
+        # in YYYY/MM/DD/HH/ format it's parts[0] (the date folder is parts[1]='YYYY' which doesn't parse)
+        candidate = parse_folder_timestamp(parts[1])
+        folder_name = parts[1] if candidate else parts[0]
         dt = parse_folder_timestamp(folder_name)
         if dt:
+            # Support YYYYMMDD/HH/<key>/file.md format (5 parts)
+            # Return full path prefix including slot hour
+            if len(parts) >= 4 and re.fullmatch(r'20\d{6}', parts[1]):
+                # parts: records, YYYYMMDD, HH, key, file.md
+                # Rebuild dt with correct hour from parts[2]
+                year = parts[1][:4]
+                month = parts[1][4:6]
+                day = parts[1][6:8]
+                slot = parts[2]
+                hour = slot if re.fullmatch(r'\d{2}', slot) else '00'
+                dt = datetime.strptime(f'{year}-{month}-{day} {hour}:00', '%Y-%m-%d %H:%M')
+                return f"records/{parts[1]}/{parts[2]}", dt
             return folder_name, dt
 
     return None
