@@ -388,31 +388,59 @@ def extract_original_link(content: str) -> tuple[str, str]:
     return '', ''
 
 
-def parse_star_score(text: str) -> float | None:
+def parse_score_info(text: str) -> dict | None:
     preferred_patterns = [
-        r'(?:综合推荐指数|综合评分|综合推荐|综合|悟评|评分|打星|星级)[^\n|]{0,40}?([0-5](?:\.\d+)?)\s*/\s*5',
-        r'→\s*\*{0,2}\s*综合\s*([0-5](?:\.\d+)?)',
-        r'\|\s*\*{0,2}综合\*{0,2}\s*\|\s*\*{0,2}([0-5](?:\.\d+)?)\s*/\s*5',
-        r'(?:综合推荐指数|综合评分|综合推荐|综合)\s*[:：]?\s*([0-5](?:\.\d+)?)\b',
+        r'(?:综合推荐指数|综合评分|综合推荐|综合|悟评|评分|打星|星级)[^\n|]{0,40}?((?:10|[0-9])(?:\.\d+)?)\s*/\s*(5|10)',
+        r'→\s*\*{0,2}\s*综合\s*((?:10|[0-9])(?:\.\d+)?)\s*/?\s*(5|10)?',
+        r'\|\s*\*{0,2}综合\*{0,2}\s*\|\s*\*{0,2}((?:10|[0-9])(?:\.\d+)?)\s*/\s*(5|10)',
+        r'(?:综合推荐指数|综合评分|综合推荐|综合)\s*[:：]?\s*((?:10|[0-9])(?:\.\d+)?)\b',
     ]
     for pattern in preferred_patterns:
         match = re.search(pattern, text, re.I)
         if match:
-            return float(match.group(1))
+            raw_score = float(match.group(1))
+            scale = int(match.group(2)) if match.lastindex and match.lastindex >= 2 and match.group(2) else (10 if raw_score > 5 else 5)
+            if scale == 10:
+                return {
+                    'score': raw_score / 2,
+                    'display': f'{format_star_score(raw_score)}/10',
+                    'scale': 10,
+                }
+            return {
+                'score': raw_score,
+                'display': f'{format_star_score(raw_score * 2)}/10',
+                'scale': 5,
+            }
 
     keyword_lines = [
         line for line in text.splitlines()
         if any(keyword in line for keyword in ('悟评', '综合', '评分', '打星', '星级', '推荐指数'))
     ]
     for line in keyword_lines:
-        match = re.search(r'([0-5](?:\.\d+)?)\s*/\s*5', line)
+        match = re.search(r'((?:10|[0-9])(?:\.\d+)?)\s*/\s*(5|10)', line)
         if match:
-            return float(match.group(1))
+            raw_score = float(match.group(1))
+            scale = int(match.group(2))
+            return {
+                'score': raw_score / 2 if scale == 10 else raw_score,
+                'display': f'{format_star_score(raw_score if scale == 10 else raw_score * 2)}/10',
+                'scale': scale,
+            }
         star_match = re.search(r'([★⭐☆]{3,5})', line)
         if star_match:
             stars = star_match.group(1)
-            return float(stars.count('★') + stars.count('⭐'))
+            score = float(stars.count('★') + stars.count('⭐'))
+            return {
+                'score': score,
+                'display': f'{format_star_score(score * 2)}/10',
+                'scale': 5,
+            }
     return None
+
+
+def parse_star_score(text: str) -> float | None:
+    score_info = parse_score_info(text)
+    return score_info['score'] if score_info else None
 
 
 def format_star_score(score: float) -> str:
@@ -422,6 +450,10 @@ def format_star_score(score: float) -> str:
 def score_to_stars(score: float) -> str:
     rounded = max(0, min(5, round(score)))
     return '★' * rounded + '☆' * (5 - rounded)
+
+
+def format_ten_point_score(score: float) -> str:
+    return f'{format_star_score(score * 2)}/10'
 
 
 def normalize_paper_key(title: str, arxiv_id: str = '') -> str:
@@ -859,6 +891,46 @@ def build_research_packages(records: list[dict]) -> list[dict]:
     return packages
 
 
+def extract_package_keys_from_summary_heading(key_text: str) -> set[str]:
+    keys = set()
+    for token in re.findall(r'[A-Za-z0-9][A-Za-z0-9_.-]*', key_text):
+        token = token.strip('._-').lower()
+        if '-' in token or re.match(r'\d{4}\.\d+', token):
+            keys.add(token)
+    return keys
+
+
+def extract_gojo_summary_ratings(records: list[dict]) -> dict[str, dict]:
+    ratings: dict[str, dict] = {}
+    heading_pattern = re.compile(r'^###\s+.+?[（(]([^）)]+)[）)]\s*$', re.M)
+
+    for record in records:
+        marker = f"{record['file_name']}\n{record['title']}\n{record['content']}"
+        if '五条悟' not in marker or '汇总' not in marker:
+            continue
+
+        matches = list(heading_pattern.finditer(record['content']))
+        for index, match in enumerate(matches):
+            section_end = matches[index + 1].start() if index + 1 < len(matches) else len(record['content'])
+            section = record['content'][match.end():section_end]
+            score_info = parse_score_info(section)
+            if not score_info:
+                continue
+            item = {
+                'score': score_info['score'],
+                'display_score': score_info['display'],
+                'source_label': '五条老师评定',
+                'date': record['date'],
+                'timestamp': record['timestamp'],
+            }
+            for key in extract_package_keys_from_summary_heading(match.group(1)):
+                current = ratings.get(key)
+                if not current or item['timestamp'] >= current['timestamp']:
+                    ratings[key] = item
+
+    return ratings
+
+
 def render_research_package_cards(packages: list[dict]) -> str:
     if not packages:
         return '<div class="empty-state">还没有可展示的论文研究包。</div>'
@@ -896,11 +968,13 @@ def gojo_rating_for_package(package: dict) -> dict | None:
     for member in package['members']:
         if member.get('member') != '五条悟':
             continue
-        score = parse_star_score(member['content'])
-        if score is None:
+        score_info = parse_score_info(member['content'])
+        if not score_info:
             continue
         ratings.append({
-            'score': score,
+            'score': score_info['score'],
+            'display_score': score_info['display'],
+            'source_label': '五条老师评定',
             'date': member['date'],
             'timestamp': member['timestamp'],
         })
@@ -909,7 +983,54 @@ def gojo_rating_for_package(package: dict) -> dict | None:
     return max(ratings, key=lambda item: (item['score'], item['timestamp']))
 
 
-def build_gojo_recent_rankings(packages: list[dict], *, days: int = 3) -> list[dict]:
+def package_rating_keys(package: dict) -> list[str]:
+    key = package['key'].lower()
+    return [
+        key,
+        key.rstrip('/').split('/')[-1],
+        normalize_paper_key(package['title']),
+    ]
+
+
+def ranking_rating_for_package(package: dict, gojo_summary_ratings: dict[str, dict] | None = None) -> dict | None:
+    gojo_rating = gojo_rating_for_package(package)
+    if gojo_rating:
+        return gojo_rating
+
+    if gojo_summary_ratings:
+        for key in package_rating_keys(package):
+            rating = gojo_summary_ratings.get(key)
+            if rating:
+                return rating
+
+    paper_score = parse_score_info(package['paper']['content'])
+    if paper_score:
+        return {
+            'score': paper_score['score'],
+            'display_score': paper_score['display'],
+            'source_label': '综合评分',
+            'date': package['paper']['date'],
+            'timestamp': package['paper']['timestamp'],
+        }
+
+    role_scores = []
+    for member in package['members']:
+        score_info = parse_score_info(member['content'])
+        if not score_info:
+            continue
+        role_scores.append({
+            'score': score_info['score'],
+            'display_score': score_info['display'],
+            'source_label': f'{member.get("member") or "角色"}评分',
+            'date': member['date'],
+            'timestamp': member['timestamp'],
+        })
+    if not role_scores:
+        return None
+    return max(role_scores, key=lambda item: (item['score'], item['timestamp']))
+
+
+def build_gojo_recent_rankings(packages: list[dict], *, days: int = 3, gojo_summary_ratings: dict[str, dict] | None = None) -> list[dict]:
     if not packages:
         return []
 
@@ -920,7 +1041,7 @@ def build_gojo_recent_rankings(packages: list[dict], *, days: int = 3) -> list[d
     for package in packages:
         if package['timestamp'] < cutoff:
             continue
-        rating = gojo_rating_for_package(package)
+        rating = ranking_rating_for_package(package, gojo_summary_ratings)
         ranked.append({
             **package,
             'gojo_rating': rating,
@@ -949,7 +1070,7 @@ def package_domain_tags(paper: dict) -> list[str]:
 def ranking_reason(package: dict, tags: list[str], rating: dict | None) -> str:
     if rating:
         tag_text = ' / '.join(tags[:2]) if tags else '前沿'
-        return f'五条老师给到 {format_star_score(rating["score"])}/5，适合作为 {tag_text} 方向的灵感线索。'
+        return f'五条老师给到 {format_ten_point_score(rating["score"])}，适合作为 {tag_text} 方向的灵感线索。'
     if tags:
         return f'已进入近 3 天资讯池，可先按 {" / ".join(tags[:2])} 方向暂存观察。'
     return '已进入近 3 天资讯池，等待五条老师补充前沿判断。'
@@ -973,12 +1094,11 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
     for index, package in enumerate(packages, start=1):
         paper = package['paper']
         rating = package.get('gojo_rating')
-        score_label = f"五条老师评定 {format_star_score(rating['score'])}/5" if rating else '待五条老师评定'
+        score_label = f"{rating.get('source_label', '综合评分')} {rating.get('display_score', format_ten_point_score(rating['score']))}" if rating else '待五条老师评定'
         score_stars = score_to_stars(rating['score']) if rating else '未评分'
         tags = package_domain_tags(paper)
-        reason = ranking_reason(package, tags, rating)
         next_action = ranking_next_action(rating)
-        tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:4])
+        tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:3])
         cards.append(f'''                    <article class="research-package-card ranking-card">
                         <div class="ranking-head">
                             <div class="ranking-position">#{index}</div>
@@ -988,12 +1108,10 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
                             </div>
                         </div>
                         <a class="research-package-title" href="papers.html?search={quote(paper['title'])}">{html.escape(paper['title'])}</a>
-                        <div class="research-package-meta">来源：{html.escape(package['key'])}</div>
-                        <div class="ranking-insight">{html.escape(reason)}</div>
                         <div class="ranking-action">{html.escape(next_action)}</div>
                         <div class="research-chip-row">
                             {tags_markup}
-                            <a class="research-chip link-chip" href="archive.html?search={quote(package['key'])}">查看研究包</a>
+                            <a class="research-chip link-chip" href="papers.html?search={quote(paper['title'])}">阅读</a>
                         </div>
                     </article>''')
     return '\n'.join(cards)
@@ -1002,7 +1120,7 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
 def render_topic_cards(items: list[dict]) -> str:
     html = []
     for item in items:
-        html.append(f'''                    <a class="topic-card" href="{item['href']}" style="--accent:{item['accent']};">
+        html.append(f'''                    <a class="topic-card focus-link" href="{item['href']}" style="--accent:{item['accent']};">
                         <div class="topic-head">
                             <div>
                                 <div class="topic-name">{item['name']}</div>
@@ -1445,8 +1563,9 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
 
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     research_packages = build_research_packages(records)
-    gojo_rankings = build_gojo_recent_rankings(research_packages, days=3)
-    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:8])
+    gojo_summary_ratings = extract_gojo_summary_ratings(records)
+    gojo_rankings = build_gojo_recent_rankings(research_packages, days=3, gojo_summary_ratings=gojo_summary_ratings)
+    gojo_ranking_markup = render_gojo_ranking_cards(gojo_rankings[:5])
     problem_lenses = build_problem_lens_cards(papers)
     problem_lens_markup = render_compact_topic_cards(problem_lenses[:6])
     domain_tracks = build_domain_track_cards(domain_cards)
@@ -1483,35 +1602,28 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             'href': 'papers.html',
             'count': paper_count,
             'accent': '#ff8c42',
-            'desc': '按时间浏览全部论文总结，用来快速了解最近收集了什么。'
+            'desc': '先快速扫最近收集了什么。'
         },
         {
             'name': '精选论文',
             'href': '#recent',
             'count': len(starred_entries),
             'accent': '#88ccff',
-            'desc': '合并近 3 天五条榜单和历史高星库，用来判断优先阅读顺序。'
+            'desc': '看五条榜单和高星库，决定先读哪篇。'
         },
         {
             'name': '研究方向雷达',
             'href': '#directions',
             'count': len(domain_tracks),
             'accent': '#f59e0b',
-            'desc': '合并主题分布、问题索引和热点筛选，用来发现可延展方向。'
+            'desc': '把主题、问题和热点合在一起找方向。'
         },
         {
             'name': '成员判断',
             'href': '#members',
             'count': member_count,
             'accent': '#9b59b6',
-            'desc': '按角色查看短评和能力进化，追踪谁给出了哪些研究判断。'
-        },
-        {
-            'name': '全部归档',
-            'href': archive_link,
-            'count': len(records),
-            'accent': '#88ccff',
-            'desc': '周会、升级迭代等内容仍然保留，但统一收进总归档页。'
+            'desc': '只在需要追溯判断来源时进入。'
         },
     ]
 
@@ -1590,30 +1702,19 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
         </section>
 
         <section class="section-grid" style="margin-top:22px;">
-            <div class="section-panel" style="--accent:#ff8c42;">
+            <div class="section-panel focus-panel" style="--accent:#ff8c42;">
                 <div class="section-kicker">Quick Access</div>
                 <h2 class="section-title">核心学术入口</h2>
                 <p class="panel-subtitle">按你的实际使用路径组织：先看资讯，再找灵感，最后沉淀成可追踪的研究方向。</p>
-                <div class="topic-grid">
+                <div class="topic-grid focus-link-list">
 {render_topic_cards(focus_cards)}
                 </div>
-                <div class="quick-filter-strip">
-                    <div class="quick-filter-copy">
-                        <div class="section-kicker">Meeting Tags</div>
-                        <h3 class="quick-filter-title">周会讨论区</h3>
-                    </div>
-                    <div class="quick-filter-list">
-{render_home_filter_tags(quick_filters)}
-                    </div>
-                </div>
-                <div class="chart-grid">
-{activity_chart_markup}
-                </div>
+                <a class="focus-archive-link" href="{archive_link}">查看全部 {len(records)} 条归档</a>
             </div>
-            <div class="section-panel" id="recent" style="--accent:#88ccff;">
+            <div class="section-panel ranking-panel" id="recent" style="--accent:#88ccff;">
                 <div class="section-kicker">Gojo Ranking</div>
                 <h2 class="section-title">近 3 天论文排行榜</h2>
-                <p class="panel-subtitle">收录近 3 天采集的论文研究包，由五条老师的前沿评审评分决定排序；未评分论文保留在榜单后方等待评定。</p>
+                <p class="panel-subtitle">只显示前五篇。评分决定优先级，未评分论文排在后面等待判断。</p>
                 <div class="research-package-list">
 {gojo_ranking_markup}
                 </div>

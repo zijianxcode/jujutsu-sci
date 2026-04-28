@@ -134,6 +134,34 @@ class SyncFromSourceHermesTests(unittest.TestCase):
                 encoding='utf-8',
             )
 
+            third = source / 'records' / '2026' / '04' / '28' / '09' / 'yujin-7218'
+            third.mkdir(parents=True)
+            (third / '论文总结.md').write_text(
+                '\n'.join([
+                    '# 论文总结',
+                    '',
+                    '**论文标题：** AI Agents as Users',
+                    '**领域标签：** AI, UX, Agent',
+                    '**综合评分：8/10**',
+                    '',
+                    '## 1. 研究什么？',
+                    '研究 AI Agent 如何成为界面的真实用户。',
+                ]),
+                encoding='utf-8',
+            )
+
+            summary = source / 'records' / '2026' / '04' / '28' / '09' / 'five-daily-summary'
+            summary.mkdir(parents=True)
+            (summary / '五条悟-汇总.md').write_text(
+                '\n'.join([
+                    '# 2026-04-28 五条悟每日汇总',
+                    '',
+                    '### 悠仁（yujin-7218）',
+                    '这篇内容选择得很好。评分8.5/10，实至名归。',
+                ]),
+                encoding='utf-8',
+            )
+
             result = subprocess.run(
                 [sys.executable, 'sync_from_source.py'],
                 cwd=project,
@@ -146,7 +174,9 @@ class SyncFromSourceHermesTests(unittest.TestCase):
             index = (project / 'index.html').read_text(encoding='utf-8')
             self.assertIn('近 3 天论文排行榜', index)
             self.assertIn('MTA-Agent: An Open Recipe for Multimodal Deep Search Agents', index)
-            self.assertIn('五条老师评定 4.7/5', index)
+            self.assertIn('五条老师评定 9.4/10', index)
+            self.assertIn('AI Agents as Users', index)
+            self.assertIn('五条老师评定 8.5/10', index)
             self.assertIn('待五条老师评定', index)
             self.assertIn('研究方向雷达', index)
             self.assertIn('热点筛选', index)
