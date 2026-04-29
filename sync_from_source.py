@@ -62,7 +62,10 @@ def resolve_paths() -> tuple[Path, Path, dict]:
     return source, project, config
 
 
-SOURCE_ROOT, PROJECT_ROOT, APP_CONFIG = resolve_paths()
+SOURCE_ROOT: Path = Path()
+PROJECT_ROOT: Path = Path()
+APP_CONFIG: dict = {}
+ASSET_VERSION = '20260429'
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
@@ -669,7 +672,11 @@ def load_records() -> list[dict]:
         if not context:
             continue
         source_dir, dt = context
-        content = path.read_text(encoding='utf-8')
+        try:
+            content = path.read_text(encoding='utf-8')
+        except (UnicodeDecodeError, OSError) as exc:
+            print(f'警告: 跳过无法读取的文件 {rel} ({exc.__class__.__name__}: {exc})')
+            continue
         actual_dt = parse_content_timestamp(content, dt)
         file_name = path.name
         kind = detect_kind(file_name)
@@ -743,7 +750,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css?v=20260427-quiet-detail1">
+    <link rel="stylesheet" href="site.css?v={ASSET_VERSION}">
     <script src="vendor/marked.min.js"></script>
     <script src="vendor/purify.min.js"></script>
 </head>
@@ -810,7 +817,8 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
         var pageConfig = {json.dumps({'title': title, 'subtitle': subtitle, 'obsidian': obsidian_config}, ensure_ascii=False)};
         var entries = {json.dumps(payload, ensure_ascii=False, indent=2)};
     </script>
-    <script src="site-detail.js?v=20260427-quiet-detail1"></script>
+    <script src="site-search-utils.js?v={ASSET_VERSION}"></script>
+    <script src="site-detail.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''
@@ -1625,7 +1633,7 @@ def build_ranking_page(records: list[dict]) -> str:
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css?v=20260429-hero-align1">
+    <link rel="stylesheet" href="site.css?v={ASSET_VERSION}">
 </head>
 <body class="home-page ranking-page">
     <div class="home-shell">
@@ -1772,7 +1780,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css?v=20260429-hero-align1">
+    <link rel="stylesheet" href="site.css?v={ASSET_VERSION}">
 </head>
 <body class="home-page">
     <div class="home-shell">
@@ -1908,7 +1916,8 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     <script>
         var homeSearchIndex = {json.dumps(search_payload, ensure_ascii=False, indent=2)};
     </script>
-    <script src="site-index.js"></script>
+    <script src="site-search-utils.js?v={ASSET_VERSION}"></script>
+    <script src="site-index.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''
@@ -1920,6 +1929,8 @@ def write_text(path: Path, content: str) -> None:
 
 
 def main() -> None:
+    global SOURCE_ROOT, PROJECT_ROOT, APP_CONFIG
+    SOURCE_ROOT, PROJECT_ROOT, APP_CONFIG = resolve_paths()
     records = load_records()
     papers = [item for item in records if item['kind'] == 'paper']
     starred_entries = build_starred_entries(records)
