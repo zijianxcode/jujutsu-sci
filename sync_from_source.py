@@ -736,16 +736,16 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
-    <meta name="description" content="{subtitle}">
-    <meta property="og:title" content="{title} - 研究所">
-    <meta property="og:description" content="{subtitle}">
+    <title>{html.escape(title)}</title>
+    <meta name="description" content="{html.escape(subtitle)}">
+    <meta property="og:title" content="{html.escape(title)} - 研究所">
+    <meta property="og:description" content="{html.escape(subtitle)}">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="site.css?v=20260427-quiet-detail1">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+    <script src="vendor/marked.min.js"></script>
+    <script src="vendor/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:{accent};">
     <div class="nav-overlay" id="navOverlay"></div>
@@ -1086,7 +1086,7 @@ def ranking_next_action(rating: dict | None) -> str:
     return '下一步：暂存归档，保留为背景材料'
 
 
-def render_gojo_ranking_cards(packages: list[dict]) -> str:
+def render_gojo_ranking_cards(packages: list[dict], *, show_reason: bool = False, row_attributes: bool = False) -> str:
     if not packages:
         return '<div class="empty-state">近 3 天还没有可展示的论文研究包。</div>'
 
@@ -1098,16 +1098,22 @@ def render_gojo_ranking_cards(packages: list[dict]) -> str:
         score_stars = score_to_stars(rating['score']) if rating else '未评分'
         tags = package_domain_tags(paper)
         next_action = ranking_next_action(rating)
+        reason_markup = f'\n                        <div class="ranking-insight">{html.escape(ranking_reason(package, tags, rating))}</div>' if show_reason else ''
         tags_markup = ''.join(f'<span class="research-chip">{html.escape(tag)}</span>' for tag in tags[:3])
-        cards.append(f'''                    <article class="research-package-card ranking-card">
+        row_attr = f' data-ranking-row data-rank="{index}"' if row_attributes else ''
+        rank_class = f' rank-top rank-{index}' if index <= 3 else ''
+        rank_icons = {1: '金', 2: '银', 3: '铜'}
+        rank_label = f'<span class="ranking-medal" aria-hidden="true">{rank_icons[index]}</span>' if index <= 3 else ''
+        cards.append(f'''                    <article class="research-package-card ranking-card{rank_class}"{row_attr}>
                         <div class="ranking-head">
-                            <div class="ranking-position">#{index}</div>
+                            <div class="ranking-position">{rank_label}<span>#{index}</span></div>
                             <div>
                                 <div class="research-package-date">{html.escape(package['date'])}</div>
                                 <div class="ranking-score">{html.escape(score_label)} · {html.escape(score_stars)}</div>
                             </div>
                         </div>
                         <a class="research-package-title" href="papers.html?search={quote(paper['title'])}">{html.escape(paper['title'])}</a>
+                        {reason_markup}
                         <div class="ranking-action">{html.escape(next_action)}</div>
                         <div class="research-chip-row">
                             {tags_markup}
@@ -1279,6 +1285,46 @@ def render_home_filter_tags(items: list[dict]) -> str:
     return '\n'.join(markup)
 
 
+def render_focus_workbench(gojo_rankings: list[dict], trend_items: list[dict]) -> str:
+    scored_count = sum(1 for item in gojo_rankings if item.get('gojo_score') is not None)
+    top_score = gojo_rankings[0].get('gojo_rating', {}).get('display_score', '待评定') if gojo_rankings else '-'
+    top_trend = trend_items[0]['name'] if trend_items else '暂无热点'
+    rows = [
+        {
+            'index': '01',
+            'label': '先读榜首',
+            'desc': f'当前最高优先级 {top_score}，先从排行榜第一篇进入。',
+            'value': '精读',
+            'href': 'ranking.html',
+        },
+        {
+            'index': '02',
+            'label': '补齐判断',
+            'desc': f'近 3 天已有 {scored_count} 篇完成评分，其余先留在候选池。',
+            'value': f'{scored_count}/{len(gojo_rankings)}',
+            'href': 'ranking.html',
+        },
+        {
+            'index': '03',
+            'label': '追热点',
+            'desc': f'最近更活跃的线索是 {top_trend}，适合继续往下钻。',
+            'value': '趋势',
+            'href': '#directions',
+        },
+    ]
+    return '\n'.join(
+        f'''                    <a class="focus-workbench-row" href="{row['href']}">
+                        <span class="focus-workbench-index">{row['index']}</span>
+                        <span class="focus-workbench-copy">
+                            <strong>{html.escape(row['label'])}</strong>
+                            <small>{html.escape(row['desc'])}</small>
+                        </span>
+                        <span class="focus-workbench-value">{html.escape(row['value'])}</span>
+                    </a>'''
+        for row in rows
+    )
+
+
 PROBLEM_LENSES = {
     'Agent': {
         'keywords': ['agent', 'agentic', 'multi-agent', 'tool use', 'workflow', '智能体', '代理', '工具调用'],
@@ -1361,7 +1407,7 @@ def build_home_search_payload(records: list[dict], starred_entries: list[dict]) 
             'excerpt': item['excerpt'],
             'label': '高星论文',
             'href': home_search_href({'kind': 'other'}, title),
-            'keywords': f"{title} {item['excerpt']} {clean_inline_text(item['content'])[:3200]} 高星论文 打星 综合星级 角色评分",
+            'keywords': f"{title} {item['excerpt']} 高星论文 打星 综合星级 角色评分",
         })
 
     for item in records:
@@ -1376,7 +1422,7 @@ def build_home_search_payload(records: list[dict], starred_entries: list[dict]) 
             'excerpt': item['excerpt'],
             'label': home_search_label(item),
             'href': home_search_href(item, title),
-            'keywords': f"{title} {item['excerpt']} {clean_inline_text(item['content'])[:3200]} {item['file_name']} {item['source_dir']} {item.get('member') or ''} {item.get('session_label') or ''}",
+            'keywords': f"{title} {item['excerpt']} {item['file_name']} {item['source_dir']} {item.get('member') or ''} {item.get('session_label') or ''}",
         })
 
     payload.sort(key=lambda item: item['date'], reverse=True)
@@ -1559,6 +1605,93 @@ def build_member_activity_chart(member_cards: list[dict]) -> str:
     return render_bar_chart_card('成员活跃度', '按成员页自动汇总的记录量，方便在首页看到谁最近更新更密集。', items[:6])
 
 
+def build_ranking_page(records: list[dict]) -> str:
+    research_packages = build_research_packages(records)
+    gojo_summary_ratings = extract_gojo_summary_ratings(records)
+    gojo_rankings = build_gojo_recent_rankings(research_packages, days=3, gojo_summary_ratings=gojo_summary_ratings)
+    ranking_markup = render_gojo_ranking_cards(gojo_rankings[:20], show_reason=True, row_attributes=True)
+    latest_date = gojo_rankings[0]['date'] if gojo_rankings else '-'
+    scored_count = sum(1 for item in gojo_rankings if item.get('gojo_score') is not None)
+
+    return f'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近 3 天论文排行榜 - 研究所</title>
+    <meta name="description" content="近 3 天论文排行榜，默认显示前 10，可切换查看前 20。">
+    <meta property="og:title" content="近 3 天论文排行榜 - 研究所">
+    <meta property="og:description" content="近 3 天论文排行榜，默认显示前 10，可切换查看前 20。">
+    <meta property="og:image" content="logo.jpg">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="site.css?v=20260429-hero-align1">
+</head>
+<body class="home-page ranking-page">
+    <div class="home-shell">
+        <header class="topbar ranking-topbar">
+            <a class="brand" href="index.html">
+                <img class="brand-mark" src="logo.jpg" alt="研究所 logo">
+                <div class="brand-copy">
+                    <strong>研究所</strong>
+                    <span>无量空处</span>
+                </div>
+            </a>
+            <div class="topbar-links">
+                <a class="pill-link" href="index.html">返回首页</a>
+                <a class="pill-link" href="papers.html">论文资讯</a>
+                <a class="pill-link" href="starred.html">高星论文</a>
+            </div>
+        </header>
+
+        <main class="ranking-board" style="--accent:#88ccff;">
+            <div class="ranking-board-head">
+                <div>
+                    <div class="section-kicker">Gojo Ranking</div>
+                    <h1>近 3 天论文排行榜</h1>
+                </div>
+                <div class="ranking-board-stats" aria-label="排行榜统计">
+                    <span><strong>{len(gojo_rankings)}</strong>候选</span>
+                    <span><strong>{scored_count}</strong>已评分</span>
+                    <span><strong>{html.escape(latest_date)}</strong>最新</span>
+                </div>
+            </div>
+
+            <div class="ranking-board-toolbar" role="group" aria-label="排行榜显示数量">
+                <button class="ranking-size-button is-active" type="button" data-ranking-size="10">前 10</button>
+                <button class="ranking-size-button" type="button" data-ranking-size="20">前 20</button>
+            </div>
+
+            <div class="research-package-list ranking-board-list">
+{ranking_markup}
+            </div>
+        </main>
+    </div>
+    <script>
+        (function () {{
+            var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-ranking-size]'));
+            var rows = Array.prototype.slice.call(document.querySelectorAll('[data-ranking-row]'));
+            function show(size) {{
+                rows.forEach(function (row) {{
+                    row.hidden = Number(row.dataset.rank || 0) > size;
+                }});
+                buttons.forEach(function (button) {{
+                    button.classList.toggle('is-active', Number(button.dataset.rankingSize) === size);
+                }});
+            }}
+            buttons.forEach(function (button) {{
+                button.addEventListener('click', function () {{
+                    show(Number(button.dataset.rankingSize));
+                }});
+            }});
+            show(10);
+        }})();
+    </script>
+</body>
+</html>
+'''
+
+
 def build_index(records: list[dict], papers: list[dict], source_cards: list[dict], domain_cards: list[dict], member_cards: list[dict], starred_entries: list[dict]) -> str:
     research_packages = build_research_packages(records)
     gojo_summary_ratings = extract_gojo_summary_ratings(records)
@@ -1568,7 +1701,9 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     problem_lens_markup = render_compact_topic_cards(problem_lenses[:6])
     domain_tracks = build_domain_track_cards(domain_cards)
     domain_topic_markup = render_compact_topic_cards(domain_tracks)
-    trend_filter_markup = render_trend_filter_cards(build_trend_filter_cards(papers, days=14))
+    trend_items = build_trend_filter_cards(papers, days=14)
+    trend_filter_markup = render_trend_filter_cards(trend_items)
+    focus_workbench_markup = render_focus_workbench(gojo_rankings, trend_items)
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
     archive_card = next((item for item in source_cards if item['name'] == '全部记录'), None)
     archive_link = archive_card['href'] if archive_card else 'archive.html'
@@ -1637,7 +1772,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css?v=20260429-members-strip1">
+    <link rel="stylesheet" href="site.css?v=20260429-hero-align1">
 </head>
 <body class="home-page">
     <div class="home-shell">
@@ -1708,10 +1843,20 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 {render_topic_cards(focus_cards)}
                 </div>
                 <a class="focus-archive-link" href="{archive_link}">查看全部 {len(records)} 条归档</a>
+                <div class="focus-workbench">
+                    <div class="section-kicker">Today Desk</div>
+                    <h3 class="focus-workbench-title">今日研究工作台</h3>
+                    <div class="focus-workbench-list">
+{focus_workbench_markup}
+                    </div>
+                </div>
             </div>
             <div class="section-panel ranking-panel" id="recent" style="--accent:#88ccff;">
                 <div class="section-kicker">Gojo Ranking</div>
-                <h2 class="section-title">近 3 天论文排行榜</h2>
+                <div class="section-title-row">
+                    <h2 class="section-title">近 3 天论文排行榜</h2>
+                    <a class="section-more-link" href="ranking.html">More</a>
+                </div>
                 <p class="panel-subtitle">只显示前五篇。评分决定优先级，未评分论文排在后面等待判断。</p>
                 <div class="research-package-list">
 {gojo_ranking_markup}
@@ -1806,6 +1951,7 @@ def main() -> None:
     write_text(PROJECT_ROOT / SOURCE_PAGES['upgrade']['file'], build_detail_page(SOURCE_PAGES['upgrade']['title'], f"{SOURCE_PAGES['upgrade']['desc']} 共 {len(upgrades)} 条。", SOURCE_PAGES['upgrade']['accent'], upgrades))
     write_text(PROJECT_ROOT / SOURCE_PAGES['discussion']['file'], build_detail_page(SOURCE_PAGES['discussion']['title'], f"{SOURCE_PAGES['discussion']['desc']} 共 {len(discussions)} 条。", SOURCE_PAGES['discussion']['accent'], discussions))
     write_text(PROJECT_ROOT / 'index.html', build_index(records, papers, source_cards, domain_cards, member_cards, starred_entries))
+    write_text(PROJECT_ROOT / 'ranking.html', build_ranking_page(records))
     print(f'Generated {len(records)} records from {SOURCE_ROOT}')
 
 

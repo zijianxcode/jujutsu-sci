@@ -80,9 +80,14 @@ sync_academy_mirror() {
 
   ACADEMY_REMOTE_STATUS="cloned"
   ensure_repo_clean "$HOMEPAGE_TMP"
-  rsync -a --delete --include='*.html' --exclude='*' "$PROJECT_ROOT/" "$HOMEPAGE_TMP/academy/"
+  rsync -a --delete \
+    --include='*.html' --include='*.css' --include='*.js' \
+    --include='*.svg' --include='*.jpg' --include='*.png' --include='*.webp' \
+    --include='vendor/' --include='vendor/**' \
+    --exclude='*' \
+    "$PROJECT_ROOT/" "$HOMEPAGE_TMP/academy/"
 
-  if commit_if_needed "$HOMEPAGE_TMP" "Auto sync academy content from academic source" academy/*.html; then
+  if commit_if_needed "$HOMEPAGE_TMP" "Auto sync academy content from academic source" academy/; then
     if retry_command 3 git -C "$HOMEPAGE_TMP" push origin "$BRANCH" >/dev/null 2>&1; then
       ACADEMY_REMOTE_STATUS="pushed"
       ACADEMY_COMMIT_STATUS="committed"
