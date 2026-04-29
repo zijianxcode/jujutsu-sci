@@ -66,10 +66,10 @@ SOURCE_ROOT, PROJECT_ROOT, APP_CONFIG = resolve_paths()
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
-    '悠仁': {'image': 'yujin.jpg', 'accent': '#ff6b35', 'role': '跨领域追踪'},
-    '野蔷薇': {'image': 'panda.jpg', 'accent': '#f97316', 'role': '批判性分析'},
-    '惠': {'image': 'megumi.jpg', 'accent': '#27ae60', 'role': '写作与方法论'},
-    '五条悟': {'image': 'gojo.jpg', 'accent': '#9b59b6', 'role': '前沿评审'},
+    '悠仁': {'image': 'yujin.jpg', 'accent': '#ff6b35', 'role': '跨域线索追踪'},
+    '野蔷薇': {'image': 'panda.jpg', 'accent': '#f97316', 'role': '批判视角与问题意识'},
+    '惠': {'image': 'megumi.jpg', 'accent': '#27ae60', 'role': '方法论与写作沉淀'},
+    '五条悟': {'image': 'gojo.jpg', 'accent': '#9b59b6', 'role': '前沿判断与优先级'},
 }
 
 SOURCE_PAGES = {
@@ -738,7 +738,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <meta name="description" content="{subtitle}">
-    <meta property="og:title" content="{title} - 咒术SCI高专">
+    <meta property="og:title" content="{title} - 研究所">
     <meta property="og:description" content="{subtitle}">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
@@ -751,10 +751,10 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <div class="nav-overlay" id="navOverlay"></div>
     <aside class="detail-sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <img class="sidebar-brand-mark" src="logo.jpg" alt="学术小龙虾 logo">
+            <img class="sidebar-brand-mark" src="logo.jpg" alt="研究所 logo">
             <div class="brand-copy">
-                <strong>学术小龙虾</strong>
-                <span>{title}</span>
+                <strong>研究所</strong>
+                <span>无量空处</span>
             </div>
         </div>
         <a class="sidebar-back" href="index.html">← 返回总览</a>
@@ -1256,17 +1256,15 @@ def render_member_cards(items: list[dict]) -> str:
     html = []
     for item in items:
         html.append(f'''                <a class="member-card" href="{item['href']}">
-                    <div class="member-head">
-                        <div class="member-profile">
-                            <img class="member-avatar" src="{item['image']}" alt="{item['name']}" width="56" height="56" loading="lazy">
-                            <div>
-                                <div class="member-name">{item['name']}</div>
-                                <div class="member-role">{item['role']}</div>
-                            </div>
+                    <img class="member-avatar" src="{item['image']}" alt="{item['name']}" width="64" height="64" loading="lazy">
+                    <div class="member-copy">
+                        <div class="member-name">{item['name']}</div>
+                        <div class="member-role">{item['role']}</div>
+                        <div class="member-meta">
+                            <span>{item['count']} 条记录</span>
+                            <span>进入</span>
                         </div>
-                        <div class="member-count">{item['count']}</div>
                     </div>
-                    <div class="member-snippet">{item['desc']}</div>
                 </a>''')
     return '\n'.join(html)
 
@@ -1632,23 +1630,23 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>咒术SCI高专</title>
+    <title>研究所</title>
     <meta name="description" content="围绕论文追踪、主题沉淀与成员进化持续更新的学术协作主页。">
-    <meta property="og:title" content="咒术SCI高专">
+    <meta property="og:title" content="研究所">
     <meta property="og:description" content="围绕论文追踪、主题沉淀与成员进化持续更新的学术协作主页。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="site.css?v=20260429-members-strip1">
 </head>
 <body class="home-page">
     <div class="home-shell">
         <header class="topbar">
             <div class="brand">
-                <img class="brand-mark" src="logo.jpg" alt="学术小龙虾 logo">
+                <img class="brand-mark" src="logo.jpg" alt="研究所 logo">
                 <div class="brand-copy">
-                    <strong>咒术SCI高专</strong>
-                    <span>宗旨与简介</span>
+                    <strong>研究所</strong>
+                    <span>无量空处</span>
                 </div>
             </div>
             <form class="topbar-search" id="homeSearchForm" role="search">
@@ -1672,7 +1670,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
             <div class="hero-panel" style="--accent:#ff6b35;">
                 <div class="section-kicker">Research Dashboard</div>
                 <div class="hero-copy">
-                    <h1>咒术SCI高专</h1>
+                    <h1>研究所</h1>
                     <p>本主页以追踪前沿论文、沉淀研究主题、记录成员能力进化为核心，构建一个持续更新的学术协作场。我们希望把阅读、总结、讨论与写作连接成清晰可浏览的知识流，让每一次学习都能被积累、被连接、被推进。</p>
                 </div>
                 <div class="hero-actions">
@@ -1754,8 +1752,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 
         <section class="section-panel" id="members" style="margin-top:22px; --accent:#9b59b6;">
             <div class="section-kicker">Members</div>
-            <h2 class="section-title">按成员浏览</h2>
-            <p class="panel-subtitle">成员页全部从对应的 <code>XX-能力进化.md</code> 自动拉取，并按时间倒序排列。</p>
+            <h2 class="section-title">研究角色</h2>
             <div class="member-grid">
 {render_member_cards(member_cards)}
             </div>

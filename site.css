@@ -715,6 +715,25 @@ input {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.member-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#members {
+    padding: 30px 0 8px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+#members .member-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
 .focus-link-list {
     grid-template-columns: 1fr;
     gap: 0;
@@ -812,28 +831,64 @@ input {
     font-size: 0.78rem;
 }
 
-.member-head {
-    align-items: flex-start;
+.member-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 118px;
 }
 
-.member-profile {
-    display: flex;
-    gap: 14px;
+#members .member-card {
+    min-height: 0;
+    padding: 18px 20px;
+    border: 0;
+    border-right: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 0;
+    background: transparent;
+}
+
+#members .member-card:last-child {
+    border-right: 0;
+}
+
+#members .member-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.035);
 }
 
 .member-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
+    width: 64px;
+    height: 64px;
+    flex: 0 0 auto;
+    border-radius: 20px;
     object-fit: cover;
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.32);
 }
 
-.member-role,
-.member-snippet {
-    margin-top: 8px;
+#members .member-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+}
+
+.member-copy {
+    min-width: 0;
+}
+
+.member-role {
+    margin-top: 4px;
     font-size: 0.92rem;
-    line-height: 1.65;
+    line-height: 1.45;
+}
+
+.member-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    color: color-mix(in srgb, var(--accent) 72%, white);
+    font-size: 0.78rem;
+    font-weight: 700;
 }
 
 .utility-grid {
@@ -1961,9 +2016,24 @@ input {
 
     .status-grid,
     .kpi-grid,
-    .member-grid,
     .utility-grid {
         grid-template-columns: 1fr;
+    }
+
+    .member-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #members .member-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #members .member-card:nth-child(2n) {
+        border-right: 0;
+    }
+
+    #members .member-card:nth-child(n + 3) {
+        border-top: 1px solid rgba(148, 163, 184, 0.12);
     }
 
     .quick-filter-strip {
