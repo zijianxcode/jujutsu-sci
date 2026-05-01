@@ -1,5 +1,59 @@
 # 问题记录与修复日志
 
+## 2026-05-01：Cron Job 采集静默失败 —— streaming 响应被 inactivity timeout 误杀
+
+### 问题现象
+
+- 4/29、4/30 连续两天，野蔷薇（13:30）和惠（14:00）显示"已采集"（last_status=ok），但实际上目录内容不完整或为空
+- 日志中大量 `TimeoutError: Cron job 'Agent3-晚间补充' idle for 1065s (limit 600s) — last_activity: receiving stream response`
+- 采集员在等待 provider 返回 streaming 响应时被 scheduler 判定为"空闲"并杀死
+
+### 根因判断
+
+**根本原因是 cron scheduler 的 inactivity timeout 逻辑存在缺陷。**
+
+Scheduler 依赖 `agent.get_activity_summary()` 的 `seconds_since_activity` 来判断 agent 是否还活着。但这个值在 streaming 期间会持续累加——因为没有新的 activity delta 到达，计时器一直在走。
+
+关键日志证据：
+```
+Job 'Agent3-晚间补充' idle for 1065s (limit 600s) | last_activity=receiving stream response | iteration=24/60
+Job 'Agent3-早间收集' idle for 3642s (limit 600s) | last_activity=waiting for provider response (streaming) | iteration=1/60
+```
+
+Agent 在第 1-24 轮迭代中都活着（说明不是真的 hang），但 scheduler 在 600s 无活动后将正在 streaming 的 agent 杀掉了。
+
+另一层因素：Gateway Telegram 连接在 4/29-4/30 期间频繁断开，导致 cron 调度出现延迟和阻塞，放大了 streaming 超时的问题。
+
+### 修复动作
+
+1. **修改 `scheduler.py` inactivity 检测逻辑**（文件：`~/.hermes/hermes-agent/cron/scheduler.py`）
+   - 在判断 inactivity 超时前，先检查 `last_activity_desc` 是否包含 "stream" 或 "receiving"
+   - 如果正在 streaming，跳过 inactivity 检查——agent 是活着的，只是 provider 还没发完数据
+
+```python
+# 修改前
+if _idle_secs >= _cron_inactivity_limit:
+    _inactivity_timeout = True
+    break
+
+# 修改后
+_is_streaming = "stream" in _last_desc.lower() or "receiving" in _last_desc.lower()
+if not _is_streaming and _idle_secs >= _cron_inactivity_limit:
+    _inactivity_timeout = True
+    break
+```
+
+2. **`.env` 中已设置 `HERMES_CRON_TIMEOUT=1800`**
+   - 将总超时从默认 600s 提升到 1800s（30分钟），应对学术搜索耗时
+
+3. **Gateway 重启加载新配置**
+
+### 预防措施
+
+- Cron job 的 "ok" 状态不等于内容真正产出——必须验证输出目录存在且 `.md` 文件数量 ≥ 2
+- Streaming 期间的"无活动"和"真正卡死"从 scheduler 角度看是一样的，必须通过 `last_activity_desc` 来区分
+- 后续如遇 job 持续超时，优先检查 `last_activity` 字段：如果是 "receiving stream response"，说明是 provider 端慢，不是 agent 端卡死
+
 ## 2026-04-28：10 分制评分没有进入首页排行榜，CloudBase 可能只同步 HTML 导致样式旧
 
 ### 问题现象
