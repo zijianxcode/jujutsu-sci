@@ -1,5 +1,77 @@
 # 问题记录与修复日志
 
+## 2026-05-03：auto_sync_site.sh push 超时静默失败，cron 报 ok 但 GitHub 未更新
+
+### 问题现象
+
+- 5/3 下午 15:40 jujutsu-sci 仓库成功 commit `922adf0`（cron jobs 触发）
+- 16:01 personal-homepage academy mirror 成功推送 commit `114a5f6`
+- 16:03 cron ⑤同步推送执行，cron 显示 "ok"
+- 但 jujutsu-sci 和 personal-homepage 均无 16:03 的新 commit
+- 线上 CloudBase 主页缺 15:40 之后采集的最新内容（悠仁/野蔷薇/惠/五条悟采集）
+
+### 根因判断
+
+**根本原因：push 超时时静默失败，cron job 的 "ok" 状态不等于内容真正到达 remote。**
+
+两层问题叠加：
+
+1. **git push 超时但脚本正常退出**
+   `retry_command 3 git push` 超过单次操作级别 timeout 时会一直等待，网络抖动后 git 命令hang住，3次×3秒重试共约 27 秒。但 cron job 显示 "ok"（进程正常退出），未区分"内容真正同步"和"操作失败但退出码非零"。
+
+2. **`commit_if_needed` 返回 false 时静默 exit 0**
+   push 失败后走 `else` 分支打印 "No staged changes after sync" 并 exit 0，cron 认为任务成功完成。
+
+3. **academy mirror clone 用普通 git clone 无 timeout**
+   网络慢时 clone 也会挂住，直到超时才返回，但不会阻止后续步骤。
+
+### 修复动作（commit `acfb0f0`）
+
+1. **各步骤加 per-command timeout**
+   - `with_timeout()`: git fetch/clone 等通用操作上限 60s
+   - `with_push_timeout()`: push 操作上限 90s
+   - 永远不会再hang死
+
+2. **`verify_remote_has_commit()` — push 后验证 remote**
+   每次 push 后 fetch remote 的 HEAD 比对 SHA，不合就走 retry 循环。push 返回成功不意味着 remote 真的收到了。
+
+3. **retry 循环在 push 失败时不立刻退出**
+   先 push+verify，失败后等 5 秒重试最多 3 轮，给网络恢复空间。
+
+4. **exit code 语义化**
+   - `0` = jujutsu-sci push 到 remote + academy mirror 均成功
+   - `1` = sync_from_source.py 生成失败
+   - `2` = jujutsu-sci push 三轮都没到 remote
+   - `3` = academy mirror push 失败
+
+5. **`commit_if_needed` 区分两种情况**
+   `return 1` = 没什么要提交的（正常），`exit 2` = git 操作报错（异常）。不再把"没内容"和"操作失败"混为 exit 0。
+
+6. **academy mirror clone 改用 bare repo + GIT_WORK_TREE 模式**
+   避免普通 clone 产生 working tree 冲突，clone 带 timeout 保护。
+
+### 验证方法
+
+```bash
+# 正常同步（check 模式先验语法）
+./auto_sync_site.sh check
+
+# 观察日志关键字
+# - "pushed and verified" = push 成功且 remote 有 commit
+# - "push attempt N timed out" = 某次 push 超时但会重试
+# - "academy: pushed and verified" = mirror 同步成功
+# - "FAILURE: jujutsu-sci push did not reach remote" = 三轮都失败，exit 2
+```
+
+### 预防措施
+
+- **永远不要依赖 cron job 的 "ok" 状态判断内容真正上线**——必须验证 GitHub remote commit 存在
+- **每次 push 后必须验证 remote**，不能只看本地 exit code
+- **exit code 必须语义化**，让调用方（cron/告警系统）能区分"没事情做"和"事情做失败了"
+- 后续考虑在 cron job 失败时接入 Telegram 告警，不只是静默记录 ok
+
+---
+
 ## 2026-05-01：Cron Job 采集静默失败 —— streaming 响应被 inactivity timeout 误杀
 
 ### 问题现象
