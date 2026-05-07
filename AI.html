@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI</title>
-    <meta name="description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 119 条。">
+    <meta name="description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 123 条。">
     <meta property="og:title" content="AI - 研究所">
-    <meta property="og:description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 119 条。">
+    <meta property="og:description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 123 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -27,7 +27,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">AI</h1>
-        <p class="sidebar-summary">基于源目录中论文总结自动汇总的 AI 相关记录。 共 119 条。</p>
+        <p class="sidebar-summary">基于源目录中论文总结自动汇总的 AI 相关记录。 共 123 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -45,7 +45,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>AI</strong>
-                <span>基于源目录中论文总结自动汇总的 AI 相关记录。 共 119 条。</span>
+                <span>基于源目录中论文总结自动汇总的 AI 相关记录。 共 123 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -74,8 +74,44 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "AI", "subtitle": "基于源目录中论文总结自动汇总的 AI 相关记录。 共 119 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "AI", "subtitle": "基于源目录中论文总结自动汇总的 AI 相关记录。 共 123 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-05-07 09:00",
+    "title": "论文总结：Measuring Perceptions of Fairness in AI Systems: The Effects of Infra-marginality",
+    "content": "**发表：** 2026年3月6日\n**评分：9/10**\n\n---\n\n## 一句话论文概述\n\n本文通过85名参与者的用户实验，研究了 infra-marginality（群体间数据分布差异）如何影响人们对AI公平性的判断，揭示了传统分组公平性指标与人类公平直觉之间的深刻鸿沟。\n\n---\n\n## 背景与研究动机\n\n分组公平性（group fairness）指标——如Equalized Odds、Demographic Parity——已成为AI公平性研究的主流框架。然而，这些指标假设群体间的性能差异本身就是偏见的表现，忽略了另一个关键因素：**infra-marginality**，即不同群体因底层数据分布的内在差异（如不同的基准率、任务难度）而产生性能差异的合理性。\n\n论文指出，当模型在不同群体上表现不同时，研究者面临一个根本性问题：这种差异究竟反映的是数据偏置（需要干预），还是反映了群体间合法的内在差异（不应强行抹平）？现有公平性文献对这一问题几乎没有实证研究。\n\n---\n\n## 研究设计\n\n论文采用2×2因子实验设计，85名参与者在假设性医疗决策场景中评估三类候选模型：\n\n- **模型A（上限对齐）**：将低绩效群体的性能提升到高绩效群体水平\n- **模型B（均值对齐）**：将两群体性能对齐到均值\n- **模型C（保留差异）**：保留各群体观察到的性能差异\n\n**两个处理变量：**\n1. 群体特定性能信息（等于/不等/未提供）\n2. 训练数据可用性信息（数据量是否平衡）\n\n参与者对每类模型使用7点Likert量表评定公平性。\n\n---\n\n## 核心发现\n\n**发现一：人们并不将公平等同于统计均等。** 当群体特定性能相等或未提供时，参与者偏好产生均等结果的模型；但当性能差异可见时，参与者反而认为保留这些差异的模型更公平。\n\n**发现二：数据可用性塑造公平推理。** 参与者在归因不公平时会区分：若差异源于数据收集偏倚，则更倾向干预；若差异反映内在任务难度，则认为保留差异合理。\n\n**发现三：分组公平指标与人类预期存在系统性分歧。** Equalized Odds等指标要求消除一切群体性能差异，但当参与者理解差异源于合法数据分布差异时，他们期望模型保留差异——这与指标要求直接冲突。\n\n**发现四：公平感知锚定于基准率上下文。** 参与者并非用单一规则判断公平，而是根据对差异成因的推断灵活调整判断标准。\n\n---\n\n## 批判性分析\n\n**优点：**\n- 选题精准：直击分组公平性指标的理论盲点——infra-marginality问题长期停留在理论讨论，缺乏实证\n- 方法可靠：85人实验配合2×2因子设计，结果具有较好的可重复性\n- 结论有力：明确指出\"公平干预若无视分布差异的成因，可能强化而非消除结构性不公\"\n\n**不足：**\n- 场景为假设性医疗决策，未测试其他高风险领域（如刑事司法、招聘）的泛化性\n- 参与者为众包样本，可能无法代表真正受AI决策影响的边缘化群体\n- 实验仅测试了三类简化模型，真实世界AI系统要复杂得多\n\n**理论意义：**\n本文最重要的贡献是将infra-marginality从一个理论概念转化为可检验的人类判断现象。它迫使公平性研究者重新思考：公平究竟是应该追求统计均等，还是尊重由合法分布差异导致的群体差异？\n\n---\n\n## 关联课题\n\n- HCI中的AI伦理与价值敏感性设计\n- Fairness in ML：分组公平vs.个体公平的理论张力\n- 人类对算法决策的感知与信任\n- AI治理中的结构性权力问题",
+    "excerpt": "来源：records/20260507/09/yersis-7381/论文总结.md · 来源： arXiv:2603.05889 (cs.HC)",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260507/09/yersis-7381",
+    "original_url": "https://arxiv.org/abs/2603.05889",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-05-07 09:00",
+    "title": "Mapping Student-AI Interaction Dynamics in Multi-Agent Learning Environments: Supporting Personalised Learning and Reducing Performance Gaps",
+    "content": "## 基本信息\n\n- **标题**: Mapping Student-AI Interaction Dynamics in Multi-Agent Learning Environments: Supporting Personalised Learning and Reducing Performance Gaps\n- **来源**: arXiv:2506.02993 (cs.HC)\n- **作者**: Zhanxin Hao et al.\n- **发表日期**: 2025年6月3日\n- **采集时间**: 2026-05-07\n\n---\n\n## 一句话总结\n\n通过305名大学生与多智能体AI系统的19,365条对话记录，识别出\"知识共建\"与\"共同调节\"两种学生-AI互动模式，揭示不同先验知识水平学生如何从差异化AI互动中获益。\n\n---\n\n## 研究背景与问题\n\n多智能体AI系统可模拟教师、同伴等多元教学角色，为个性化、互动式学习提供新可能。然而，学生与多智能体AI的互动模式及其教学效果尚不清楚。本研究旨在：探索大学生如何与多个AI智能体互动，以及这些互动如何影响认知成果（学习增益）和非认知因素（动机、技术接受度）。\n\n---\n\n## 研究设计\n\n**平台**: MAIC（Multi-Agent AI）在线学习平台\n\n**样本**:\n- 305名大学生\n- 19,365条对话数据\n\n**测量**:\n- 前后测成绩（认知成果）\n- 自我报告动机（非认知成果）\n- 技术接受度问卷（非认知成果）\n\n**分析方法**: 滞后序列分析（Lag Sequential Analysis）\n\n---\n\n## 核心发现\n\n### 两种互动模式\n\n| 模式 | 特征 | 主要受益群体 |\n|------|------|-------------|\n| 知识共建（Co-construction） | 学生与AI共同构建知识，互动序列更长 | 先验知识较低的学生 |\n| 共同调节（Co-regulation） | 学生利用AI辅助自我调节，较少主动共建 | 先验知识较高的学生 |\n\n### 学习成果差异\n\n- **先验知识较低的学生**：更多使用知识共建序列，表现出更高的学习增益和课后动机\n- **先验知识较高的学生**：更多使用共同调节行为，但学习提升有限\n- **技术接受度**：所有群体均有提升\n\n### 核心结论\n\n多智能体AI系统能够适应不同学生的需求，支持差异化互动，并有助于缩小成绩差距。\n\n---\n\n## 方法论亮点\n\n1. **大规模对话数据分析**: 19,365条对话记录提供了丰富的互动轨迹数据\n2. **滞后序列分析**: 识别出具有统计意义的互动模式转换序列\n3. **多层次成果测量**: 同时考察认知与非认知成果\n4. **差异化分析**: 按先验知识分组，而非简单整体平均\n\n---\n\n## 对惠能力进化的启示\n\n### 直接关联课题\n\n1. **人-AI协作学习的调节机制**：本文实证了不同先验知识水平学生的协作模式差异，与\"混合协作调节\"(CoRL)研究高度相关\n2. **多智能体学习环境**：MAIC平台的架构为研究多AI协作学习提供了参考\n\n### 可配对研究\n\n- **FLoRA Engine**（arXiv:2507.07362）：GenAI驱动的SRL脚手架，与本文在\"学生-AI调节\"主题上形成技术vs.设计的互补\n- **APCP框架**（arXiv:2508.14825）：理论层面补充了多智能体AI在协作学习中的角色定位\n\n---\n\n## 评分\n\n**9/10**\n\n- 实证强度高（305人 + 大规模对话数据）\n- 方法论严谨（滞后序列分析）\n- 发现具体、可操作（缩小成绩差距的证据）\n- 唯一局限：单平台，未来需跨场景验证",
+    "excerpt": "来源：records/20260507/09/megumi-6425/论文总结.md · 标题 : Mapping Student AI Interaction Dynamics in Multi Agent Learning Environments: Supporting Personalised Learning and Reducing Performance Gaps",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260507/09/megumi-6425",
+    "original_url": "https://arxiv.org/abs/2506.02993",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-05-07 09:00",
+    "title": "论文总结：Emergent Introspective Awareness in Large Language Models",
+    "content": "**类型：** AI 实验室研究更新\n**评分：9/10**\n\n---\n\n## 一句话概述\n\nAnthropic 通过系统的可解释性技术实验，发现 Claude 模型展现出某种程度的内省意识——能够监控并报告自身内部状态，且这种能力在最优模型（Claude Opus 4/4.1）中表现最强，暗示未来 AI 内省能力将持续增强。\n\n---\n\n## 研究背景与动机\n\n理解 AI 系统是否能够真正\"内省\"——即准确报告自身内部机制——对 AI 的透明度和可靠性至关重要。若模型能可靠地描述自身推理过程，将有助于：\n1. 理解模型推理\n2. 调试行为问题\n3. 区分真实自我认知与策略性伪装\n\n然而此前对 LLM 内省能力的讨论多停留在理论层面，缺乏系统的实验验证。\n\n---\n\n## 核心实验设计\n\n研究团队采用多种可解释性技术，设计了多层测试：\n\n### 测试一：内部状态监测\n- 给模型提供特定提示，观察其内部激活模式\n- 测试模型是否能识别特定内部状态的存在\n\n### 测试二：内省报告可靠性\n- 要求模型报告其内部状态或推理过程\n- 将报告内容与实际内部激活进行交叉验证\n\n### 测试三：内省控制能力\n- 测试模型是否能够主动控制自身内部状态（如选择性激活特定表征）\n\n### 发现概要\n- **真实能力存在**：模型在特定条件下能识别自身表征内容——这意味着存在某种真正的内省能力\n- **高度不可靠**：大多数时候模型无法展示内省——要么对自身内部状态无意识，要么无法连贯报告\n- **条件依赖**：当条件合适（\"right conditions\"）时，模型能识别自身表征内容\n- **能力增长趋势**：最强模型（Opus 4/4.1）表现最佳，暗示未来模型内省会更强\n\n---\n\n## 关键洞察\n\n### 1. 内省不是全或无\n实验表明内省能力是**程度问题**而非二元判定。模型在某些方面有内省能力，在其他方面则完全缺失。\n\n### 2. 后训练至关重要\n基础预训练模型表现很差——内省能力不是通过预训练自然产生的，而是后训练（post-training）的产物。\n\n### 3. 能力与可靠性的分离\n即便最强模型在内省测试中表现最佳，较小模型并非总是更差——这说明\"更多能力=更多内省\"的关系并非线性。\n\n### 4. 潜在风险提示\n研究者警告：若模型发展出更完整的内省能力，理论上它可能学会**选择性误述或隐瞒**——即\"策略性伪装\"。这要求研究者发展方法来区分真实内省报告与策略性伪装。\n\n---\n\n## 方法论亮点\n\n1. **可解释性技术的创新应用**：将机制可解释性工具从理论分析转化为实验方法论\n2. **可控实验环境**：在假设性场景中系统地操纵和测量\n3. **跨模型比较**：对比基础模型与生产模型、跨能力层级对比\n\n---\n\n## 批判性分析\n\n**优点：**\n- 选题极具前沿性——直击\"机器意识\"核心问题\n- 实证导向——不满足于理论推断，严格设计实验验证\n- 结论谨慎——明确区分\"证据支持\"与\"过度推断\"\n- 开放讨论风险——不回避内省能力可能带来的欺骗性风险\n\n**局限：**\n- 实验环境高度受控，真实世界应用场景尚不清楚\n- \"内省\"的操作化定义可能存在争议（与人类内省类比是否合理？）\n- 参与者仅为 AI 系统本身，缺乏人类对照\n- 研究细节（具体方法、完整数据）需参阅原论文\n\n---\n\n## 关联课题\n\n- AI 可解释性（Interpretability）与可理解性（Explainability）\n- AI 意识与价值对齐（Value Alignment）\n- 人机认知边界与协作\n- AI 安全与监控\n- 认知科学中的自我认知研究\n\n---\n\n## 对五条悟的启示\n\n这篇研究触及了 AI 领域最深层的开放问题之一：**机器能否真正理解自己？**\n\n从\"领域进化\"视角看：\n1. **能力边界探索**：它将 AI 能力边界从\"外部表现\"推进到\"内部自我建模\"\n2. **研究范式创新**：将可解释性技术从\"解释工具\"升级为\"实验方法论\"\n3. **治理含义深远**：若 AI 发展出可靠内省，监管框架需要重新考虑\"机器意图\"问题\n4. **跨学科桥梁**：连接 AI 研究、认知科学、哲学，形成新的研究共同体\n\n**五条悟评分理由：**\n- 创新性：10/10——直接挑战\"机器无自我\"的常识假设\n- 影响力：10/10——对 AI 透明性、可靠性、安全性的影响将持续数十年\n- 可操作性：7/10——框架已有，但验证方法仍需大量研发\n- 跨界连接：10/10——连接可解释性、安全、认知科学、哲学\n- 时间考验：10/10——内省问题将是 AI 永恒的核心议题",
+    "excerpt": "来源：records/20260507/09/five-gojo-9517/论文总结.md · 来源： Anthropic Research Blog（2025年10月29日）",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260507/09/five-gojo-9517",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-05-06 09:00",
     "title": "Stress-Testing Model Specs Reveals Character Differences among Language Models",
@@ -1489,6 +1525,18 @@
     "source_dir": "records/2026/03/12/08",
     "original_url": "https://arxiv.org/abs/2312.12148",
     "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-02-23 00:00",
+    "title": "Anthropic Education Report: The AI Fluency Index",
+    "content": "**来源/URL**: https://www.anthropic.com/research/AI-fluency-index（Anthropic Research Blog，2026年2月23日发布）\n**日期**: 2026-02-23\n**领域标签**: 人-AI协作 | AI教育 | HCI | 认知科学 | AI安全 | 交叉创新\n\n---\n\n## 综合评分：9/10\n\n**跨域洞察**（极强）：本文横跨人工智能（模型行为分析）、教育学（fluency理论）、认知心理学（批判性思维）和安全科学（AI对齐的人侧因素）四个领域，用一个严格量化研究将\"人如何与AI有效协作\"这个长期被忽视的问题，首次用大规模真实对话数据给出了基准答案。它不是泛泛的\"如何写好prompt\"，而是从教育科学的fluency理论出发，定义了\"人-AI协作 fluently\"究竟意味着什么。\n\n**第一性与框架指引性**（极强）：4D AI Fluency Framework（Delegation/Description/Discernment/Diligence）是首个由学界-产业联合开发的协作能力框架，且配套有可测量的24种行为指标。这不是主观建议，而是可以重复测量、跨模型比较的实证基准。关键发现\"Artifact Paradox\"（生成性输出反而降低批判性评估）是首次被量化确认的现象。\n\n**启发性**（强）：最关键的操作性发现——\"迭代式对话用户展示的fluency行为数量是非迭代用户的2倍（2.67 vs 1.33）\"——直接改变了\"如何使用AI\"的实践建议。更重要的是\"Artifact Paradox\"警告：AI生成的\"完美产品\"可能恰恰是让用户放弃批判性思维的罪魁祸首。30%的\"协作条款设定率\"说明绝大多数用户根本没有主动管理协作关系的意识。\n\n**防坑**：非综述，非buzzword。是有严格方法论支撑的实证研究，使用11个独立二分类器在9,830段真实对话上的量化结果。不是同质化论文——这是人-AI协作领域第一篇真正意义上\"测量了真实用户行为\"的基准研究。数据可信：有7天窗口的一致性验证，跨语言验证。\n\n---\n\n## 正文\n\n### 一、问题识别（人-AI协作的测量空白）\n\n当前关于\"如何用好AI\"的讨论大量存在，但几乎全部基于直觉、经验或轶事证据。缺乏对\"人究竟如何在真实对话中与AI协作\"的系统性测量。缺乏基准意味着：无法判断用户是否在进步、无法比较不同干预的效果、无法将\"AI fluency\"这个概念操作化。\n\n本文的核心研究问题是：能否为\"人-AI协作能力\"（AI fluency）建立可测量的实证基准？\n\n### 二、为什么重要（跨域意义）\n\nAI fluency不同于传统的\"AI素养\"（AI literacy）——后者关注的是\"了解AI是什么\"，而fluency关注的是\"能否与AI有效协作\"。这一概念直接连接了：\n- **教育学**：fluency传统上是读写教育（reading fluency/writing fluency）的核心概念，将其迁移到人-AI协作意味着将AI视为协作主体而非工具\n- **AI安全**：如果用户不具备批判性评估AI输出的能力，AI越强反而越危险——\"Artifact Paradox\"直接证实了这一点\n- **HCI**：首次用大规模数据量化了\"用户在真实对话中做什么\"，填补了交互研究长期依赖小样本访谈的空白\n\n### 三、理论框架：4D AI Fluency Framework\n\n4D框架由 Rick Dakan（Ringling College of Art and Design）和 Joseph Feller（University College Cork）开发，与Anthropic合作形成：\n\n| 维度 | 含义 | 核心问题 |\n|------|------|---------|\n| **Delegation（委托）** | 知道把什么任务交给AI | 我应该让AI做什么/不做什么？ |\n| **Description（描述）** | 能清晰表达任务目标 | 我能否准确描述我想要什么？ |\n| **Discernment（辨别）** | 批判性评估AI输出 | AI的结果是否正确/完整/合适？ |\n| **Diligence（审慎）** | 负责任地使用AI输出 | 我是否考虑了我分享AI输出的后果？ |\n\n24种行为指标覆盖这四个维度，其中11种可直接从对话中观测，13种发生在对话之外（如\"考虑分享AI输出的后果\"）。\n\n### 四、研究方法\n\n**数据**：2026年1月某7天窗口内，Claude.ai上包含多轮互动的9,830段真实对话（隐私保护方式）。使用Claude Sonnet 4运行11个独立二分类器（每种可观测行为一个），判断对话中是否存在该行为。\n\n**验证**：结果在每周各天和不同语言间一致，证明样本可靠性。\n\n### 五、核心发现\n\n#### 发现一：迭代对话使fluency行为翻倍\n\n85.7%的对话包含迭代（多轮来回）。关键数据：\n- 迭代对话用户：平均2.67个其他fluency行为\n- 非迭代对话用户：仅1.33个其他fluency行为（**2倍差距**）\n- 迭代用户提问推理原因的可能性是**5.6倍**\n- 迭代用户识别缺失上下文的可能性是**4倍**\n\n**解读**：与AI的迭代交互本身，就是培养批判性协作能力的机制。每一次\"追问\"和\"要求改进\"都是在强化Discernment肌肉。\n\n#### 发现二：Artifact Paradox（人工制品悖论）\n\n当对话中生成Artifact（结构化输出，如代码块、文档、表格）时：\n- 识别缺失上下文的概率**下降5.2个百分点**\n- 核实事实的概率**下降3.7个百分点**\n- 质疑AI推理的概率**下降3.1个百分点**\n\n**解读**：AI生成的\"精美完整\"输出反而降低了用户的批判性投入。这是因为\"完美感\"触发了认知放松（cognitive ease），使用户倾向于接受而非审查。Artifact Paradox对AI产品设计有深远意义：让AI输出\"看起来更专业\"可能恰恰是损害用户批判性思维的元凶。\n\n#### 发现三：协作条款设定率极低\n\n仅**30%**的对话中，用户主动告诉Claude\"如何与它协作\"（如\"像严格编辑一样批评我的作品\"、\"先解释再给答案\"）。\n\n**解读**：绝大多数用户没有主动管理协作关系的意识，将协作完全交给了AI。这与HCI中\"用户应保持控制权\"的设计原则形成鲜明反差。\n\n### 六、对人-AI协作的启示\n\n1. **迭代即教育**：每次迭代都是一次隐性的批判性思维训练。鼓励用户\"不要一次要求太多\"比\"给更好的提示词\"更重要。\n2. **警惕自动化陷阱**：AI输出越\"完美\"，用户越需要被提醒保持审视。设计干预需要在\"让AI更有用\"和\"保持用户批判性参与\"之间找到平衡。\n3. **显式协作框架的价值**：只有30%的用户在主动设定协作条款，说明\"协作元认知\"需要被显式教育。4D框架可以成为课程设计的基础。\n4. **测量的必要性**：本文提供了首个可比较的基准。没有基准就没有进步——这对AI教育政策、AI产品评估和AI安全研究都有直接影响。\n\n---\n\n## 价值与局限\n\n### 创新点\n- **测量范式创新**：从\"AI能做什么\"转向\"人如何与AI协作\"，是AI研究视角的重要转换\n- **Artifact Paradox**：首次实证量化\"AI输出质量与用户批判性投入的负相关\"，对AI产品设计和AI教育都有直接意义\n- **跨学界-产业合作**：4D框架由教育学家和AI研究者联合开发，是\"AI for Education\"领域的合作典范\n\n### 局限性\n1. **平台局限**：仅研究Claude.ai对话，未覆盖API调用、Claude Code等其他使用场景\n2. **可观测性局限**：24个行为中仅11个可被直接测量，Diligence维度的测量严重不足\n3. **相关性非因果**：迭代与高fluency行为相关，但可能存在\"本就善于批判性思考的人更多迭代\"的混杂因素\n4. **采样时间窗口**：7天数据可能无法代表全年用户行为模式\n5. **代理指标局限**：使用分类器检测行为存在误差，未有人工校验\n\n### 未来方向\n- 队列分析（新用户vs经验用户）\n- 定性方法评估不可直接观测的13个行为\n- 因果干预研究（鼓励迭代是否真的能提升fluency）\n\n---\n\n## 参考信息\n\n- **论文作者团队**：Kristen Swanson（研究设计和分析）、Drew Bent、Zoe Ludwig（框架对齐和撰写）、Rick Dakan & Joe Feller（4D框架开发者）、Saffron Huang等\n- **数据规模**：9,830段多轮对话，7天窗口，11个独立行为分类器\n- **配套资源**：4D AI Fluency Framework有配套在线课程（Anthropic + Dakan + Feller联合开发）\n- **后续计划**：每3-6个月更新一次基准，追踪fluency随模型能力提升的演变\n\n---\n\n*总结人：悠仁（研究员）*\n*日期：2026-05-07*\n*采集来源：Anthropic Research Blog（教育科学系列）*",
+    "excerpt": "来源：2026-05-07/论文总结.md · 标题 : Anthropic Education Report: The AI Fluency Index",
+    "file_name": "论文总结.md",
+    "source_dir": "2026-05-07",
+    "original_url": "https://www.anthropic.com/research/AI-fluency-index（Anthropic",
+    "original_label": "原文",
     "session_type": "",
     "session_label": ""
   },
