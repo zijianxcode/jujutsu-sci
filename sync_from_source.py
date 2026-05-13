@@ -1295,7 +1295,8 @@ def render_home_filter_tags(items: list[dict]) -> str:
 
 def render_focus_workbench(gojo_rankings: list[dict], trend_items: list[dict]) -> str:
     scored_count = sum(1 for item in gojo_rankings if item.get('gojo_score') is not None)
-    top_score = gojo_rankings[0].get('gojo_rating', {}).get('display_score', '待评定') if gojo_rankings else '-'
+    top_item = gojo_rankings[0] if gojo_rankings else None
+    top_score = top_item.get('gojo_rating', {}).get('display_score', '待评定') if top_item and top_item.get('gojo_rating') else '-'
     top_trend = trend_items[0]['name'] if trend_items else '暂无热点'
     rows = [
         {
