@@ -65,7 +65,7 @@ def resolve_paths() -> tuple[Path, Path, dict]:
 SOURCE_ROOT: Path = Path()
 PROJECT_ROOT: Path = Path()
 APP_CONFIG: dict = {}
-ASSET_VERSION = '20260429'
+ASSET_VERSION = '20260515-i18n1'
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
@@ -91,6 +91,14 @@ DOMAIN_META = {
     'HCI': {'file': 'HCI.html', 'accent': '#88ccff', 'desc': '基于关键词自动归类的人机交互与协作研究。'},
     'UX': {'file': 'UX.html', 'accent': '#cc88ff', 'desc': '基于关键词自动归类的体验与设计研究。'},
 }
+
+
+def render_language_switch() -> str:
+    return '''    <div class="language-switch" data-i18n-root aria-label="Language switcher">
+        <button class="language-option is-active" type="button" data-lang-option="zh" aria-pressed="true">中</button>
+        <button class="language-option" type="button" data-lang-option="en" aria-pressed="false">EN</button>
+    </div>
+'''
 
 KEYWORDS = {
     'NLP': ['nlp', 'language', 'lingu', 'text', 'token', 'dialog', 'translation', 'cross-lingual', '语言', '文本', '对话', '跨语言', '翻译', '语义', '低资源'],
@@ -755,6 +763,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     <script src="vendor/purify.min.js"></script>
 </head>
 <body class="detail-page" style="--accent:{accent};">
+{render_language_switch()}
     <div class="nav-overlay" id="navOverlay"></div>
     <aside class="detail-sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -819,6 +828,7 @@ def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict
     </script>
     <script src="site-search-utils.js?v={ASSET_VERSION}"></script>
     <script src="site-detail.js?v={ASSET_VERSION}"></script>
+    <script src="site-i18n.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''
@@ -1637,6 +1647,7 @@ def build_ranking_page(records: list[dict]) -> str:
     <link rel="stylesheet" href="site.css?v={ASSET_VERSION}">
 </head>
 <body class="home-page ranking-page">
+{render_language_switch()}
     <div class="home-shell">
         <header class="topbar ranking-topbar">
             <a class="brand" href="index.html">
@@ -1696,6 +1707,7 @@ def build_ranking_page(records: list[dict]) -> str:
             show(10);
         }})();
     </script>
+    <script src="site-i18n.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''
@@ -1784,6 +1796,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     <link rel="stylesheet" href="site.css?v={ASSET_VERSION}">
 </head>
 <body class="home-page">
+{render_language_switch()}
     <div class="home-shell">
         <header class="topbar">
             <div class="brand">
@@ -1919,6 +1932,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     </script>
     <script src="site-search-utils.js?v={ASSET_VERSION}"></script>
     <script src="site-index.js?v={ASSET_VERSION}"></script>
+    <script src="site-i18n.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''

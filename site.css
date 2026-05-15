@@ -57,6 +57,47 @@ input {
     margin: 0 auto;
 }
 
+.language-switch {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 80;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    background: rgba(7, 17, 31, 0.72);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 16px 38px rgba(2, 6, 23, 0.22);
+}
+
+.language-option {
+    min-width: 38px;
+    height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(203, 213, 225, 0.82);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.language-option:hover {
+    color: var(--text);
+}
+
+.language-option.is-active {
+    background: color-mix(in srgb, var(--accent) 72%, white);
+    color: #07111f;
+}
+
 .topbar {
     display: flex;
     align-items: center;
@@ -124,6 +165,10 @@ input {
 .topbar-search-input::placeholder {
     color: rgba(148, 163, 184, 0.82);
     font-weight: 500;
+}
+
+body[data-lang="en"] .topbar-search-input {
+    font-size: 0.94rem;
 }
 
 .topbar-search-button {
@@ -2012,6 +2057,13 @@ input {
 @media (max-width: 720px) {
     .home-page {
         padding: 14px;
+    }
+
+    .language-switch {
+        top: 10px;
+        right: 10px;
+        transform: scale(0.92);
+        transform-origin: top right;
     }
 
     .topbar {
