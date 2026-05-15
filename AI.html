@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI</title>
-    <meta name="description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 179 条。">
+    <meta name="description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 180 条。">
     <meta property="og:title" content="AI - 研究所">
-    <meta property="og:description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 179 条。">
+    <meta property="og:description" content="基于源目录中论文总结自动汇总的 AI 相关记录。 共 180 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -27,7 +27,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">AI</h1>
-        <p class="sidebar-summary">基于源目录中论文总结自动汇总的 AI 相关记录。 共 179 条。</p>
+        <p class="sidebar-summary">基于源目录中论文总结自动汇总的 AI 相关记录。 共 180 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -45,7 +45,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>AI</strong>
-                <span>基于源目录中论文总结自动汇总的 AI 相关记录。 共 179 条。</span>
+                <span>基于源目录中论文总结自动汇总的 AI 相关记录。 共 180 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -74,8 +74,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "AI", "subtitle": "基于源目录中论文总结自动汇总的 AI 相关记录。 共 179 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "AI", "subtitle": "基于源目录中论文总结自动汇总的 AI 相关记录。 共 180 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-05-15 09:00",
+    "title": "Sensible Agent: A Framework for Unobtrusive Interaction with Proactive AR Agents",
+    "content": "## 1. 元数据\n\n| 字段 | 内容 |\n|------|------|\n| **标题** | Sensible Agent: A Framework for Unobtrusive Interaction with Proactive AR Agents |\n| **作者** | Geonsun Lee, Min Xia, Nels Numan, Xun Qian, David Li, Yanhe Chen, Achin Kulshrestha, Ishan Chatterjee, Yinda Zhang, Dinesh Manocha, David Kim, Ruofei Du |\n| **机构** | Google Research, University of Maryland, University of North Carolina at Chapel Hill, Virginia Tech, University of Cambridge |\n| **发表会议** | UIST 2025 (ACM Symposium on User Interface Software and Technology) |\n| **发表时间** | 2025年9月 |\n| **DOI** | 10.1145/3746059.3747748 |\n| **arXiv** | arXiv:2509.09255 |\n| **项目页面** | https://research.google/blog/sensible-agent-a-framework-for-unobtrusive-interaction-with-proactive-ar-agents |\n| **领域标签** | 人机交互(HCI)、增强现实(AR)、多模态交互、主动式AI代理、情境感知系统 |\n\n---\n\n## 2. 研究背景与问题\n\n### 2.1 背景\n\n随着Project Astra等 proactive AR agent 的兴起，AI代理正从\"被动响应\"向\"主动预测\"演进。然而，当前AR代理普遍依赖**显式语音指令**作为交互入口，这在以下场景中造成显著摩擦：\n\n- **社交尴尬场景**：在餐厅、博物馆、公共交通等公共场所大声对AI说话\n- **情境性障碍(SIIDs)**：双手被占用（如烹饪、提物）、环境嘈杂、视觉注意力被占用\n- **认知负荷**：用户需要主动构思查询语句，增加了心智负担\n\n### 2.2 核心问题\n\n> **如何让 proactive AR agent 在正确的时间、以正确的方式、提供正确的帮助，同时最小化对用户的干扰？**\n\n具体分解为两个子问题：\n1. **What**：代理应该在什么情境下主动提供什么帮助？\n2. **How**：代理应该以何种交互模态（视觉/听觉/手势/眼动）呈现建议，并以何种方式接收用户确认？\n\n### 2.3 现有局限\n\n- 现有系统（如Siri、Google Assistant）多为**被动响应式**，缺乏情境感知下的主动行为\n- 少数主动系统（如早期AR助手）采用\"一刀切\"的语音交互，未根据情境动态调整交互模态\n- 缺乏系统性的设计框架来指导 proactive agent 的\"what+how\"联合决策\n\n---\n\n## 3. 核心方法/系统架构\n\n### 3.1 系统概述\n\nSensible Agent 是一个**情境感知、主动式、非侵入性**的AR代理框架，其核心创新在于**联合推理\"提供什么帮助\"(what) 和 \"如何提供\"(how)**。\n\n### 3.2 四大组件架构\n\n```\n┌─────────────────────────────────────────────────────────────┐\n│                    Sensible Agent 架构                        │\n├─────────────────────────────────────────────────────────────┤\n│  (1) Context Parser          → 解析用户情境                  │\n│      · 自我中心摄像头(egocentric camera)                     │\n│      · 环境感知（场景、物体、活动）                           │\n│      · 用户状态（手部可用性、注意力、社交情境）                │\n├─────────────────────────────────────────────────────────────┤\n│  (2) Proactive Query Generator → 决定\"What\"                 │\n│      · 使用LMM(GPT-4o) + Few-shot CoT prompting            │\n│      · 输出：行动内容 + 查询格式 + 呈现模态                   │\n│      · 查询格式：多选/二选一/图标                            │\n│      · 呈现模态：纯音频/纯视觉/音视频结合                     │\n├─────────────────────────────────────────────────────────────┤\n│  (3) Interaction Module      → 决定\"How\"                    │\n│      · UI Manager：渲染视觉面板或TTS音频提示                 │\n│      · Input Modality Manager：动态启用输入模态              │\n│        - 眼动凝视(Gaze dwell, 3.5秒确认)                    │\n│        - 头部动作(点头/摇头)                                 │\n│        - 手势(握拳/张开)                                     │\n│        - 语音指令                                            │\n├─────────────────────────────────────────────────────────────┤\n│  (4) Response Generator      → 生成并交付响应                │\n│      · LLM生成自然语言回复                                   │\n│      · TTS合成音频输出                                       │\n└─────────────────────────────────────────────────────────────┘\n```\n\n### 3.3 关键设计决策\n\n| 设计维度 | 决策 | 理由 |\n|---------|------|------|\n| **查询格式** | 多选(42%) / 二选一(36%) / 图标(22%) | 数据标注研究(n=40, 960场景)显示用户偏好因情境而异 |\n| **呈现模态** | 音视频结合(38%)为主 | 冗余信息提升清晰度；但在社交敏感场景偏好纯视觉 |\n| **确认机制** | 嵌入式多模态确认 | 用户偏好自然低 effort 行为（点头、凝视停留）而非显式确认 |\n| **模态选择** | 基于情境约束动态启用 | 手部占用时启用头部/眼动；嘈杂环境禁用音频 |\n\n### 3.4 原型实现\n\n- **平台**：WebXR（兼容Android XR和WebXR）\n- **AI模型**：GPT-4o（LMM推理）+ 轻量级语音处理\n- **硬件**：XR头显（支持egocentric camera）\n- **Wizard-of-Oz控制**：用户研究中由实验者触发系统行为\n\n---\n\n## 4. 实验与评估\n\n### 4.1 形成性研究（Formative Studies）\n\n#### 研究1：专家工作坊 (n=12)\n- **目的**：探索用户在什么情境下需要 proactive AR agent\n- **发现**：\n  - 6个反复出现的情境因素：重复性活动、社交尴尬场景、不确定性、陌生环境、时间敏感场景、情境性障碍(SIIDs)\n  - 5类期望的主动行为：信息传递、提醒、建议、错误检测、环境控制\n  - 用户强烈偏好**非侵入性交互**：手势、头部动作、眼动、微妙音频提示\n\n#### 研究2：数据标注研究 (n=40, 960条响应)\n- **目的**：量化用户对查询格式和呈现模态的偏好\n- **发现**：\n  - 查询格式高度情境敏感：陌生环境偏好多选，熟悉环境偏好二选一，社交敏感场景偏好图标\n  - 呈现模态同样情境敏感：快速移动场景偏好音频，社交场景偏好纯视觉\n\n### 4.2 用户评估实验 (n=10)\n\n**实验设计**：\n- **设计类型**：被试内设计(within-subjects)\n- **对比条件**：\n  - **Sensible Agent**：主动提供情境适配建议，使用非侵入性多模态交互\n  - **Baseline**：传统语音控制AR助手（类似Project Astra）\n- **任务**：12个情境变化场景（餐厅点餐、博物馆参观、杂货店购物等），以360°视频和AR场景呈现\n- **测量指标**：\n  - NASA-TLX（认知负荷）\n  - SUS（可用性）\n  - 7点Likert偏好量表\n  - 交互时间\n\n### 4.3 核心结果\n\n| 指标 | Sensible Agent | Baseline | 显著性 |\n|------|---------------|----------|--------|\n| **NASA-TLX 心智需求** | 21.1 / 100 | 65.0 / 100 | **p < .001** ⬇️67.5% |\n| **NASA-TLX 时间需求** | 显著降低 | — | **p < .001** |\n| **NASA-TLX 整体努力** | 显著降低 | — | **p = .0039** |\n| **SUS 可用性** | \"Good\" | \"Good\" | p = .11 (无显著差异) |\n| **用户偏好(7点量表)** | μ = 6.00 | μ = 3.80 | **p = .0074** |\n| **交互时间** | μ = 28.54s | μ = 16.43s | **p < .001** (更长) |\n\n### 4.4 关键发现解读\n\n1. **认知负荷大幅降低**：Sensible Agent将心智需求从65分降至21分（降低67.5%），说明主动式、情境适配的交互显著减少了用户构思查询的心智负担。\n\n2. **用户强烈偏好主动式交互**：尽管交互时间更长（因两步确认流程），用户仍显著偏好Sensible Agent（6.0 vs 3.8），尤其在社交情境中。\n\n3. **交互时间的权衡是可接受的**：两步流程（系统建议→用户确认）导致时间增加，但用户认为这种权衡值得，因为获得了更低的认知负荷和更高的社交接受度。\n\n4. **可用性保持高水平**：两种系统都达到\"Good\"可用性评级，说明Sensible Agent在降低侵入性的同时没有牺牲可用性。\n\n### 4.5 定性反馈\n\n- **正面**：\n  - \"像自然社交对话一样\"\n  - 多选提示在陌生情境中很有帮助\n  - 最小努力输入（点头、凝视）受到赞赏\n  - 在社交场合中更自在\n\n- **负面/挑战**：\n  - 眼动交互收到 mixed feedback（可能与视觉焦点冲突）\n  - 两步确认流程在快速移动场景中略显拖沓\n  - WebXR限制下眼动通过头部朝向近似，精度有限\n\n---\n\n## 5. 局限性与未来方向\n\n### 5.1 局限性\n\n| 局限 | 说明 |\n|------|------|\n| **样本量小** | 用户评估仅n=10，统计功效有限 |\n| **Wizard-of-Oz** | 系统行为由实验者触发，非完全自主运行 |\n| **WebXR限制** | 眼动追踪通过头部朝向近似（3.5秒dwell时间），非原生眼动追踪；无法访问原始眼动/面部追踪数据（隐私保护限制） |\n| **交互时间代价** | 两步确认流程使交互时间增加约74% |\n| **情境覆盖有限** | 仅测试6类日常活动，未覆盖工作、紧急医疗等场景 |\n| **长期适应性** | 未评估长期使用后的用户适应和偏好变化 |\n| **隐私顾虑** | egocentric camera持续记录环境引发隐私担忧 |\n\n### 5.2 未来方向\n\n1. **跨设备扩展**：从XR头显扩展到智能手机、智能家居、物理机器人\n2. **长期个性化**：整合长期历史数据支持随时间演化的个性化\n3. **设备端推理**：将AI模型蒸馏到设备端，降低延迟并保护隐私\n4. **更精细的眼动追踪**：利用原生OpenXR或Unity实现gaze+pinch交互\n5. **SIIDs深度适配**：针对情境性障碍和残障用户进行更深入的适配\n6. **隐私保护API**：推动浏览器级API支持隐私安全的传感器数据处理\n\n---\n\n## 6. 五条悟评估\n\n| 维度 | 评分 | 理由 |\n|------|------|------|\n| **创新性 (Innovation)** | ⭐⭐⭐⭐☆ (4/5) | 首次提出\"what+how\"联合推理框架，将 proactive agent 的设计从单一维度扩展到内容+模态双维度。但\"主动式AI\"概念本身并非全新，框架的算法创新度有限（主要依赖LMM prompting）。 |\n| **影响力 (Impact)** | ⭐⭐⭐⭐☆ (4/5) | UIST顶会发表，Google Research背书，对AR/AI代理交互设计有直接指导意义。但n=10的用户研究限制了结论的普适性，且未开源代码/数据。 |\n| **可操作性 (Actionability)** | ⭐⭐⭐⭐⭐ (5/5) | 提供了可直接应用的设计框架、taxonomy、和实现原型。四大组件架构清晰，query format和modality selection有明确的数据支撑。对设计师和工程师都有实操价值。 |\n| **跨界连接力 (Cross-domain)** | ⭐⭐⭐⭐⭐ (5/5) | 横跨HCI、AR/VR、多模态AI、认知心理学（认知负荷理论）、社交计算。将LMM能力转化为可落地的交互设计，连接了AI技术和用户体验。 |\n| **时间考验力 (Timelessness)** | ⭐⭐⭐☆☆ (3/5) | 框架设计具有较好的前瞻性，但依赖特定技术栈（GPT-4o、WebXR），且未开源。随着AI模型和AR硬件快速迭代，具体实现可能过时，但\"what+how\"的设计思想具有持久价值。 |\n\n**总分：21/25**\n\n---\n\n## 7. 悠仁专属批注\n\n### 为什么这篇值得采？\n\n这篇论文完美契合近期权重提升的**\"AI × 新型交互方式\"**方向，且质量完全达标：\n\n1. **有实际系统验证**：WebXR原型在XR头显上运行，非纯概念论文\n2. **有用户研究数据**：形成性研究(n=52) + 评估实验(n=10)，NASA-TLX、SUS、偏好量表三管齐下\n3. **有跨领域洞察**：将LMM的推理能力转化为可落地的交互设计框架，连接AI技术和HCI设计\n4. **有失败案例和负面结果坦诚披露**：交互时间更长、眼动交互mixed feedback、WebXR限制等\n5. **顶会发表**：UIST 2025，HCI领域顶级会议\n\n### 与课题的关联\n\n- **AI+环境/隐式交互**：Sensible Agent是\"AI感知用户在场/行为/情绪后主动调整环境\"方向的标杆案例\n- **多模态交互设计**：为\"AI+手势/体感/眼动\"交互提供了系统性的设计框架\n- **认知负荷理论**：量化证明了主动式交互可将心智需求降低67.5%，对设计AI交互系统有重要参考价值",
+    "excerpt": "来源：records/20260515/09/yujin-sensible-agent/论文总结.md · | 字段 | 内容 |",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260515/09/yujin-sensible-agent",
+    "original_url": "https://doi.org/10.1145/3746059.3747748",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-05-14 09:00",
     "title": "野蔷薇 · 2026-05-14 采集报告",
