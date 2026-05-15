@@ -15,8 +15,19 @@
 | --- | --- | ---: | --- | --- |
 | v1.0.0 | `packages/jujutsu-sci-v1.0.0.zip` | 4.1 MB | `0bd49d37b3bcad92b2f3a469dc3bbe8fdc71c1c33eef75e5cf3bc7de69397955` | GitHub 源同步与自动任务基线版本。 |
 | v2.0.0 | `packages/jujutsu-sci-v2.0.0.zip` | 7.2 MB | `b4988431f573f3cdcdc1e3e444eefc5ba7b8c1b921cc1106fffba23f33cbc1e7` | Hermes 迁移与 IA 2.0 发布版本。 |
+| v2.1.0 | `packages/jujutsu-sci-v2.1.0.zip` | 7.5 MB | `78ebd5fd06d75c7ef5771535ab4c79814f9e346ac3f63608d7a4a9ccc0700d78` | Agent 能力升级：引用溯源、结构审查、方法论沉淀。 |
 
 ## 更新摘要
+
+### v2.1.0
+
+- Agent 研究能力系统性升级：引用溯源校验、论文结构完整性审查、领域调研方法论沉淀。
+- 新增 `verify_citations.py`（arXiv / CrossRef API 引用验证）和 `check_paper_quality.py`（独立完整性检查工具）。
+- 新增 `tests/test_verify_citations.py`（24 个测试），`test_pure_functions.py` 追加 12 个测试。
+- `sync_from_source.py` 新增 `--check-quality` 模式、策略提取与聚合函数。
+- 更新 `site.css` 策略章节卡片样式，成员页自动展示方法论内容。
+- 更新 Hermes 六个 cron 采集 Agent 的 prompt，嵌入引用校验、结构自检和策略沉淀步骤。
+- 更新 `docs/COLLECTION_POLICY.md`、`docs/HERMES_MIGRATION.md`、`README.md` 和 `docs/VERSION_HISTORY.md`。
 
 ### v2.0.0
 

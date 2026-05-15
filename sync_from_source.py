@@ -48,7 +48,10 @@ def resolve_paths() -> tuple[Path, Path, dict]:
     parser = argparse.ArgumentParser(description='从源目录同步内容并生成静态页面')
     parser.add_argument('--source', type=str, default=None, help='源内容目录路径')
     parser.add_argument('--project', type=str, default=None, help='网页项目输出目录路径')
+    parser.add_argument('--check-quality', action='store_true', help='运行论文完整性检查（非阻塞）')
     args = parser.parse_args()
+    global CHECK_QUALITY
+    CHECK_QUALITY = args.check_quality
     source = Path(args.source).expanduser() if args.source else path_from_config(config.get('source_root', DEFAULT_CONFIG['source_root']))
     project = Path(args.project).expanduser() if args.project else path_from_config(config.get('project_root', DEFAULT_CONFIG['project_root']))
     if not source.exists():
@@ -65,6 +68,7 @@ def resolve_paths() -> tuple[Path, Path, dict]:
 SOURCE_ROOT: Path = Path()
 PROJECT_ROOT: Path = Path()
 APP_CONFIG: dict = {}
+CHECK_QUALITY: bool = False
 ASSET_VERSION = '20260515-i18n1'
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
@@ -99,6 +103,23 @@ def render_language_switch() -> str:
         <button class="language-option" type="button" data-lang-option="en" aria-pressed="false">EN</button>
     </div>
 '''
+
+CANONICAL_SECTIONS = [
+    '研究什么',
+    '为什么研究',
+    '别人做过什么',
+    '作者怎么研究',
+    '发现了什么',
+    '价值和不足',
+]
+
+REQUIRED_METADATA_PATTERNS = [
+    (r'(?:论文标题|标题|论文)\s*[：:]', 'title'),
+    (r'作者\s*[：:]', 'authors'),
+    (r'(?:来源|会议|期刊|URL|来源/URL)\s*[：:]', 'source'),
+    (r'(?:日期|发表|年份)\s*[：:]', 'date'),
+    (r'(?:领域标签|领域|标签)\s*[：:]', 'domain_tags'),
+]
 
 KEYWORDS = {
     'NLP': ['nlp', 'language', 'lingu', 'text', 'token', 'dialog', 'translation', 'cross-lingual', '语言', '文本', '对话', '跨语言', '翻译', '语义', '低资源'],
@@ -291,6 +312,36 @@ def first_meaningful_line(content: str) -> str:
 def member_name(file_name: str) -> str | None:
     match = re.match(r'(.+)-能力进化\.md$', file_name)
     return match.group(1) if match else None
+
+
+def extract_strategy_section(content: str) -> str | None:
+    """Extract the ## 领域调研策略 section from a role evolution document.
+
+    Returns everything from the heading to the next ## or end of content.
+    """
+    pattern = r'^##\s*领域调研策略\s*\n(.*?)(?=\n##\s|\Z)'
+    match = re.search(pattern, content, re.DOTALL | re.MULTILINE)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
+def collect_strategies(records: list[dict]) -> dict[str, list[str]]:
+    """Aggregate strategy sections from all role evolution documents.
+
+    Returns {member_name: [strategy_text, ...]} keyed by member name.
+    """
+    strategies: dict[str, list[str]] = {}
+    for record in records:
+        if record['kind'] != 'member' or not record.get('member'):
+            continue
+        section = extract_strategy_section(record['content'])
+        if section:
+            name = record['member']
+            if name not in strategies:
+                strategies[name] = []
+            strategies[name].append(section)
+    return strategies
 
 
 def build_title(file_name: str, content: str) -> str:
@@ -714,6 +765,128 @@ def load_records() -> list[dict]:
     return records
 
 
+def check_paper_quality(content: str, paper_dir: Path) -> dict:
+    """Check a single 论文总结.md for completeness.
+
+    Returns dict with: file, title, errors, warnings, metadata, sections_found,
+    sections_missing, has_role_ratings, score_valid, score_value
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    metadata_found: dict[str, bool] = {}
+
+    for pattern, key in REQUIRED_METADATA_PATTERNS:
+        metadata_found[key] = bool(re.search(pattern, content, re.I))
+
+    if not metadata_found.get('title'):
+        errors.append('缺少论文标题')
+    if not metadata_found.get('authors'):
+        errors.append('缺少作者')
+    if not metadata_found.get('source'):
+        warnings.append('缺少来源信息')
+    if not metadata_found.get('date'):
+        warnings.append('缺少日期')
+    if not metadata_found.get('domain_tags'):
+        warnings.append('缺少领域标签')
+
+    sections_found: list[str] = []
+    sections_missing: list[str] = []
+    h2_titles = re.findall(r'^##\s+(.+)$', content, re.M)
+    h2_clean = [re.sub(r'[^一-鿿\w]', '', t) for t in h2_titles]
+    for canonical in CANONICAL_SECTIONS:
+        canonical_clean = re.sub(r'[^一-鿿\w]', '', canonical)
+        matched = False
+        for h2c in h2_clean:
+            if canonical_clean in h2c or h2c in canonical_clean:
+                sections_found.append(canonical)
+                matched = True
+                break
+        if not matched:
+            sections_missing.append(canonical)
+
+    if sections_missing:
+        warnings.append(f'缺少 {len(sections_missing)} 个规范章节: {", ".join(sections_missing)}')
+
+    has_role_ratings = False
+    if paper_dir.exists():
+        for sibling in paper_dir.iterdir():
+            if sibling.name.endswith('-能力进化.md'):
+                has_role_ratings = True
+                break
+
+    score_info = parse_score_info(content)
+    score_valid = score_info is not None
+    score_value = score_info.get('score') if score_info else None
+
+    if not score_valid:
+        warnings.append('缺少有效评分')
+
+    if not has_role_ratings:
+        warnings.append('无角色评分文件')
+
+    title_match = re.search(r'(?:论文标题|标题|论文)\s*[：:]\s*(.+)', content)
+    extracted_title = title_match.group(1).strip() if title_match else ''
+
+    return {
+        'file': '',
+        'title': extracted_title,
+        'errors': errors,
+        'warnings': warnings,
+        'metadata': metadata_found,
+        'sections_found': sections_found,
+        'sections_missing': sections_missing,
+        'has_role_ratings': has_role_ratings,
+        'score_valid': score_valid,
+        'score_value': score_value,
+    }
+
+
+def check_all_papers(records: list[dict], source_root: Path) -> list[dict]:
+    """Run quality check on all paper records."""
+    reports = []
+    paper_records = [r for r in records if r['kind'] == 'paper']
+    for record in paper_records:
+        report = check_paper_quality(record['content'], source_root / record['source_dir'])
+        report['file'] = record['source_dir']
+        reports.append(report)
+    return reports
+
+
+def print_quality_report(reports: list[dict]) -> None:
+    """Print quality warnings/errors to stderr."""
+    if not reports:
+        print('没有论文记录可检查。', file=sys.stderr)
+        return
+
+    total = len(reports)
+    error_count = sum(1 for r in reports if r['errors'])
+    warning_count = sum(1 for r in reports if r['warnings'])
+    clean_count = sum(1 for r in reports if not r['errors'] and not r['warnings'])
+
+    print(f'\n论文完整性检查: {total} 篇 | ✅ {clean_count} 篇无问题 | ❌ {error_count} 篇有错误 | ⚠️ {warning_count} 篇有警告', file=sys.stderr)
+    print('=' * 70, file=sys.stderr)
+
+    for report in reports:
+        if not report['errors'] and not report['warnings']:
+            continue
+        label = report['title'] or report['file']
+        print(f'\n📄 {label}', file=sys.stderr)
+        for e in report['errors']:
+            print(f'   ❌ {e}', file=sys.stderr)
+        for w in report['warnings']:
+            print(f'   ⚠️  {w}', file=sys.stderr)
+        missing_sec = report['sections_missing']
+        if missing_sec:
+            print(f'   📋 缺失章节: {", ".join(missing_sec)}', file=sys.stderr)
+    print(file=sys.stderr)
+
+
+def save_quality_json(reports: list[dict], path: Path) -> None:
+    """Write quality report as JSON file."""
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(reports, f, ensure_ascii=False, indent=2)
+
+
 def matches_keywords(text: str, keywords: list[str]) -> bool:
     text = text.lower()
     return any(keyword.lower() in text for keyword in keywords)
@@ -725,8 +898,35 @@ def domain_records(domain: str, papers: list[dict]) -> list[dict]:
     return [item for item in papers if matches_keywords(item['title'] + '\n' + item['content'], KEYWORDS[domain])]
 
 
-def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict], cover_image: str | None = None) -> str:
+def build_detail_page(title: str, subtitle: str, accent: str, entries: list[dict], cover_image: str | None = None, strategies: list[str] | None = None) -> str:
     cover_markup = f'        <img class="sidebar-cover" src="{cover_image}" alt="{title} 封面" loading="lazy">\n' if cover_image else ''
+    strategy_markup = ''
+    if strategies:
+        strategy_parts = []
+        for s in strategies:
+            escaped = s.replace('\\', '\\\\').replace('`', '\\`').replace('$', '\\$')
+            strategy_parts.append(escaped)
+        strategy_json = json.dumps(strategy_parts, ensure_ascii=False)
+        strategy_markup = '''        <div class="strategy-section" id="strategySection">
+            <div class="strategy-header">
+                <span class="section-kicker">Research Strategies</span>
+                <h2 class="strategy-title">领域调研策略</h2>
+            </div>
+            <div id="strategyContent" class="markdown-body strategy-body"></div>
+        </div>
+        <script>
+            (function() {{
+                var strategies = ''' + strategy_json + ''';
+                var container = document.getElementById('strategyContent');
+                if (strategies.length && container) {{
+                    var html = strategies.map(function(s) {{
+                        return '<div class="strategy-card markdown-body">' + marked.parse(s) + '</div>';
+                    }}).join('');
+                    container.innerHTML = DOMPurify.sanitize(html);
+                }}
+            }})();
+        </script>
+'''
     obsidian_config = {
         'vault': APP_CONFIG.get('obsidian_vault', ''),
         'folder': APP_CONFIG.get('obsidian_folder', ''),
@@ -1952,6 +2152,12 @@ def main() -> None:
     upgrades = [item for item in records if item['kind'] == 'upgrade']
     discussions = [item for item in records if item['kind'] == 'discussion']
 
+    if CHECK_QUALITY:
+        reports = check_all_papers(records, SOURCE_ROOT)
+        print_quality_report(reports)
+        save_quality_json(reports, PROJECT_ROOT / 'quality-report.json')
+        print(f'质量报告已保存至: {PROJECT_ROOT / "quality-report.json"}')
+
     source_cards = [
         {'name': SOURCE_PAGES['archive']['title'], 'href': SOURCE_PAGES['archive']['file'], 'count': len(records), 'accent': SOURCE_PAGES['archive']['accent'], 'desc': SOURCE_PAGES['archive']['desc']},
         {'name': SOURCE_PAGES['paper']['title'], 'href': SOURCE_PAGES['paper']['file'], 'count': len(papers), 'accent': SOURCE_PAGES['paper']['accent'], 'desc': SOURCE_PAGES['paper']['desc']},
@@ -1965,11 +2171,14 @@ def main() -> None:
         domain_cards.append({'name': domain, 'href': meta['file'], 'count': len(items), 'accent': meta['accent'], 'desc': meta['desc']})
         write_text(PROJECT_ROOT / meta['file'], build_detail_page(domain, f"{meta['desc']} 共 {len(items)} 条。", meta['accent'], items))
 
+    strategies = collect_strategies(records)
+
     member_cards = []
     for name, meta in MEMBER_META.items():
         items = [item for item in records if item['member'] == name]
+        member_strategies = strategies.get(name, [])
         member_cards.append({'name': name, 'href': f'{name}.html', 'count': len(items), 'image': meta['image'], 'accent': meta['accent'], 'role': meta['role'], 'desc': f'来自源目录的 {len(items)} 条能力进化记录，按时间倒序排列。'})
-        write_text(PROJECT_ROOT / f'{name}.html', build_detail_page(name, f'来自源目录的 {len(items)} 条能力进化记录，按时间倒序排列。', meta['accent'], items, cover_image=meta['image']))
+        write_text(PROJECT_ROOT / f'{name}.html', build_detail_page(name, f'来自源目录的 {len(items)} 条能力进化记录，按时间倒序排列。', meta['accent'], items, cover_image=meta['image'], strategies=member_strategies))
 
     write_text(PROJECT_ROOT / SOURCE_PAGES['archive']['file'], build_detail_page(SOURCE_PAGES['archive']['title'], f"{SOURCE_PAGES['archive']['desc']} 共 {len(records)} 条。", SOURCE_PAGES['archive']['accent'], records))
     write_text(PROJECT_ROOT / SOURCE_PAGES['paper']['file'], build_detail_page(SOURCE_PAGES['paper']['title'], f"{SOURCE_PAGES['paper']['desc']} 共 {len(papers)} 条。", SOURCE_PAGES['paper']['accent'], papers))

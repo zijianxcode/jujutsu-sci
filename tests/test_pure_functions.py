@@ -6,6 +6,7 @@ because resolve_paths() is now deferred to main().
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
@@ -175,6 +176,140 @@ class TestClassifySessionType(unittest.TestCase):
         st, sl = sfs.classify_session_type('悠仁-能力进化.md', '# 悠仁', 'member')
         self.assertIsInstance(st, str)
         self.assertIsInstance(sl, str)
+
+
+def _make_paper_md(
+    title='Test Paper',
+    authors='Author One, Author Two',
+    source='arXiv:2301.12345',
+    date='2026-05',
+    domain='AI',
+    score='8.5/10',
+    sections=None,
+) -> str:
+    if sections is None:
+        sections = [
+            '研究什么？',
+            '为什么研究？',
+            '别人做过什么？',
+            '作者怎么研究？',
+            '发现了什么？',
+            '价值和不足？',
+        ]
+    lines = [
+        f'**论文标题：** {title}',
+        f'**作者：** {authors}',
+        f'**来源：** {source}',
+        f'**日期：** {date}',
+        f'**领域标签：** {domain}',
+        f'**综合评分：** {score}',
+        '',
+    ]
+    for sec in sections:
+        lines.append(f'## {sec}')
+        lines.append('')
+        lines.append('Content here.')
+        lines.append('')
+    return '\n'.join(lines)
+
+
+class TestCheckPaperQuality(unittest.TestCase):
+    def test_complete_paper(self):
+        content = _make_paper_md()
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertEqual(len(report['errors']), 0)
+        self.assertEqual(len(report['sections_missing']), 0)
+        self.assertTrue(report['score_valid'])
+        self.assertIsNotNone(report['score_value'])  # parse_score_info normalizes to 5-point scale
+
+    def test_missing_metadata_fields(self):
+        content = 'Just some text\nNo metadata here\n'
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertTrue(len(report['errors']) > 0)
+
+    def test_missing_sections(self):
+        content = _make_paper_md(sections=['研究什么？'])
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertTrue(len(report['sections_missing']) > 0, f'Expected missing sections, got: {report["sections_missing"]}')
+        self.assertIn('价值和不足', report['sections_missing'])
+
+    def test_invalid_score(self):
+        content = _make_paper_md(score='N/A')
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertFalse(report['score_valid'])
+
+    def test_score_5_point_scale(self):
+        content = _make_paper_md(score='4.5/5')
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertTrue(report['score_valid'])
+        self.assertIsNotNone(report['score_value'])
+
+    def test_no_role_ratings(self):
+        content = _make_paper_md()
+        with tempfile.TemporaryDirectory() as td:
+            paper_dir = Path(td)
+            report = sfs.check_paper_quality(content, paper_dir)
+            self.assertFalse(report['has_role_ratings'])
+
+    def test_with_role_ratings(self):
+        content = _make_paper_md()
+        with tempfile.TemporaryDirectory() as td:
+            paper_dir = Path(td)
+            (paper_dir / '悠仁-能力进化.md').write_text('评分 8/10', encoding='utf-8')
+            report = sfs.check_paper_quality(content, paper_dir)
+            self.assertTrue(report['has_role_ratings'])
+
+    def test_fuzzy_section_match(self):
+        content = _make_paper_md(sections=[
+            '1. 研究什么？',
+            '2. 为什么研究这个问题',
+            '3. 别人做过什么',
+            '4. 作者怎么研究的',
+            '5. 发现了什么结果',
+            '6. 价值和不足？',
+        ])
+        report = sfs.check_paper_quality(content, Path('/tmp/fake'))
+        self.assertEqual(len(report['sections_missing']), 0, f'Unexpected missing: {report["sections_missing"]}')
+
+
+class TestExtractStrategySection(unittest.TestCase):
+    def test_strategy_present(self):
+        content = '# Title\n\n## 领域调研策略\n\n### 有效数据库\n- arXiv\n- CHI Proceedings\n\n### 有效关键词\n- "human-AI"\n\n## Next Section\nMore content'
+        result = sfs.extract_strategy_section(content)
+        self.assertIsNotNone(result)
+        self.assertIn('有效数据库', result)
+        self.assertIn('arXiv', result)
+        self.assertNotIn('Next Section', result)
+
+    def test_strategy_absent(self):
+        result = sfs.extract_strategy_section('# Title\n\nSome content\n\n## Another Section\nMore text')
+        self.assertIsNone(result)
+
+    def test_strategy_at_end(self):
+        content = '# Title\n\n## 领域调研策略\n\n- Key finding 1\n- Key finding 2\n'
+        result = sfs.extract_strategy_section(content)
+        self.assertIsNotNone(result)
+        self.assertIn('Key finding 1', result)
+
+
+class TestCollectStrategies(unittest.TestCase):
+    def test_aggregation(self):
+        records = [
+            {'kind': 'member', 'member': '悠仁', 'content': '## 领域调研策略\n\n悠仁策略1'},
+            {'kind': 'member', 'member': '悠仁', 'content': '## 领域调研策略\n\n悠仁策略2'},
+            {'kind': 'member', 'member': '惠', 'content': '## 领域调研策略\n\n惠策略1'},
+            {'kind': 'member', 'member': '野蔷薇', 'content': 'No strategy here'},
+            {'kind': 'paper', 'member': None, 'content': '## 领域调研策略\n\nNot a member'},
+        ]
+        result = sfs.collect_strategies(records)
+        self.assertEqual(len(result), 2)  # 悠仁 and 惠
+        self.assertEqual(len(result['悠仁']), 2)
+        self.assertEqual(len(result['惠']), 1)
+        self.assertNotIn('野蔷薇', result)
+
+    def test_empty_records(self):
+        result = sfs.collect_strategies([])
+        self.assertEqual(result, {})
 
 
 if __name__ == '__main__':
