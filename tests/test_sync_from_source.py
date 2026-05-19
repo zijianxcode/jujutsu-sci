@@ -177,6 +177,8 @@ class SyncFromSourceHermesTests(unittest.TestCase):
             self.assertIn('近 3 天论文排行榜', index)
             self.assertIn('data-lang-option="en"', index)
             self.assertIn('site-i18n.js', index)
+            self.assertIn('按时间回溯', index)
+            self.assertIn('archive.html?dateRange=3d', index)
             self.assertIn('MTA-Agent: An Open Recipe for Multimodal Deep Search Agents', index)
             self.assertIn('五条老师评定 9.4/10', index)
             self.assertIn('AI Agents as Users', index)

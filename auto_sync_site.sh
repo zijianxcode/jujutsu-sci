@@ -12,6 +12,8 @@ PROJECT_ROOT="$SCRIPT_DIR"
 BRANCH="main"
 HOMEPAGE_REPO_URL="https://github.com/zijianxcode/personal-homepage.git"
 HOMEPAGE_TMP="${TMPDIR:-/tmp}/personal-homepage-sync"
+# Local checkout — avoids git clone timeout issues (5/16, 5/18, 5/17 failures)
+HOMEPAGE_LOCAL="/Users/zijian/Documents/Code/personal-homepage"
 MODE="${1:-sync}"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 HTML_FILES=()
@@ -124,51 +126,117 @@ commit_if_needed() {
 sync_academy_mirror() {
   local local_commit=""
   local push_ok=false
+  local target_repo=""
 
-  rm -rf "$HOMEPAGE_TMP"
-
-  # Clone with timeout — never hang indefinitely
-  if ! with_timeout git clone --bare "$HOMEPAGE_REPO_URL" "$HOMEPAGE_TMP" >/dev/null 2>&1; then
-    echo "[$TIMESTAMP] academy clone timed out or failed (timeout=${GIT_TIMEOUT}s)"
-    return 3
+  # Use local checkout (avoids git clone timeout — root cause of 5/16, 5/18 failures)
+  if [ -d "$HOMEPAGE_LOCAL/.git" ]; then
+    target_repo="$HOMEPAGE_LOCAL"
+    echo "[$TIMESTAMP] academy: using local checkout: $HOMEPAGE_LOCAL"
+    if ! with_timeout git -C "$target_repo" pull origin "$BRANCH" 2>/dev/null; then
+      echo "[$TIMESTAMP] academy: git pull timed out — will sync against local state and push later"
+    fi
+    if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
+      echo "[$TIMESTAMP] academy: local repo not clean, falling back to clone"
+      target_repo=""
+    fi
   fi
 
-  ensure_repo_clean "$HOMEPAGE_TMP"
+  # Fallback: clone fresh (legacy path)
+  if [ -z "$target_repo" ]; then
+    rm -rf "$HOMEPAGE_TMP"
+    if ! with_timeout git clone --bare "$HOMEPAGE_REPO_URL" "$HOMEPAGE_TMP" >/dev/null 2>&1; then
+      echo "[$TIMESTAMP] academy clone timed out or failed (timeout=${GIT_TIMEOUT}s)"
+      echo "[$TIMESTAMP] To manually sync: run the following from your terminal:"
+      echo "  cd $HOMEPAGE_LOCAL && git pull origin main && \\"
+      echo "  rsync -a --delete --include='*.html' --include='*.css' --include='*.js' \\"
+      echo "    --include='*.svg' --include='*.jpg' --include='*.png' --include='*.webp' \\"
+      echo "    --include='vendor/' --include='vendor/**' --exclude='*' \\"
+      echo "    $PROJECT_ROOT/ academy/ && \\"
+      echo "  git add academy/ && git commit -m 'sync academy' && git push origin main"
+      return 3
+    fi
 
-  # rsync content into academy/ subdir of the bare repo working tree
-  local work_tree="${HOMEPAGE_TMP}-work"
-  mkdir -p "$work_tree"
-  GIT_WORK_TREE="$work_tree" git -C "$HOMEPAGE_TMP" checkout -f "$BRANCH" >/dev/null 2>&1 || true
+    ensure_repo_clean "$HOMEPAGE_TMP"
 
+    local work_tree="${HOMEPAGE_TMP}-work"
+    mkdir -p "$work_tree"
+    GIT_WORK_TREE="$work_tree" git -C "$HOMEPAGE_TMP" checkout -f "$BRANCH" >/dev/null 2>&1 || true
+
+    # rsync content into academy/ subdir — SOURCE IS $PROJECT_ROOT/ NOT docs/
+    rsync -a --delete \
+      --include='*.html' --include='*.css' --include='*.js' \
+      --include='*.svg' --include='*.jpg' --include='*.png' --include='*.webp' \
+      --include='vendor/' --include='vendor/**' \
+      --exclude='*' \
+      "$PROJECT_ROOT/" "$work_tree/academy/"
+
+    cd "$work_tree"
+    git add academy/
+    if git diff --cached --quiet; then
+      echo "[$TIMESTAMP] academy: no HTML changes to sync"
+      cd "$PROJECT_ROOT"
+      rm -rf "$HOMEPAGE_TMP" "$work_tree"
+      return 0
+    fi
+
+    git commit -m "Auto sync academy content from academic source" || {
+      echo "[$TIMESTAMP] academy: commit failed"
+      cd "$PROJECT_ROOT"
+      rm -rf "$HOMEPAGE_TMP" "$work_tree"
+      return 3
+    }
+
+    local_commit=$(git rev-parse HEAD)
+    cd "$PROJECT_ROOT"
+
+    if with_push_timeout git -C "$HOMEPAGE_TMP" push origin "$BRANCH" 2>/dev/null; then
+      if verify_remote_has_commit "$HOMEPAGE_TMP" "$local_commit"; then
+        echo "[$TIMESTAMP] academy: pushed and verified (commit=$local_commit)"
+        push_ok=true
+      else
+        echo "[$TIMESTAMP] academy: push returned success but remote commit mismatch — retry needed"
+      fi
+    else
+      echo "[$TIMESTAMP] academy: push timed out or failed (timeout=${PUSH_TIMEOUT}s)"
+    fi
+
+    rm -rf "$HOMEPAGE_TMP" "$work_tree"
+
+    if $push_ok; then
+      return 0
+    else
+      return 3
+    fi
+  fi
+
+  # --- Local repo path (preferred) ---
+  # rsync content into academy/ — SOURCE IS $PROJECT_ROOT/ (repo root), NOT docs/
   rsync -a --delete \
     --include='*.html' --include='*.css' --include='*.js' \
     --include='*.svg' --include='*.jpg' --include='*.png' --include='*.webp' \
     --include='vendor/' --include='vendor/**' \
     --exclude='*' \
-    "$PROJECT_ROOT/" "$work_tree/academy/"
+    "$PROJECT_ROOT/" "$target_repo/academy/"
 
-  cd "$work_tree"
+  cd "$target_repo"
   git add academy/
   if git diff --cached --quiet; then
     echo "[$TIMESTAMP] academy: no HTML changes to sync"
     cd "$PROJECT_ROOT"
-    rm -rf "$HOMEPAGE_TMP" "$work_tree"
     return 0
   fi
 
   git commit -m "Auto sync academy content from academic source" || {
     echo "[$TIMESTAMP] academy: commit failed"
     cd "$PROJECT_ROOT"
-    rm -rf "$HOMEPAGE_TMP" "$work_tree"
     return 3
   }
 
   local_commit=$(git rev-parse HEAD)
   cd "$PROJECT_ROOT"
 
-  if with_push_timeout git -C "$HOMEPAGE_TMP" push origin "$BRANCH" 2>/dev/null; then
-    # Push succeeded — verify remote has the commit
-    if verify_remote_has_commit "$HOMEPAGE_TMP" "$local_commit"; then
+  if with_push_timeout git -C "$target_repo" push origin "$BRANCH" 2>/dev/null; then
+    if verify_remote_has_commit "$target_repo" "$local_commit"; then
       echo "[$TIMESTAMP] academy: pushed and verified (commit=$local_commit)"
       push_ok=true
     else
@@ -177,8 +245,6 @@ sync_academy_mirror() {
   else
     echo "[$TIMESTAMP] academy: push timed out or failed (timeout=${PUSH_TIMEOUT}s)"
   fi
-
-  rm -rf "$HOMEPAGE_TMP" "$work_tree"
 
   if $push_ok; then
     return 0

@@ -69,7 +69,7 @@ SOURCE_ROOT: Path = Path()
 PROJECT_ROOT: Path = Path()
 APP_CONFIG: dict = {}
 CHECK_QUALITY: bool = False
-ASSET_VERSION = '20260515-i18n1'
+ASSET_VERSION = '20260519-time-search1'
 IGNORED_SOURCE_PARTS = {'html', 'legacy-html', 'attachments', 'inbox', '__pycache__'}
 
 MEMBER_META = {
@@ -1544,6 +1544,20 @@ def render_focus_workbench(gojo_rankings: list[dict], trend_items: list[dict]) -
     )
 
 
+def render_time_search_links() -> str:
+    items = [
+        ('最新一天', 'archive.html?dateRange=latest-day'),
+        ('近 3 天', 'archive.html?dateRange=3d'),
+        ('近 7 天', 'archive.html?dateRange=7d'),
+        ('本月', 'archive.html?dateRange=month'),
+        ('全部归档', 'archive.html'),
+    ]
+    return '\n'.join(
+        f'<a class="time-search-link" href="{href}">{html.escape(label)}</a>'
+        for label, href in items
+    )
+
+
 PROBLEM_LENSES = {
     'Agent': {
         'keywords': ['agent', 'agentic', 'multi-agent', 'tool use', 'workflow', '智能体', '代理', '工具调用'],
@@ -1925,6 +1939,7 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
     trend_items = build_trend_filter_cards(papers, days=14)
     trend_filter_markup = render_trend_filter_cards(trend_items)
     focus_workbench_markup = render_focus_workbench(gojo_rankings, trend_items)
+    time_search_markup = render_time_search_links()
     paper_card = next((item for item in source_cards if item['name'] == '论文总结'), None)
     archive_card = next((item for item in source_cards if item['name'] == '全部记录'), None)
     archive_link = archive_card['href'] if archive_card else 'archive.html'
@@ -2065,6 +2080,13 @@ def build_index(records: list[dict], papers: list[dict], source_cards: list[dict
 {render_topic_cards(focus_cards)}
                 </div>
                 <a class="focus-archive-link" href="{archive_link}">查看全部 {len(records)} 条归档</a>
+                <div class="time-search">
+                    <div class="section-kicker">Time Search</div>
+                    <h3 class="time-search-title">按时间回溯</h3>
+                    <div class="time-search-links">
+{time_search_markup}
+                    </div>
+                </div>
                 <div class="focus-workbench">
                     <div class="section-kicker">Today Desk</div>
                     <h3 class="focus-workbench-title">今日研究工作台</h3>
