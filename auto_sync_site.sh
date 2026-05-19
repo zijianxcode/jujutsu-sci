@@ -22,6 +22,17 @@ HTML_FILES=()
 GIT_TIMEOUT=60
 PUSH_TIMEOUT=90
 
+# macOS has no GNU timeout; detect and use the right command
+if command -v gtimeout >/dev/null 2>&1; then
+  _TIMEOUT_CMD="gtimeout"
+elif command -v timeout >/dev/null 2>&1; then
+  _TIMEOUT_CMD="timeout"
+else
+  # Fallback: perl-based timeout
+  _TIMEOUT_CMD="perl -e 'alarm shift; exec @ARGV'"
+fi
+_perl_timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+
 # --- Collect HTML files -------------------------------------------------------
 while IFS= read -r html_file; do
   HTML_FILES+=("$html_file")
@@ -34,11 +45,19 @@ cd "$PROJECT_ROOT"
 with_timeout() {
   # Run "$@" with SIGTERM after $GIT_TIMEOUT seconds
   # Returns 124 if timed out, otherwise the command's exit code
-  timeout "$GIT_TIMEOUT" "$@" 2>/dev/null
+  if [ "$_TIMEOUT_CMD" = "timeout" ] || [ "$_TIMEOUT_CMD" = "gtimeout" ]; then
+    $_TIMEOUT_CMD "$GIT_TIMEOUT" "$@" 2>/dev/null
+  else
+    perl -e 'alarm shift; exec @ARGV' "$GIT_TIMEOUT" "$@" 2>/dev/null
+  fi
 }
 
 with_push_timeout() {
-  timeout "$PUSH_TIMEOUT" "$@" 2>/dev/null
+  if [ "$_TIMEOUT_CMD" = "timeout" ] || [ "$_TIMEOUT_CMD" = "gtimeout" ]; then
+    $_TIMEOUT_CMD "$PUSH_TIMEOUT" "$@" 2>/dev/null
+  else
+    perl -e 'alarm shift; exec @ARGV' "$PUSH_TIMEOUT" "$@" 2>/dev/null
+  fi
 }
 
 retry_command() {
@@ -257,6 +276,20 @@ sync_academy_mirror() {
 # Main
 # =============================================================================
 
+# Check mode — skip clean check, just validate
+if [ "$MODE" = "check" ]; then
+  if ! python3 sync_from_source.py; then
+    echo "[$TIMESTAMP] ERROR: sync_from_source.py failed"
+    exit 1
+  fi
+  echo "[$TIMESTAMP] Check mode — HTML generated, no commit or push performed."
+  if [ -n "$(git status --short)" ]; then
+    echo "[$TIMESTAMP] Warning: working tree has uncommitted changes (untracked files etc.)"
+    git status --short | head -10
+  fi
+  exit 0
+fi
+
 ensure_repo_clean "$PROJECT_ROOT"
 
 # Fetch with timeout and retry
@@ -284,11 +317,6 @@ fi
 
 echo "[$TIMESTAMP] Detected generated HTML changes:"
 printf '%s\n' "$CHANGED_FILES"
-
-if [ "$MODE" = "check" ]; then
-  echo "[$TIMESTAMP] Check mode — no commit or push performed."
-  exit 0
-fi
 
 # --- Commit + push jujutsu-sci repo ----------------------------------------
 local_commit=""
