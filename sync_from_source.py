@@ -115,10 +115,20 @@ CANONICAL_SECTIONS = [
 
 REQUIRED_METADATA_PATTERNS = [
     (r'(?:论文标题|标题|论文)\s*[：:]', 'title'),
+    (r'\*\*(?:论文标题|标题|论文)\*\*\s*[：:]', 'title'),
+    (r'\|\s*\*\*标题\*\*\s*\|', 'title'),
     (r'作者\s*[：:]', 'authors'),
+    (r'\*\*作者\*\*\s*[：:]', 'authors'),
+    (r'\|\s*\*\*作者\*\*\s*\|', 'authors'),
     (r'(?:来源|会议|期刊|URL|来源/URL)\s*[：:]', 'source'),
+    (r'\*\*(?:来源|会议|期刊)\*\*\s*[：:]', 'source'),
+    (r'\|\s*\*\*来源\*\*\s*\|', 'source'),
     (r'(?:日期|发表|年份)\s*[：:]', 'date'),
+    (r'\*\*(?:日期|年份)\*\*\s*[：:]', 'date'),
+    (r'\|\s*\*\*日期\*\*\s*\|', 'date'),
     (r'(?:领域标签|领域|标签)\s*[：:]', 'domain_tags'),
+    (r'\*\*(?:领域标签|领域|标签)\*\*\s*[：:]', 'domain_tags'),
+    (r'\|\s*\*\*领域标签\*\*\s*\|', 'domain_tags'),
 ]
 
 KEYWORDS = {
@@ -776,7 +786,8 @@ def check_paper_quality(content: str, paper_dir: Path) -> dict:
     metadata_found: dict[str, bool] = {}
 
     for pattern, key in REQUIRED_METADATA_PATTERNS:
-        metadata_found[key] = bool(re.search(pattern, content, re.I))
+        if key not in metadata_found or not metadata_found[key]:
+            metadata_found[key] = bool(re.search(pattern, content, re.I))
 
     if not metadata_found.get('title'):
         errors.append('缺少论文标题')
@@ -825,6 +836,10 @@ def check_paper_quality(content: str, paper_dir: Path) -> dict:
         warnings.append('无角色评分文件')
 
     title_match = re.search(r'(?:论文标题|标题|论文)\s*[：:]\s*(.+)', content)
+    if not title_match:
+        title_match = re.search(r'\|\s*\*\*标题\*\*\s*\|\s*(.+?)\s*(?:\|)', content)
+    if not title_match:
+        title_match = re.search(r'(?:[-*])\s*\*\*标题\*\*\s*[：:]\s*(.+)', content)
     extracted_title = title_match.group(1).strip() if title_match else ''
 
     return {
