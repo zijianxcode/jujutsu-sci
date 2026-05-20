@@ -458,6 +458,105 @@ def extract_original_link(content: str) -> tuple[str, str]:
     return '', ''
 
 
+# -- Gojo 7-dimension review score validation (v2.0) ---------------------------
+
+GOJO_REVIEW_DIMENSIONS = [
+    ('原创性', 0.20),
+    ('方法严谨性', 0.25),
+    ('证据充分性', 0.20),
+    ('论证连贯性', 0.15),
+    ('写作质量', 0.10),
+    ('文献整合', 0.05),
+    ('影响与意义', 0.05),
+]
+
+_GOJO_DIM_NAMES = [d[0] for d in GOJO_REVIEW_DIMENSIONS]
+_GOJO_DIM_WEIGHTS = {d[0]: d[1] for d in GOJO_REVIEW_DIMENSIONS}
+
+# Patterns that match a Gojo review scoring table row: | 维度名 | 75/100 | 理由 |
+_GOJO_SCORE_ROW_RE = re.compile(
+    r'\|\s*(' + '|'.join(_GOJO_DIM_NAMES) + r')\s*\|\s*(\d{1,3})\s*/\s*100\s*\|'
+)
+_GOJO_WEIGHTED_TOTAL_RE = re.compile(
+    r'(?:加权总分|加权平均|最终分|综合得分)\s*.*?(\d{1,3}(?:\.\d+)?)\s*/\s*100'
+)
+# Decision line — Tier 1: 必收 / 可收 / 不收  Tier 2: Accept / Minor Revision / Major Revision / Reject
+_GOJO_DECISION_RE = re.compile(
+    r'(?:决策|Decision)\s*[：:\n]\s*(?:.+\n)?.*?\b(必收|可收|不收|Accept|Minor\s+Revision|Major\s+Revision|Reject)\b',
+    re.I,
+)
+
+_GOJO_TIER1_DECISIONS = {'必收', '可收', '不收'}
+_GOJO_TIER2_DECISIONS = {'accept', 'minor revision', 'major revision', 'reject'}
+
+
+def parse_gojo_review_scores(text: str) -> dict | None:
+    """Detect and validate Gojo 7-dimension review scores in text.
+
+    Returns None if no Gojo review detected.
+    Returns dict with dimensions, scores, weighted_total, decision, issues on success.
+    """
+    rows = _GOJO_SCORE_ROW_RE.findall(text)
+    if len(rows) < 3:
+        return None  # Not a Gojo review
+
+    found_dims: dict[str, int] = {}
+    found_scores: dict[str, int] = {}
+    issues: list[str] = []
+
+    for dim_name, score_str in rows:
+        score = int(score_str)
+        found_dims[dim_name] = score
+        found_scores[dim_name] = score
+        if not (0 <= score <= 100):
+            issues.append(f'评分越界: {dim_name} = {score}（须 0-100）')
+
+    for dim_name in _GOJO_DIM_NAMES:
+        if dim_name not in found_dims:
+            issues.append(f'缺少评分维度: {dim_name}')
+
+    weighted_total = None
+    total_match = _GOJO_WEIGHTED_TOTAL_RE.search(text)
+    if total_match:
+        weighted_total = float(total_match.group(1))
+
+    if found_scores and weighted_total is not None:
+        expected = sum(s * _GOJO_DIM_WEIGHTS[d] for d, s in found_scores.items() if d in _GOJO_DIM_WEIGHTS)
+        if abs(expected - weighted_total) > 1.0:
+            issues.append(f'加权总分 {weighted_total} 与计算值 {expected:.1f} 偏差 >1')
+
+    decision = None
+    decision_match = _GOJO_DECISION_RE.search(text)
+    if decision_match:
+        decision = decision_match.group(1).strip()
+        if decision not in _GOJO_TIER1_DECISIONS and decision.lower() not in _GOJO_TIER2_DECISIONS:
+            issues.append(f'无效决策: {decision}（Tier 1 须为 必收/可收/不收，Tier 2 须为 Accept/Minor Revision/Major Revision/Reject）')
+
+    # Fatal-veto check: method <45 or evidence <45 or coherence <45 but decision >= Minor
+    if decision and decision.lower() in ('accept', 'minor revision'):
+        method_score = found_scores.get('方法严谨性')
+        evidence_score = found_scores.get('证据充分性')
+        coherence_score = found_scores.get('论证连贯性')
+        fatal_dims = []
+        if method_score is not None and method_score < 45:
+            fatal_dims.append(f'方法严谨性={method_score}')
+        if evidence_score is not None and evidence_score < 45:
+            fatal_dims.append(f'证据充分性={evidence_score}')
+        if coherence_score is not None and coherence_score < 45:
+            fatal_dims.append(f'论证连贯性={coherence_score}')
+        if fatal_dims:
+            issues.append(f'致命否决触发: {", ".join(fatal_dims)} 但决策={decision}')
+
+    return {
+        'dimensions': found_dims,
+        'scores': found_scores,
+        'weighted_total': weighted_total,
+        'decision': decision,
+        'issues': issues,
+        'valid': len(issues) == 0,
+    }
+
+
 def parse_score_info(text: str) -> dict | None:
     preferred_patterns = [
         r'(?:综合推荐指数|综合评分|综合推荐|综合|悟评|评分|打星|星级)[^\n|]{0,40}?((?:10|[0-9])(?:\.\d+)?)\s*/\s*(5|10)',
@@ -833,6 +932,12 @@ def check_paper_quality(content: str, paper_dir: Path) -> dict:
     if not has_role_ratings:
         warnings.append('无角色评分文件')
 
+    # Gojo 7-dimension review validation (v2.0)
+    gojo_review = parse_gojo_review_scores(content)
+    if gojo_review is not None and gojo_review['issues']:
+        for issue in gojo_review['issues']:
+            warnings.append(f'五条悟评审: {issue}')
+
     title_match = re.search(r'(?:论文标题|标题|论文)\s*[：:]\s*(.+)', content)
     if not title_match:
         title_match = re.search(r'\|\s*\*\*标题\*\*\s*\|\s*(.+?)\s*(?:\|)', content)
@@ -851,6 +956,7 @@ def check_paper_quality(content: str, paper_dir: Path) -> dict:
         'has_role_ratings': has_role_ratings,
         'score_valid': score_valid,
         'score_value': score_value,
+        'gojo_review': gojo_review,
     }
 
 
@@ -876,7 +982,12 @@ def print_quality_report(reports: list[dict]) -> None:
     warning_count = sum(1 for r in reports if r['warnings'])
     clean_count = sum(1 for r in reports if not r['errors'] and not r['warnings'])
 
+    gojo_count = sum(1 for r in reports if r.get('gojo_review') is not None)
+    gojo_issue_count = sum(1 for r in reports if r.get('gojo_review') is not None and r['gojo_review']['issues'])
+
     print(f'\n论文完整性检查: {total} 篇 | ✅ {clean_count} 篇无问题 | ❌ {error_count} 篇有错误 | ⚠️ {warning_count} 篇有警告', file=sys.stderr)
+    if gojo_count:
+        print(f'五条悟评审: {gojo_count} 篇含评审 | {gojo_issue_count} 篇评审格式有问题', file=sys.stderr)
     print('=' * 70, file=sys.stderr)
 
     for report in reports:
