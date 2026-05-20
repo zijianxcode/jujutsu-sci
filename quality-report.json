@@ -367,7 +367,6 @@
       "缺少论文标题"
     ],
     "warnings": [
-      "缺少日期",
       "缺少领域标签",
       "缺少 1 个规范章节: 别人做过什么",
       "缺少有效评分"
@@ -376,7 +375,7 @@
       "title": false,
       "authors": true,
       "source": true,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -461,7 +460,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -469,7 +467,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -521,7 +519,6 @@
     ],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -529,7 +526,7 @@
       "title": true,
       "authors": false,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -580,7 +577,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少 2 个规范章节: 别人做过什么, 价值和不足",
       "缺少有效评分"
     ],
@@ -588,7 +584,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [
@@ -673,7 +669,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -681,7 +676,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -703,7 +698,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -711,7 +705,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -733,7 +727,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -741,7 +734,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -765,7 +758,6 @@
     ],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -773,7 +765,7 @@
       "title": true,
       "authors": false,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -797,14 +789,13 @@
     ],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少有效评分"
     ],
     "metadata": {
       "title": false,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [
@@ -858,14 +849,13 @@
       "缺少论文标题"
     ],
     "warnings": [
-      "缺少日期",
       "缺少有效评分"
     ],
     "metadata": {
       "title": false,
       "authors": true,
       "source": true,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [
@@ -887,7 +877,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -895,7 +884,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -1189,7 +1178,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -1197,7 +1185,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -1462,7 +1450,6 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -1470,7 +1457,7 @@
       "title": true,
       "authors": true,
       "source": true,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -1551,7 +1538,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -1559,7 +1545,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -1649,7 +1635,6 @@
     ],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -1657,7 +1642,7 @@
       "title": true,
       "authors": false,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -1943,7 +1928,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少 1 个规范章节: 价值和不足",
       "缺少有效评分"
@@ -1952,7 +1936,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -2038,7 +2022,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -2046,7 +2029,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -2246,7 +2229,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少有效评分"
     ],
@@ -2254,7 +2236,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [
@@ -2366,14 +2348,13 @@
     "title": "** \"It Became My Buddy, But I'm Not Afraid to Disagree\": A Multi-Session Study of UX Evaluators Collaborating with Conversational AI Assistants",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少领域标签",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": false
     },
@@ -2454,14 +2435,12 @@
     "errors": [
       "缺少作者"
     ],
-    "warnings": [
-      "缺少日期"
-    ],
+    "warnings": [],
     "metadata": {
       "title": true,
       "authors": false,
       "source": true,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [
@@ -3000,14 +2979,13 @@
     "title": "Towards Autonomous Mathematics Research",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3029,14 +3007,13 @@
     "title": "AI Agents as Users",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3058,14 +3035,13 @@
     "title": "Measuring AI agent autonomy in practice",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3087,14 +3063,13 @@
     "title": "Feedback Descent: Open-Ended Text Optimization via Pairwise Comparison",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3390,13 +3365,12 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3418,13 +3392,12 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3446,13 +3419,12 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3474,13 +3446,12 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -3502,14 +3473,13 @@
     "title": "Stress-Testing Model Specs Reveals Character Differences among Language Models",
     "errors": [],
     "warnings": [
-      "缺少日期",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
       "source": true,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [],
@@ -3561,13 +3531,12 @@
     "title": "",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": true
     },
@@ -5070,7 +5039,6 @@
     "title": "Seeing Eye to Eye: Enabling Cognitive Alignment Through Shared First-Person Perspective in Human-AI Collaboration",
     "errors": [],
     "warnings": [
-      "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
@@ -5079,7 +5047,7 @@
       "authors": true,
       "source": true,
       "date": true,
-      "domain_tags": false
+      "domain_tags": true
     },
     "sections_found": [],
     "sections_missing": [
@@ -5196,7 +5164,6 @@
     ],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
@@ -5205,7 +5172,7 @@
       "title": true,
       "authors": false,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [],
@@ -5289,7 +5256,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
@@ -5297,7 +5263,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [],
@@ -5318,16 +5284,14 @@
     "title": "Sensible Agent: A Framework for Unobtrusive Interaction with Proactive AR Agents",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
-      "缺少日期",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
-      "date": false,
+      "source": true,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [],
@@ -5374,7 +5338,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
@@ -5383,7 +5346,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [],
@@ -5461,8 +5424,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
-      "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
     ],
@@ -5470,8 +5431,8 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
-      "domain_tags": false
+      "date": true,
+      "domain_tags": true
     },
     "sections_found": [],
     "sections_missing": [
@@ -5548,7 +5509,6 @@
     "title": "ClassAid: A Real-time Instructor-AI-Student Orchestration System for Classroom Programming Activities",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
       "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
       "缺少有效评分"
@@ -5556,7 +5516,7 @@
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
+      "source": true,
       "date": true,
       "domain_tags": false
     },
@@ -5610,15 +5570,13 @@
     "title": "Persistent Assistant: Seamless Everyday AI Interactions via Intent Grounding and Multimodal Feedback",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
-      "缺少日期",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
-      "date": false,
+      "source": true,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [],
@@ -5640,7 +5598,6 @@
     "errors": [],
     "warnings": [
       "缺少来源信息",
-      "缺少日期",
       "缺少领域标签",
       "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足"
     ],
@@ -5648,7 +5605,7 @@
       "title": true,
       "authors": true,
       "source": false,
-      "date": false,
+      "date": true,
       "domain_tags": false
     },
     "sections_found": [],
@@ -5698,15 +5655,13 @@
     "title": "From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze-Aware AI Assistants",
     "errors": [],
     "warnings": [
-      "缺少来源信息",
-      "缺少日期",
       "缺少 1 个规范章节: 价值和不足"
     ],
     "metadata": {
       "title": true,
       "authors": true,
-      "source": false,
-      "date": false,
+      "source": true,
+      "date": true,
       "domain_tags": true
     },
     "sections_found": [

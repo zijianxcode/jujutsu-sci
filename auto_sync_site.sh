@@ -229,6 +229,14 @@ sync_academy_mirror() {
   fi
 
   # --- Local repo path (preferred) ---
+  # Safety check: confirm source has HTML files before rsync
+  html_count=$(find "$PROJECT_ROOT" -maxdepth 1 -name '*.html' | wc -l | tr -d ' ')
+  if [ "$html_count" -lt 5 ]; then
+    echo "[$TIMESTAMP] SAFETY STOP: only $html_count HTML files found in $PROJECT_ROOT/ — refusing to rsync (would delete academy/ HTML)"
+    echo "[$TIMESTAMP] Expected at least 5 .html files. Check sync_from_source.py output."
+    return 3
+  fi
+  echo "[$TIMESTAMP] academy: $html_count HTML files in source, proceeding with rsync"
   # rsync content into academy/ — SOURCE IS $PROJECT_ROOT/ (repo root), NOT docs/
   rsync -a --delete \
     --include='*.html' --include='*.css' --include='*.js' \

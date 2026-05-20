@@ -113,23 +113,21 @@ CANONICAL_SECTIONS = [
     '价值和不足',
 ]
 
-REQUIRED_METADATA_PATTERNS = [
-    (r'(?:论文标题|标题|论文)\s*[：:]', 'title'),
-    (r'\*\*(?:论文标题|标题|论文)\*\*\s*[：:]', 'title'),
-    (r'\|\s*\*\*标题\*\*\s*\|', 'title'),
-    (r'作者\s*[：:]', 'authors'),
-    (r'\*\*作者\*\*\s*[：:]', 'authors'),
-    (r'\|\s*\*\*作者\*\*\s*\|', 'authors'),
-    (r'(?:来源|会议|期刊|URL|来源/URL)\s*[：:]', 'source'),
-    (r'\*\*(?:来源|会议|期刊)\*\*\s*[：:]', 'source'),
-    (r'\|\s*\*\*来源\*\*\s*\|', 'source'),
-    (r'(?:日期|发表|年份)\s*[：:]', 'date'),
-    (r'\*\*(?:日期|年份)\*\*\s*[：:]', 'date'),
-    (r'\|\s*\*\*日期\*\*\s*\|', 'date'),
-    (r'(?:领域标签|领域|标签)\s*[：:]', 'domain_tags'),
-    (r'\*\*(?:领域标签|领域|标签)\*\*\s*[：:]', 'domain_tags'),
-    (r'\|\s*\*\*领域标签\*\*\s*\|', 'domain_tags'),
-]
+_META_FIELDS = {
+    'title': ['论文标题', '标题', '论文'],
+    'authors': ['作者'],
+    'source': ['来源', '会议', '期刊', 'URL', '来源/URL', '发表会议', '出处'],
+    'date': ['日期', '发表', '年份', '发表时间'],
+    'domain_tags': ['领域标签', '领域', '标签'],
+}
+
+REQUIRED_METADATA_PATTERNS: list[tuple[str, str]] = []
+for key, labels in _META_FIELDS.items():
+    labels_alt = '|'.join(re.escape(l) for l in labels)
+    REQUIRED_METADATA_PATTERNS.append((fr'(?:{labels_alt})\s*[：:]', key))
+    REQUIRED_METADATA_PATTERNS.append((fr'\*\*(?:{labels_alt})\*\*\s*[：:]', key))
+    for label in labels:
+        REQUIRED_METADATA_PATTERNS.append((fr'\|\s*\*\*{re.escape(label)}\*\*\s*\|', key))
 
 KEYWORDS = {
     'NLP': ['nlp', 'language', 'lingu', 'text', 'token', 'dialog', 'translation', 'cross-lingual', '语言', '文本', '对话', '跨语言', '翻译', '语义', '低资源'],
