@@ -104,14 +104,52 @@ def render_language_switch() -> str:
     </div>
 '''
 
-CANONICAL_SECTIONS = [
-    '研究什么',
-    '为什么研究',
-    '别人做过什么',
-    '作者怎么研究',
-    '发现了什么',
-    '价值和不足',
-]
+# Two canonical section formats:
+# Old format (used by early records, 3月-4月): 研究什么？为什么研究？等
+# Pipeline format (used by daily collection, 5月+): 研究背景与问题、研究方法...与人-AI协作的关联
+# Two canonical section sets: old format (3月-4月) and pipeline format (5月+)
+_CANONICAL_OLD = ['研究什么', '为什么研究', '别人做过什么',
+                  '作者怎么研究', '发现了什么', '价值和不足']
+_CANONICAL_PIPELINE = ['研究背景与问题', '研究方法', '核心发现',
+                       '关键洞察与跨域连接', '批判性分析', '与人-AI协作的关联']
+
+def _check_sections(content: str) -> tuple[list[str], list[str]]:
+    """Check which canonical section set the content matches."""
+    h2_titles = re.findall(r'^##\s+(.+)$', content, re.M)
+    h2_clean = [re.sub(r'[^一-鿿\w]', '', t) for t in h2_titles]
+
+    def score_set(canonical_set: list[str]) -> int:
+        score = 0
+        for canon in canonical_set:
+            cc = re.sub(r'[^一-鿿\w]', '', canon)
+            for h2c in h2_clean:
+                if cc in h2c or h2c in cc:
+                    score += 1
+                    break
+        return score
+
+    old_score = score_set(_CANONICAL_OLD)
+    pipe_score = score_set(_CANONICAL_PIPELINE)
+
+    if pipe_score >= 4:
+        chosen = _CANONICAL_PIPELINE
+    elif old_score >= 4:
+        chosen = _CANONICAL_OLD
+    else:
+        chosen = _CANONICAL_OLD  # fallback
+
+    found, missing = [], []
+    for canon in chosen:
+        cc = re.sub(r'[^一-鿿\w]', '', canon)
+        matched = False
+        for h2c in h2_clean:
+            if cc in h2c or h2c in cc:
+                found.append(canon)
+                matched = True
+                break
+        if not matched:
+            missing.append(canon)
+    return found, missing
 
 _META_FIELDS = {
     'title': ['论文标题', '标题', '论文'],
@@ -897,20 +935,7 @@ def check_paper_quality(content: str, paper_dir: Path) -> dict:
     if not metadata_found.get('domain_tags'):
         warnings.append('缺少领域标签')
 
-    sections_found: list[str] = []
-    sections_missing: list[str] = []
-    h2_titles = re.findall(r'^##\s+(.+)$', content, re.M)
-    h2_clean = [re.sub(r'[^一-鿿\w]', '', t) for t in h2_titles]
-    for canonical in CANONICAL_SECTIONS:
-        canonical_clean = re.sub(r'[^一-鿿\w]', '', canonical)
-        matched = False
-        for h2c in h2_clean:
-            if canonical_clean in h2c or h2c in canonical_clean:
-                sections_found.append(canonical)
-                matched = True
-                break
-        if not matched:
-            sections_missing.append(canonical)
+    sections_found, sections_missing = _check_sections(content)
 
     if sections_missing:
         warnings.append(f'缺少 {len(sections_missing)} 个规范章节: {", ".join(sections_missing)}')
