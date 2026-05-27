@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV</title>
-    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 112 条。">
+    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 113 条。">
     <meta property="og:title" content="CV - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 112 条。">
+    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 113 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">CV</h1>
-        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 112 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 113 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>CV</strong>
-                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 112 条。</span>
+                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 113 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 112 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 113 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-05-27 14:00",
+    "title": "AgentHands: Generating Interactive Hand Gestures for Spatially Grounded Agent Conversations in XR",
+    "content": "## 一、研究什么？\n\n这篇论文研究如何让 **XR（扩展现实）中的 AI 代理通过同步的手势交互来增强空间相关的对话**。具体来说，作者提出 AgentHands 系统，让 LLM 驱动的 XR 代理在回答用户关于物理环境的问题时，不仅用语音回复，还会自动生成与语音同步的、空间感知的、可交互的手势——比如指着一个真实物体说\"你该用这个壶浇水\"，或者用双手比划出物体的大小范围。核心问题是：文本或语音沟通空间任务会产生\"心理映射鸿沟\"（mental mapping gap），而人类面谈中天然的\"伴随言语手势\"（co-speech gestures）能弥合这个鸿沟，如何让 AI 代理也拥有这种能力？\n\n---\n\n## 二、为什么研究？\n\n**痛点明确**：当 AI 代理需要传达空间信息时（\"那盆植物需要浇水\"、\"线缆的走向是这样的\"），纯语音或文本让用户不得不在心理上把语言描述映射到物理空间，增加认知负担。**现实驱动力**：随着 XR 头显（Apple Vision Pro、Meta Quest 系列）的普及，AI 代理越来越多地出现在用户的物理环境中，但绝大多数代理只有语音输出，缺乏人类交流中自然的手势表达。**机会窗口**：LLM 在多模态理解和结构化输出上的进步，使得让 AI 自动生成\"何时做什么手势\"成为可能——十年前这需要昂贵的手动 animation 制作。**研究空白**：已有工作探索了 XR 中的手势交互或虚拟 agent 的表情动作，但缺乏一个**端到端系统**，能让 LLM 自主决定何时做手势、做什么手势，并与语音实时同步。\n\n---\n\n## 三、别人做过什么？\n\n作者将相关研究分为三条脉络：\n\n1. **XR 中的手势 Agent**：已有研究让虚拟 Agent 展示静态或动画手势（如 IVA、SARA），但大多需手动预定义手势序列，缺乏 LLM 驱动的动态生成。\n2. **伴随言语手势生成**：Co-Speech Gesture Generation 是一个活跃领域（如 Speech2Gesture、Audio2Gesture），但这些方法通常需要训练专用模型，且难以泛化到空间锚定的交互场景。\n3. **空间语言界面**：已有工作探索了 gaze-assisted grounding、spatial referential communication，但 focus on 理解而非表达——即帮助 AI 理解用户指代的对象，而非让 AI 用肢体表达自己。\n\n**关键差距**：没有一个系统能同时做到——(a) LLM 驱动的动态手势生成、(b) 空间感知的物体锚定、(c) 与语音实时同步、(d) 支持双向交互（如击掌、握手）。\n\n---\n\n## 四、作者怎么研究？\n\n### 第一步：形成性研究 → 设计分类学\n\n作者开展了一项形成性用户研究（N=10），通过半结构化访谈和用户实验，识别出 XR 对话 AI 手势交互的关键设计需求，并提炼出 **六维度手势分类学（6D Gesture Taxonomy）**：\n\n| 维度 | 含义 | 取值示例 |\n|------|------|---------|\n| **Handedness（用手方式）** | 单手/双手 | single-handed, two-hand |\n| **Gesture（手势类型）** | 手部形态 | palm, fist, point, V-sign, hold 等 |\n| **Spatiality（空间锚定）** | 手势参考空间 | mid-air, object-anchored, object-region |\n| **Temporal Dynamics（时序动态）** | 静态/动态 | static, rotation, shaking, pouring, tracing, recoil |\n| **Interactivity（交互性）** | 能否与用户交互 | non-interactable, high-five, handshake |\n| **Visual Effects（视觉效果）** | 可视化增强 | default, heat/burn, freeze, glow, red glow/smoke |\n\n### 第二步：AgentHands 管道设计\n\n**系统架构**（6个核心模块）：\n\n1. **环境预注册（Pre-registration）**：用户扫描并确认环境中的可交互物体，为每个物体存储语义标签和 3D 包围盒到物体注册表\n2. **STT 模块**：捕获用户语音输入\n3. **多模态输入**：用户语音 + 第一人称视频 + 注视射线 + 物体注册表 → 传输到 LLM 后端\n4. **LLM 生成**：通过 meta-instruction 提示，LLM 生成文本回复中嵌入**GestureEvents**（格式：`[id; attr1:val1, ...]keyword`），每个 GestureEvent 绑定到特定触发词\n5. **手势解析与规划**：轻量级 planner 解析 GestureEvents，解析物体引用，将锚点映射到世界坐标，参数化手势运动\n6. **TTS + 动画渲染**：TTS 生成语音 + 时间戳，scheduler 将每个 GestureEvent 对齐到触发词的时间位置，驱动 hand animation 系统渲染\n\n### 第三步：用户研究\n\n- **形成性研究（N=10）** → 提炼分类学\n- **主实验（Within-subjects, N=12）**：对比 AgentHands（语音+手势）vs 纯语音 baseline\n- **实验场景**：在 XR 中执行空间导向的任务（如\"给这盆兰花浇水\"、\"线缆布线方式\"）\n- **测量指标**：用户参与度（engagement）、空间理解难度、任务完成情况\n\n---\n\n## 五、发现了什么？\n\n### 量化结果\n\n- **参与度显著提升**：AgentHands 条件下的用户参与度显著高于纯语音 baseline\n- **空间理解改善**：用户报告 AgentHands 使空间导向的对话\"更容易跟上\"（easier to follow）\n- **手势的语义恰当性**：大多数推荐手势被评为\"高度适当\"\n\n### 分类学验证\n\n- 六维度分类学经过形成性研究和用户评估，证明了其在指导 XR 手势设计中的有效性\n- 分类学是**组合式且可扩展的**：设计者可以混合各维度的取值组合出新的手势行为\n\n### 关键洞察\n\n1. **\"标志性手势\"最受认可**：表示物体形状/功能的标志性手势（iconic gestures，如用手比划\"浇水动作\"）比纯指示性手势（pointing）更增强理解\n2. **空间锚定是关键**：手势只有精确锚定到物理世界的物体/位置时才有用——\"指向笼统方向\"不够好\n3. **逆向交互需要谨慎设计**：交互性手势（high-five, handshake）可提升社交感，但时机和预期管理很重要\n\n---\n\n## 六、价值和不足\n\n### 核心贡献\n\n| 贡献类型 | 具体内容 |\n|---------|---------|\n| **理论贡献** | 首个面向 XR 对话 AI 手势的六维度分类学，可组合可扩展 |\n| **系统贡献** | 端到端的 LLM 驱动手势生成管道，从 meta-instruction 到实时动画渲染 |\n| **实证贡献** | 形成性研究（N=10）+ 用户实验（N=12），定量+定性验证 |\n| **设计工具** | GestureEvents 格式 + Gesture Library，其他开发者可直接复用 |\n\n### 与同类工作的差异化优势\n\n| 维度 | 已有工作 | AgentHands |\n|------|---------|-----------|\n| 手势生成方式 | 预定义/需要训练专用模型 | LLM meta-instruction，零训练 |\n| 空间感知 | 无/受限 | 环境预注册 + 3D 物体锚定 |\n| 语音同步 | 独立模块 | GestureEvents 绑定触发词 + TTS 时间戳对齐 |\n| 交互性 | passive display | 支持双向交互（击掌、握手） |\n| 可扩展性 | 需专业动画师 | 组合式分类学，新手势 = 新组合 |\n\n### 局限性\n\n| 局限 | 说明 |\n|------|------|\n| **硬件依赖** | 需要具备手部追踪 + 空间理解的 XR 头显（目前消费级设备有限） |\n| **环境预注册成本** | 用户需手动扫描并确认每个可交互物体，部署门槛较高 |\n| **LLM 幻觉风险** | LLM 可能生成不恰当的 GestureEvents（如指向错误的物体），系统缺乏校验机制 |\n| **用户研究规模** | N=12 的 within-subjects 设计能发现显著差异，但样本量偏小 |\n| **长期效果未验证** | 单次实验 session，未知长期使用中手势的疲劳感或\"麻木效应\" |\n| **盲人/低视力用户的包容性** | 手势依赖视觉通道，未讨论无障碍设计 |\n\n### 可改进方向\n\n- 自动环境理解（而非手动预注册）→ 降低部署门槛\n- 引入手势恰当性的 LLM-as-judge 校验层\n- 跨平台迁移（从高端 XR 头显到手机 AR 或智能眼镜）\n- 文化适应性（不同文化中同一手势含义不同）\n- 面向低视力/盲人的触觉/听觉替代方案\n\n---\n\n## 参考链接\n\n- DOI: https://doi.org/10.1145/3772318.3790938\n- CHI 2026: https://chi2026.acm.org\n- 项目主页: https://duruofei.com/projects/agenthands\n- 演示视频: https://www.youtube.com/watch?v=qEtuUv-xizE\n- PDF: https://duruofei.com/papers/Liu_AgentHands-GeneratingInteractiveHandsGesturesForSpatiallyGroundedAgentConversationsInXR_CHI2026.pdf\n\n---\n\n*采集日期：2026-05-27*\n*采集员：悠仁（跨领域追踪者）*\n\n---\n\n<!-- citation-verification: 2026-05-27 14:00:00 -->\n<!-- DOI:10.1145/3772318.3790938 → verified: \"AgentHands: Generating Interactive Hand Gestures for Spatially Grounded Agent Conversations in XR\", CHI 2026, Google XR Labs -->",
+    "excerpt": "来源：records/20260527/09/yujin-CHI2026-AgentHands/论文总结.md · 这篇论文研究如何让 XR（扩展现实）中的 AI 代理通过同步的手势交互来增强空间相关的对话 。具体来说，作者提出 AgentHands 系统，让 LLM 驱动的 XR 代理在回答用户关于物理环境的问题时，不仅用语音回复，还会自动生成与语音同步的、空间感知的、可交互的手势——比如指着一个真实物体说\"你该用这个壶浇水\"，或者用双手比划出物体的大小范围。核心问题是：文本或语音沟通空间任务会产生\"心理映射鸿沟\"（mental mapping gap），而人类面谈中天然的\"伴随言语手势\"（co speech gestures）能弥合这个鸿沟，如何让 AI 代理也拥有这种能力？",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260527/09/yujin-CHI2026-AgentHands",
+    "original_url": "https://doi.org/10.1145/3772318.3790938",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-05-26 13:05",
     "title": "From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze-Aware AI Assistants",

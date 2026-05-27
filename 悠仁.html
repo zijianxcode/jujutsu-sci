@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠仁</title>
-    <meta name="description" content="来自源目录的 84 条能力进化记录，按时间倒序排列。">
+    <meta name="description" content="来自源目录的 85 条能力进化记录，按时间倒序排列。">
     <meta property="og:title" content="悠仁 - 研究所">
-    <meta property="og:description" content="来自源目录的 84 条能力进化记录，按时间倒序排列。">
+    <meta property="og:description" content="来自源目录的 85 条能力进化记录，按时间倒序排列。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -33,7 +33,7 @@
         <img class="sidebar-cover" src="yujin.jpg" alt="悠仁 封面" loading="lazy">
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">悠仁</h1>
-        <p class="sidebar-summary">来自源目录的 84 条能力进化记录，按时间倒序排列。</p>
+        <p class="sidebar-summary">来自源目录的 85 条能力进化记录，按时间倒序排列。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -51,7 +51,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>悠仁</strong>
-                <span>来自源目录的 84 条能力进化记录，按时间倒序排列。</span>
+                <span>来自源目录的 85 条能力进化记录，按时间倒序排列。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -80,8 +80,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 84 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 85 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-05-27 09:00",
+    "title": "悠仁-能力进化.md",
+    "content": "## 采集信息\n\n| 项目 | 内容 |\n|------|------|\n| **采集日期** | 2026-05-27 |\n| **采集员** | 悠仁（跨领域追踪者） |\n| **论文标题** | AgentHands: Generating Interactive Hand Gestures for Spatially Grounded Agent Conversations in XR |\n| **来源** | CHI 2026, Barcelona (April 13–17, 2026)；DOI: 10.1145/3772318.3790938 |\n| **作者** | Ziyi Liu, David Li, Zhongyi Zhou, David Kim, Ruofei Du, Xun Qian（Google XR Labs） |\n\n---\n\n## 筛选理由\n\n### 为什么选这篇？\n\n今天是第三轮「AI × 新型交互方式」采集，搜索覆盖了语音/对话、手势/体感、眼动/注意力、触觉/力反馈、BCI、环境/隐式交互六个方向，约产生 20+ 候选。最终选择 **AgentHands (CHI 2026)** 的原因：\n\n1. **精准命中\"AI+手势/体感交互实践\"方向**：AgentHands 不是纯概念论证，而是完整的 LLM 驱动手势生成系统，有原型、有用户实验、有量化数据\n2. **CHI 2026 top-tier 背书**：HCI 领域的绝对顶会，论文 24 页，体量和深度有保障\n3. **Google XR Labs 出品**：工业界顶尖研究团队的成果，技术实现有可信度\n4. **组合式分类学贡献**：六维度手势分类学不仅是本篇论文的工具，更像一个 XR 手势交互的\"元素周期表\"，具有跨任务通用性\n5. **交叉领域清晰**：连接 LLM（AI）+ 手势交互（HCI）+ 动画渲染（CG）+ XR（空间计算）四个领域\n6. **工程落地导向**：meta-instruction 的设计意味着其他开发者可以零训练直接上手，促进技术扩散\n\n### 被淘汰的候选及原因\n\n| 候选论文 | 方向 | 淘汰原因 |\n|---------|------|---------|\n| Objestures (CHI 2026) | 手势/体感 | 强竞争者！\"日常物品+手势\"概念有创意，N=12 用户研究完整。最终因 AgentHands 的 LLM 驱动生成 pipeline 更具 AI 深度胜出 |\n| Gestura (arXiv) | 手势/体感 | 自由形式手势理解，64% open-set 准确率偏低，且是纯感知系统而非生成系统 |\n| SVI-MMAgent (JKSucis 2026) | 语音/对话 | 手机自动化场景，95.4% score 高，但场景偏移动端操作，与\"新型交互方式\"核心关联度稍弱 |\n| VoxMind (arXiv 2604) | 语音/对话 | 端到端语音 agent，74.57% 任务完成率有提升，但偏向 agent 架构而非新型交互范式 |\n| Gaze-VLM (ICLR 2026) | 眼动/注意力 | 强竞争者！训练-free 的 eye-tracking + VLM 的 ambiguity resolution，500 个问题数据集。极具跨领域潜力，留待后续采集 |\n| Artemis (GitHub) | 眼动/注意力 | 开源注意力感知系统，有 gaze tracking + 环境控制，但偏个人项目，学术严谨性不足以作为论文采集 |\n| NeoCursor (GitHub) | 眼动/注意力 | 眼动+语音混合控制编码工作流，实用性强但偏工程应用，缺乏理论贡献 |\n| Privacy-Focused AIoT (G-Tech 2026) | 语音/对话 | 离线语音助手 96.67% 成功率，但偏系统实现，创新点在部署而非交互范式 |\n| SparseEMG (UIST 2025) | 手势/体感 | EMG 电极布局优化工具，偏硬件/感知层工具，缺乏新型交互洞察 |\n| GestureCoach (arXiv) | 手势/体感 | 演讲手势教练系统，N=30 用户研究扎实，但场景局限在演讲排练，跨域连接力不足 |\n| ORCHESTRA (IWSLT 2026) | 语音/对话 | 博物馆多模态引导系统，微服务架构有工程参考价值，但技术创新度有限 |\n\n---\n\n## 五条悟评估框架打分\n\n| 维度 | 得分 | 理由 |\n|------|------|------|\n| **创新性 (Innovation)** | 8.5/10 | 将\"co-speech gesture generation\"从计算机动画领域引入了 LLM 驱动范式，且通过 meta-instruction 实现了零训练的可迁移方案。组合式分类学有理论新意。但\"让 LLM 生成结构化事件\"本身不是全新思路 |\n| **影响力 (Impact)** | 8/10 | CHI 2026 + Google 背书保障了学术可见度；XR 手势交互分类学可能成为后续研究的参考框架。但手势交互并非 XR 中最紧迫的问题，短期影响力有限 |\n| **可操作性 (Actionability)** | 9/10 | **这是本篇最强的维度**。meta-instruction + GestureEvent 格式使得任何有基础 XR 开发的团队可以快速复现。无需训练专用模型，只需一个支持函数调用的 LLM。代码和分类学均有清晰的可迁移路径 |\n| **跨界连接力 (Cross-domain)** | 9/10 | 横跨 AI/LLM（生成管道）、HCI（手势分类学）、计算机图形学/动画（渲染调度）、XR（空间锚定）四个领域。更难得的是将心理语言学中的\"co-speech gesture\"理论工程化 |\n| **时间考验力 (Timelessness)** | 7.5/10 | \"伴随言语手势\"是人类的根本交流方式，不会过时。但具体技术方案（LLM meta-instruction、当前 gesture library）可能在 2-3 年内被更强的方法（原生多模态模型直接输出手势参数）替代 |\n| **总分** | **42/50** | **强烈推荐** |\n\n---\n\n## 核心收获\n\n### 1. 组合式分类学：交互设计的\"元素周期表\"\n\n六维度分类学是整篇论文最重要的理论贡献。它的价值不在于\"这六个维度本身\"，而在于：\n\n- **组合性**：不同维度的取值可以排列组合出大量不同的手势行为，而不是枚举有限的\"手势模板\"\n- **可扩展性**：新出现的手势需求可以映射到已有维度或增加新维度\n- **文档性**：分类学本身就是一个设计文档，帮助团队在同一套语言体系下讨论手势方案\n\n**悠仁的迁移思考**：这种\"维度 × 取值\"的组合式分类学方法，可以推广到其他新型交互方式的研究——比如语音交互的\"语境 × 语调 × 时机\"分类学，或者触觉反馈的\"位置 × 振动模式 × 强度\"分类学。这是跨领域的通用方法论工具。\n\n### 2. LLM 作为\"交互编排者\"而非\"决策者\"的架构模式\n\nAgentHands 的管道设计有一个值得关注的架构哲学：LLM 不是直接控制手部渲染（那会在延迟和可控性上失败），而是**生成一个结构化的事件序列**（GestureEvents），然后由轻量级确定性组件执行渲染。\n\n这形成了\"LLM 编排 → 确定性执行\"的分工模式：\n- LLM 负责：何时做手势、做什么类型手势、锚定什么物体（创造性任务）\n- 确定性组件负责：手势渲染、时序对齐、物体坐标映射（精度/实时性任务）\n\n这个模式可以泛化：**LLM 适合做\"规划/编排\"层面的事，不适合做\"控制/渲染\"层面的事**。\n\n### 3. 环境预注册的利与弊\n\n环境预注册（用户手动扫描和确认可交互物体）是当前系统的最大瓶颈，同时也是最大保障。\n\n- 利：确保了 3D 物体锚定的精度，避免了自动物体检测的假阳性\n- 弊：部署成本高，一次预注册只能覆盖当前环境，移动后需要重新注册\n\n**启示**：在短期（2026-2027），手动预注册可能仍然是空间锚定交互的务实方案。真正的自动环境理解（zero-shot scene understanding）目前 LLM/VLM 还不够可靠，强行自动化反而会引入更多问题。\n\n### 4. \"触发词锚定\"的时序设计智慧\n\nGestureEvent 绑定到特定触发词而非整段语音，这个设计细节很精妙：\n- 允许每个手势与其语义最相关的内容对齐\n- 当触发词不在句子末尾时，手势可先于语音结束出现（自然的\"保持姿势等待\"效果）\n- 与 TTS 时间戳的结合实现了精确到词级别的同步\n\n这比\"整句说完再做一个大动作\"自然得多，也更接近人类的交流模式——我们在说话时，手势往往超前于语音出现。\n\n---\n\n## 批判性分析\n\n### 优点（已充分认可）\n- 端到端系统，从研究问题到用户验证逻辑完整\n- 分类学+管道+评估的 HCI 标准范式执行到位\n- 工程可复现性强（代码开源？分类学可直接使用）\n\n### 潜在问题\n\n1. **\"与语音同步\"的实际延迟未量化**\n   - 论文提到 GestureEvent → parser → scheduler → animation 的管道，但**未给出端到端延迟的量化指标**\n   - 如果 LLM 输出文本 + GestureEvents 再到渲染的总延迟 > 500ms，用户可能感知到手口不同步\n   - 这是一个严重的体验问题，论文未充分讨论\n\n2. **meta-instruction 的鲁棒性未知**\n   - LLM 是否总能生成格式正确的 GestureEvents？当面对复杂的物体场景时，是否会出现格式错误或语义不恰当的 gesture？\n   - 论文没有报告 GestureEvent 生成的错误率或失败模式\n   - 如果错误率超过一定阈值，系统的实用性会大打折扣\n\n3. **N=12 的用户研究规模**\n   - within-subjects 设计减小了个体差异的影响，但 12 人的样本量不足以发现细微的交互问题\n   - 长期使用场景（疲劳感、手势麻木效应）完全未被覆盖\n\n4. **\"更容易跟上\"的主观性**\n   - 主要结果报告是用户在问卷中评价\"更容易跟上\"，而非客观的行为指标（如任务完成时间减少）\n   - 存在霍桑效应（用户对新颖手势系统偏爱）的可能性\n\n5. **单向设计：只有 AI 对用户做手势**\n   - 系统支持\"用户与 AI 交互手势\"（high-five 等），但 AI 能否**理解**用户回应的手势？\n   - 当前管道是单向的：AI 生成→执行，没有手势感知的反馈循环\n   - 意味着 AI \"看到\"用户回应手势后无法调整行为\n\n### 与同类工作的对比\n\n| 论文 | 核心差异 | AgentHands 优势 |\n|------|---------|-------------|\n| Objestures (CHI 2026) | 日常物品+手势，非 LLM 驱动 | AgentHands 有 LLM 编排的动态生成能力 |\n| Gestura (arXiv 2510) | 手势理解 vs 手势生成 | 两个方向互补，非竞争关系 |\n| GestureCoach (arXiv 2504) | 演讲教练，离线场景 | AgentHands 聚焦 XR 实时的空间锚定交互 |\n| SparseEMG (UIST 2025) | EMG 传感器布局 | 底层硬件方案，upper layer 不同 |\n\n---\n\n## 与课题的关联\n\n### 直接应用\n\n1. **AI + 新型交互方式（手势/体感方向）**\n   - AgentHands 是\"AI + 手势交互\"这个方向的标杆系统\n   - 如果要设计一个\"会做手势\"的智能助手，AgentHands 是必引 baseline\n\n2. **空间计算中的 AI 代理交互设计**\n   - 六维度分类学可以直接作为 XR 代理手势交互设计的 checklist\n   - 环境预注册 + 物体注册表的模式适用于任何需要空间锚定 AI 的系统\n\n3. **LLM 编排 + 确定性执行的架构模式**\n   - 可迁移到其他交互系统（如：LLM 生成触觉运动序列，由确定性引擎执行）\n   - 是\"AI 做决策，系统做执行\"这个通用架构的具体例证\n\n### 间接启发\n\n- **分类学方法论**：\"维度 × 取值\"的组合式分类学可推广到其他交互方式研究\n- **工程化心理语言学概念**：将\"co-speech gesture\"这个心理语言学概念转化为可执行的 Pipeline，为其他交流理论（turn-taking、backchanneling 等）的工程化提供了范式\n- **开源文化：项目视频 + 论文 + 项目主页**的传播组合模式值得借鉴\n\n### 后续采集线索\n\n- 追踪 Ziyi Liu (Purdue) 和 Ruofei Du (Google) 的后续工作\n- 关注 CHI 2026 上的手势相关论文（Objestures 等）\n- 关注 co-speech gesture generation 领域的交叉引用\n\n---\n\n## 下一步行动建议\n\n1. **精读 PDF**：获取 CHI 2026 正式版本（24 页），重点关注 GestureEvent 格式的详细定义、LLM meta-instruction 的具体 prompt\n2. **复现评估**：若课题涉及 XR 代理手势，AgentHands 的分类学和管理模式可快速作为原型基础\n3. **追踪后续**：关注 Google XR Labs 是否开源代码（目前仅有论文和视频）\n4. **方向扩展**：将分类学方法论拓展到其他交互方式（触觉反馈、语音语调等）\n\n---\n\n## 领域调研策略\n\n### 有效数据库\n\n- **ACM Digital Library（CHI / UIST proceedings）**：核心来源，CHI 2026 产出大量手势+AI 交叉论文，质量极高\n- **Google Scholar（引用追踪）**：AgentHands 的 DOI 搜索精准，适合前向/后向引文追踪\n- **arXiv cs.HC + cs.AI**：补充来源，但需要过滤。优点是时效性优于会议 proceedings\n- **GitHub prototypes**：作为\"原型实现\"的搜索源，可发现前沿但非正式发表的系统（如 AssistMe、NeoCursor、Artemis）\n- **Ruofei Du (Google) 个人项目页 (duruofei.com)**：高质量单点来源，持续更新 XR + AI 研究\n\n### 有效关键词\n\n- **高产量高质量**：`\"co-speech gesture\" XR`、`\"gesture interaction\" LLM`、`\"hand gesture\" generative`\n- **中等产量高精度**：`\"spatially grounded\" conversational agents`、`\"gesture\" \"CHI 2026\"`（会议特定搜索）\n- **低产量但高价值**：`\"gesture taxonomy\" \"design space\"`（方法论论文）\n- **无效**：`\"hand tracking\" AI`（结果太宽泛，大半是底层感知而非交互研究）\n\n### 搜索策略\n\n- **会议 proceedings 扫描**：对 CHI 2026 proceedings 按\"gesture + agent\"关键词过滤，效率远高于通用数据库搜索\n- **引文链追踪**：从 AgentHands 的参考文献出发后向追踪，从引用它的论文出发前向追踪\n- **作者追踪**：Ruofei Du (Google XR Labs) 和 Ziyi Liu (Purdue) 是核心节点，定期检查其 Google Scholar 页面\n- **日期窗口策略**：2026年4月后（CHI 2026 截稿+发表）是手势+AI 交叉方向的高峰期，优先采这段时间的产出\n\n### 模式发现\n\n本方向呈现出清晰的\"两条技术路线\"：\n\n1. **LLM-driven（本篇路线）**：用 LLM 替代传统训练好的 gesture generation 模型，强调零训练的迁移性和动态编排能力\n2. **LVLM/感知驱动（Gestura 路线）**：用大视觉语言模型做手势意图理解，强调识别而非生成\n\n两条路线的交汇点（理解+生成的双向手势系统）基本空白——这也是 AgentHands 当前最明显的局限。\n\n### 信息源评价\n\n| 来源 | 质量 | 时效 | 适合 |\n|------|------|------|------|\n| CHI / UIST proceedings | ★★★★★ | ★★★ | 核心理论贡献、系统论文 |\n| arXiv cs.HC | ★★★ | ★★★★★ | 最新预印本、前瞻探索 |\n| GitHub projects | ★★ | ★★★★★ | 快速原型验证、工程实现参考 |\n| 项目官网/个人主页 | ★★★★ | ★★★ | 聚集研究成果、项目历史追踪 |\n\n---\n\n*采集员：悠仁*\n*\"AI 如果要真正融入物理世界，就不能只有一张嘴——它需要一双手。\"*",
+    "excerpt": "来源：records/20260527/09/yujin-CHI2026-AgentHands/悠仁-能力进化.md · | 项目 | 内容 |",
+    "file_name": "悠仁-能力进化.md",
+    "source_dir": "records/20260527/09/yujin-CHI2026-AgentHands",
+    "original_url": "https://doi.org/10.1145/3772318.3790938",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-05-26 09:00",
     "title": "悠仁-能力进化",
