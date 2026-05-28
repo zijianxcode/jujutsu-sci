@@ -155,8 +155,14 @@ sync_academy_mirror() {
       echo "[$TIMESTAMP] academy: git pull timed out — will sync against local state and push later"
     fi
     if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
-      echo "[$TIMESTAMP] academy: local repo not clean, falling back to clone"
-      target_repo=""
+      echo "[$TIMESTAMP] academy: local repo not clean — stashing and continuing with local checkout"
+      git -C "$target_repo" stash --include-untracked --quiet 2>/dev/null || true
+      if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
+        echo "[$TIMESTAMP] academy: stash failed, falling back to clone"
+        target_repo=""
+      else
+        echo "[$TIMESTAMP] academy: stash succeeded, repo is now clean"
+      fi
     fi
   fi
 
