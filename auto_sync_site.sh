@@ -292,7 +292,7 @@ sync_academy_mirror() {
 
 # Check mode — skip clean check, just validate
 if [ "$MODE" = "check" ]; then
-  if ! python3 sync_from_source.py; then
+  if ! python3 sync_from_source.py --check-quality; then
     echo "[$TIMESTAMP] ERROR: sync_from_source.py failed"
     exit 1
   fi
@@ -315,8 +315,8 @@ else
   echo "[$TIMESTAMP] Warning: git fetch timed out — continuing with local state"
 fi
 
-# Generate HTML
-if ! python3 sync_from_source.py; then
+# Generate HTML (with quality check)
+if ! python3 sync_from_source.py --check-quality; then
   echo "[$TIMESTAMP] ERROR: sync_from_source.py failed"
   exit 1
 fi
