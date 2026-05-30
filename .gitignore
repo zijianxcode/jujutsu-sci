@@ -1,5 +1,6 @@
-__pycache__/
 *.pyc
 .DS_Store
 .pytest_cache/
+__pycache__/
 config.local.json
+quality-report.json

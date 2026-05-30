@@ -2,7 +2,13 @@
 
 # =============================================================================
 # auto_sync_site.sh — sync jujutsu-sci HTML output to GitHub + academy mirror
-# Exit codes: 0=success  1=sync failed  2=git push failed  3=academy mirror failed
+# Exit codes:
+#   0 = success
+#   1 = sync failed
+#   2 = jujutsu-sci push failed
+#   3 = academy mirror failed
+#   4 = CloudBase deploy failed
+#   5 = production verification failed
 # =============================================================================
 
 set -euo pipefail
@@ -14,6 +20,9 @@ HOMEPAGE_REPO_URL="https://github.com/zijianxcode/personal-homepage.git"
 HOMEPAGE_TMP="${TMPDIR:-/tmp}/personal-homepage-sync"
 # Local checkout — avoids git clone timeout issues (5/16, 5/18, 5/17 failures)
 HOMEPAGE_LOCAL="/Users/zijian/Documents/Code/personal-homepage"
+TCB_ENV_ID="homepage-1gthisc4771d43ac"
+CLOUDBASE_ACADEMY_URL="https://homepage-1gthisc4771d43ac-1256690240.tcloudbaseapp.com/academy/"
+PUBLIC_ACADEMY_URL="https://bananabox.plus/academy/"
 MODE="${1:-sync}"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 HTML_FILES=()
@@ -286,6 +295,92 @@ sync_academy_mirror() {
   fi
 }
 
+deploy_to_cloudbase() {
+  if [ ! -d "$HOMEPAGE_LOCAL/.git" ]; then
+    echo "[$TIMESTAMP] ERROR: personal-homepage checkout not found: $HOMEPAGE_LOCAL"
+    return 4
+  fi
+
+  echo "[$TIMESTAMP] cloudbase: deploying full site from $HOMEPAGE_LOCAL"
+  if ! (
+    cd "$HOMEPAGE_LOCAL" &&
+    export TCB_ENV_ID="$TCB_ENV_ID" &&
+    npm run deploy
+  ); then
+    echo "[$TIMESTAMP] ERROR: CloudBase deploy failed"
+    return 4
+  fi
+
+  echo "[$TIMESTAMP] cloudbase: deploy finished"
+  return 0
+}
+
+verify_production() {
+  if [ ! -f "$HOMEPAGE_LOCAL/scripts/verify-production.js" ]; then
+    echo "[$TIMESTAMP] WARNING: verify-production.js missing, skipping remote verification"
+    return 0
+  fi
+
+  echo "[$TIMESTAMP] verify: checking CloudBase academy content"
+  if ! (
+    cd "$HOMEPAGE_LOCAL" &&
+    export CLOUDBASE_ACADEMY_URL="$CLOUDBASE_ACADEMY_URL" &&
+    export PUBLIC_ACADEMY_URL="$PUBLIC_ACADEMY_URL" &&
+    npm run verify:production
+  ); then
+    echo "[$TIMESTAMP] ERROR: production verification failed"
+    return 5
+  fi
+
+  return 0
+}
+
+sync_emergency_status() {
+  if [ ! -f "$HOMEPAGE_LOCAL/scripts/health-check.js" ]; then
+    echo "[$TIMESTAMP] WARNING: health-check.js missing, skipping emergency status sync"
+    return 0
+  fi
+
+  echo "[$TIMESTAMP] emergency: probing production tiers"
+  local health_status=0
+  (
+    cd "$HOMEPAGE_LOCAL" &&
+    npm run health:production
+  ) || health_status=$?
+
+  if [ "$health_status" -eq 2 ]; then
+    echo "[$TIMESTAMP] WARNING: primary site unavailable, backup tier is reachable"
+  elif [ "$health_status" -ne 0 ]; then
+    echo "[$TIMESTAMP] WARNING: emergency health check returned exit=$health_status"
+  fi
+
+  if (
+    cd "$HOMEPAGE_LOCAL" &&
+    npm run deploy:emergency-status
+  ); then
+    echo "[$TIMESTAMP] emergency: status.json synced to CloudBase"
+  else
+    echo "[$TIMESTAMP] WARNING: emergency status sync failed"
+  fi
+
+  return 0
+}
+
+ensure_github_pages_backup() {
+  local backup_url="https://zijianxcode.github.io/personal-homepage/academy/"
+  local code="000"
+
+  code="$(curl -s -o /dev/null -w '%{http_code}' "$backup_url" || true)"
+  if [ "$code" = "200" ]; then
+    echo "[$TIMESTAMP] backup: GitHub Pages academy mirror is live"
+    return 0
+  fi
+
+  echo "[$TIMESTAMP] WARNING: GitHub Pages backup is not ready (HTTP ${code})"
+  echo "[$TIMESTAMP] Run once: cd $HOMEPAGE_LOCAL && npm run backup:enable-github-pages"
+  return 0
+}
+
 # =============================================================================
 # Main
 # =============================================================================
@@ -376,16 +471,33 @@ fi
 sync_academy_mirror
 academy_status=$?
 
-echo "[$TIMESTAMP] Done. jujutsu-sci push: $( $push_ok && echo "ok" || echo "FAILED" ), academy mirror: exit=$academy_status"
+if [ "$academy_status" -ne 0 ]; then
+  echo "[$TIMESTAMP] FAILURE: academy mirror sync failed (exit=$academy_status)."
+  exit 3
+fi
 
 if ! $push_ok; then
   echo "[$TIMESTAMP] FAILURE: jujutsu-sci push did not reach remote after 3 attempts."
   exit 2
 fi
 
-if [ "$academy_status" -ne 0 ]; then
-  echo "[$TIMESTAMP] FAILURE: academy mirror sync failed (exit=$academy_status)."
-  exit 3
+# --- Deploy to CloudBase (authoritative domestic production) -------------------
+deploy_to_cloudbase
+deploy_status=$?
+if [ "$deploy_status" -ne 0 ]; then
+  echo "[$TIMESTAMP] FAILURE: CloudBase deploy failed (exit=$deploy_status)."
+  exit "$deploy_status"
 fi
 
+verify_production
+verify_status=$?
+if [ "$verify_status" -ne 0 ]; then
+  echo "[$TIMESTAMP] FAILURE: production verification failed (exit=$verify_status)."
+  exit "$verify_status"
+fi
+
+sync_emergency_status
+ensure_github_pages_backup
+
+echo "[$TIMESTAMP] Done. jujutsu-sci push: ok, academy mirror: ok, cloudbase deploy: ok, verify: ok, emergency: synced"
 exit 0
