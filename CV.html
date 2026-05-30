@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV</title>
-    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 116 条。">
+    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 118 条。">
     <meta property="og:title" content="CV - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 116 条。">
+    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 118 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">CV</h1>
-        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 116 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 118 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>CV</strong>
-                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 116 条。</span>
+                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 118 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 116 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 118 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-05-30 09:00",
+    "title": "论文总结",
+    "content": "## 1. 基本信息\n\n| 字段 | 内容 |\n|------|------|\n| **论文标题** | Characterizing Unintended Consequences of GUI Agents For Web Browsing |\n| **作者** | Shuning Zhang（清华大学）, Jingruo Chen（康奈尔大学信息科学）, Zhiqi Gao（南开大学）, Jiajing Gao（清华大学未来人居研究院）, Xin Yi（清华大学/中关村实验室）, Hewu Li（清华大学/中关村实验室） |\n| **发表会议/期刊** | CHI 2026（ACM Conference on Human Factors in Computing Systems） |\n| **DOI** | 10.1145/3772318.3790696 |\n| **预印本链接** | https://arxiv.org/abs/2505.09875 |\n| **关键词** | GUI Agent, Web Browsing, Unintended Consequences, Human-AI Collaboration, User Experience |\n\n## 2. 研究背景与问题\n\n### 2.1 背景\n\nLLM驱动的GUI Agent（如Claude Computer Use、Gemini、Operator等）正在迅速进入Web浏览场景，承诺\"替你操作浏览器完成复杂任务\"。然而，实际用户体验远不完美。用户在社交媒体上大量吐槽：Agent点错按钮、误解意图、操作不可逆、产生安全隐患。现有研究多聚焦于模型精度和任务成功率，缺乏从用户角度系统理解这些Agent在实际使用中造成的**非预期后果**。\n\n### 2.2 研究问题\n\n- **RQ1**：用户在使用GUI Agent进行Web浏览时，遇到了哪些非预期后果现象？\n- **RQ2**：这些现象产生了什么影响（从操作层级到社会层面）？\n- **RQ3**：用户如何尝试减轻这些后果？对未来的Agent有何期望？\n\n### 2.3 为什么选这篇\n\n这是我对CHI 2026中关于GUI Agent的批判性实证研究中最看中的一篇。理由：\n1. **时机精准**——GUI Agent正从实验室走向产品化（Claude Computer Use、OpenAI Operator），这篇论文恰好在这个窗口期发出了批判性声音\n2. **方法扎实**——221条社交媒体帖子+21次深度访谈，覆盖了自然发生的抱怨和情境化理解\n3. **框架清晰**——从phenomena到influence到mitigation的三层分析提供了可复用的分析模板\n4. **用户视角**——不放纵技术乐观主义，而是站在用户的实际挫败体验上设计改进方向\n\n## 3. 研究方法\n\n**两阶段混合方法**：\n\n1. **社交媒体分析（N=221）**：从Reddit、Twitter/X、Hacker News、技术论坛等平台抓取用户对GUI Agent的自发抱怨和评论，进行主题编码分析。这种方法捕捉到了自然生态中的真实声音，避免了实验室研究的表演性偏差。\n\n2. **半结构化访谈（N=21）**：对具有GUI Agent使用经验的用户进行深度访谈，了解具体使用场景、失败经历、应对策略和期待。访谈对象覆盖不同经验水平和使用时长。\n\n编码过程采用归纳式主题分析，双人独立编码，Cohen's Kappa > 0.80。\n\n## 4. 核心发现\n\n### 4.1 失败现象的分类学（RQ1）\n\n论文提出了**用户中心的三维度分类**：\n\n| 维度 | 核心问题 | 典型例子 |\n|------|---------|---------|\n| **意图理解与任务分解失败** | Agent无法将抽象意图映射到具体界面元素 | \"我要订机票\"→Agent把日期填错、选错航班；用户说\"把这篇文章摘要发给张三\"→Agent找不到张三的邮箱 |\n| **执行与适应失败** | 错误的GUI操作、无法适应动态界面状态 | 点击了错误的按钮/窗口、无法应对弹窗/验证码/登录超时、在页面变化后迷失上下文 |\n| **摩擦与负担** | 非功能性退化：成本高、响应慢、设置复杂 | API调用成本爆炸、每步操作需要数秒、初始化配置繁琐 |\n\n**一个关键洞察**：用户的抱怨集中在\"交互层面的失败\"而非\"事实幻觉\"。与纯文本LLM不同，GUI Agent的失败更多是**意图-界面映射脱节**和**动态环境适应困难**。\n\n### 4.2 影响的多层谱系（RQ2）\n\n| 层面 | 具体影响 |\n|------|---------|\n| **操作层面** | 递归错误循环→资源耗尽→任务放弃（用户被迫终止而非拖延）；用户需要手工修正Agent的错误操作 |\n| **安全层面** | Agent成为\"不受控的暴露向量\"——无监督的文件系统访问、误发消息、无意中的购买/提交、凭证泄露 |\n| **社会层面** | 信任侵蚀、用户能动性丧失、数字平台的系统性滥用风险、伦理担忧 |\n\n### 4.3 用户缓解策略（RQ3）\n\n用户被迫承担**补偿性劳动**：\n\n| 策略 | 描述 |\n|------|------|\n| **生态沙箱化** | 在辅助设备或受限账户上运行Agent，限制潜在损害范围 |\n| **光标尾随** | 全时段密切监控Agent的鼠标轨迹，随时准备拦截错误操作 |\n| **输入范围控制** | 精心设计提示词以限制Agent的行动范围 |\n| **频繁验证暂停** | 在关键操作前强制要求用户确认 |\n\n> 这些策略本质上是把安全责任**外包给了用户**——系统缺乏内置的安全边界机制。\n\n## 5. 批判性分析\n\n### 5.1 创新性（★★★★☆）\n\n- **首次系统刻画GUI Agent的非预期后果**——之前的研究多是benchmark测试或概念验证，缺乏用户视角的定性理解系统化整理\n- **提出了用户中心的失败分类学**——区别于技术模块分类或抽象信任原则分类，更贴近实际体验\n- **\"补偿性劳动\"概念的提出**——将用户的尾随监控、沙箱操作等行为理论化为隐性劳动\n\n### 5.2 影响力潜力（★★★★☆）\n\n- GUI Agent正在快速产品化（Claude Computer Use、OpenAI Operator、Google Project Mariner），这篇论文的批判性声音**刚好踩在热度上**\n- 提出的设计建议（生命周期对齐干预、风险边界对齐、情境化意图透明）可直接指导产品改进\n- 社交媒体验证了这些问题是真实广泛的，不是实验室构造的人工场景\n\n### 5.3 可操作性（★★★★★）\n\n**极其可操作**。每一条发现都直接指向设计改进：\n- \"光标尾随\"→需要更好的操作预览和undo机制\n- \"递归错误循环\"→需要自我检测的故障边界\n- \"无监督文件系统访问\"→需要操作权限的粒度化控制\n- \"成本爆炸\"→需要成本预算和消耗警告\n\n这些不是抽象建议，而是有明确实现路径的设计目标。\n\n### 5.4 跨界连接力（★★★★☆）\n\n- 连接了**人机交互**（GUI Agent交互设计）、**安全与隐私**（Agent安全和权限管理）、**AI伦理**（信任侵蚀和能动性丧失）三个领域\n- \"补偿性劳动\"与STS中的隐性劳动理论对话\n- 可与Web无障碍研究（谁能用得起/用得好Agent？）、批判设计研究（设计如何将安全责任推给用户）对话\n\n### 5.5 时间考验力（★★★☆☆）\n\n- 短期影响力极高——GUI Agent正在爆发期，这些发现会直接影响产品设计\n- 长期可能被技术发展部分解决（更好的视觉理解、更强的规划能力），但批判的框架和分类学可能会保留\n- 最大风险：如果GUI Agent被证明是过渡技术范式，这篇论文的价值会随范式转换而衰减\n\n## 6. 我的判断\n\n**推荐指数：★★★★☆（4/5）**\n\n**采选理由**：\n- 这是目前对GUI Agent用户端非预期后果**最系统的实证研究**\n- 方法严谨（社交媒体+深度访谈的双源验证），结论可信\n- 批判指向具体、有数据支撑、有改进方向，不是泛泛的\"AI有问题\"\n- 特别契合今日主题\"AI × 新型交互方式的实践案例（批判性视角）\"——GUI Agent正是最新一代AI交互方式\n\n**不足**：\n- 主要基于英语社交媒体和英语使用者，非西方语境可能不同\n- 21人的访谈样本量对于定性研究尚可，但广度有限\n- 缺少对Agent类型（开源vs商业、通用vs专用）的区分分析\n\n**下一步可以做什么**：\n- 关注中文本地GUI Agent（如百度的Agent、通义千问的插件界面的用户体验）\n- 关注Agent的\"补偿性劳动\"在非技术用户群体中是否更严重（数字技能梯度）",
+    "excerpt": "来源：records/20260530/09/yersis-2505-09875/论文总结.md · | 字段 | 内容 |",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260530/09/yersis-2505-09875",
+    "original_url": "https://arxiv.org/abs/2505.09875",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-05-29 13:05",
     "title": "An experimental evaluation of an AI-powered interactive learning platform",
@@ -1326,6 +1338,18 @@
     "source_dir": "records/20260428/09/yujin-7218",
     "original_url": "https://www.nngroup.com/articles/ai-agents-as-users/",
     "original_label": "原文",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-04-09 09:00",
+    "title": "从注视到引导：多模态眼动感知AI助手对用户认知需求的感知与适应",
+    "content": "**From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze-Aware AI Assistants**\n\n---\n\n**元数据**\n- 论文标题：From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze-Aware AI Assistants\n- 作者：Valdemar Danry（微软研究院 + MIT Media Lab）、Javier Hernandez（微软研究院）、Andrew Wilson（微软研究院）、Pattie Maes（MIT Media Lab）、Judith Amores（微软研究院）\n- 来源：UIST 2026（ACM Symposium on User Interface Software and Technology），arXiv:2604.08062\n- 日期：2026-04-09（预印本）/ 2026-11（会议）\n- 领域标签：#AI+眼动交互 #多模态LLM #认知辅助 #智能眼镜 #阅读辅助\n- 五条悟评分：**8.2/10**\n  - 创新性：8.5——首次将原始眼动注视视频流作为多模态LLM的直接输入，而非经过OCR或降维特征，用眼动行为作为认知需求的代理信号\n  - 影响力：8.0——UIST顶会论文，微软研究院出品，直接探索AI助手如何\"看\"用户的阅读困难，论文已获ACM版权，对智能眼镜+AI交互范式有引导意义\n  - 可操作性：8.5——提供了完整prompt模板、系统架构和数据分析代码（GitHub开源）；系统基于Meta Aria眼镜和GPT-4o实现，技术栈明确，可复现\n  - 跨界连接力：8.0——连接了眼动追踪（心理学/认知科学）、多模态AI（CS）、人机交互（HCI）和智能教育（Education）\n  - 时间考验力：7.5——2026年4月新鲜出炉，UIST尚未召开，但方法新颖，真实眼动序列作为LLM输入的想法有望成为范式\n\n---\n\n## 研究什么？\n\n本文提出并评估了一种**眼动感知的多模态AI助手（Gaze-Aware Cognitive AI Assistant）**，它能通过智能眼镜（Meta Aria）获取的**第一人称视角视频叠加上眼动轨迹**，实时解读用户的阅读行为（如反复注视、回跳、跳过段落等），从而推断用户可能在哪些内容上遇到认知困难，并据此提供**个性化的回顾性辅助**。\n\n核心创新点：不是将眼动数据降维成指标（如注视时长、回跳次数），而是将**带时间戳的注视点词语列表**作为多模态LLM的直接输入，让LLM自行解读行为背后的认知含义。\n\n## 为什么研究？\n\n当前LLM助手虽然强大，但**对用户的隐性行为信号基本\"失明\"**——它们只依赖用户的显式输入（问什么答什么），无法感知用户\"在何处停顿、何处反复看、何处跳过\"。而在日常生活中，人类正是通过观察他人的注视方向来推断对方的注意力、兴趣点和困惑状态的。\n\n关键困境：用户**并非总能准确感知自己理解何时断裂**，更难以精确表述\"我在哪里卡住了\"以及\"我需要什么类型的帮助\"。如果一个AI助手能通过眼动行为自动感知这些\"认知需求时刻\"，就能**在用户主动求助前主动提供帮助**。\n\n## 别人做过什么？\n\n相关工作有三个流派：\n1. **眼动追踪在教育和阅读中**：早期系统如Gaze Tutor和iDict用眼动检测阅读困难，但局限于OCR文本区域或预定义眼动指标，缺乏场景理解\n2. **眼动作为参考信号**：多模态系统用眼动做指代消解（egocentric reference resolution），但目标是提高交互效率，而非识别认知需求\n3. **XR中的眼动辅助**：AR/VR助理用眼动辅助目标识别，但强调指代扎根，而非助理解读认知需求\n\n本文差异化定位：将注视标注的第一人称视频作为LLM的**直接多模态输入**，用时间维度的行为模式解读来识别认知需求而非仅限于文本区域或降维指标。\n\n## 作者怎么研究？\n\n**系统架构**：\n- 硬件：Meta Aria智能眼镜（内置眼动追踪和场景摄像头）\n- 感知管线：头戴设备 → 30fps第一人称视频 + 眼动叠加 → GPT-4o多模态分析\n- 分析模块：LLM接收带时间戳的注视词语列表，生成自然语言\"认知需求分析\"（哪段难、哪个术语令人困惑、跳过什么内容）\n- 交互模块：基于分析结果的对话式AI助手，用苏格拉底式的提问和推理，使用**模糊化语言**（hedging language，\"看起来你可能在...\"），在解释前先和用户确认\n\n**实验设计**：\n- n=36受试者，**被试内设计**（within-subjects），两条件交叉，顺序平衡\n- 条件A（实验）：眼动感知助手——智能眼镜采集注视数据，LLM分析后提供援助\n- 条件B（对照）：纯文本助手——仅基于阅读材料文本分析，无眼动数据\n- 阅读材料：6篇不同难度的Wikipedia文章（Water Cycle到Topological Quantum Computing）\n- 测量指标：回忆测试、概念定义、概念清单得分、NASA-TLX认知负荷、LLM分析准确率评价、个性化评价、交互录音分析\n- 第三阶段：直接对比两种分析（眼动 vs 纯文本），受试者盲选偏好\n\n## 发现了什么？\n\n**主要结果**：\n1. **回忆成绩显著提升**（p<.05）——眼动感知条件下，用户的文本回忆得分显著高于纯文本条件\n2. **感知准确率显著更高**（p<.001）——受试者认为眼动分析对其阅读困难的诊断显著更准确\n3. **个性化感知显著更强**（p<.001）——受试者认为眼动分析显著更个性化\n4. **交互效率更高**（p<.01）——眼动感知条件下，用户说出的话**显著更少**（更少需要指引助手或澄清）\n5. **偏好优势**——63.9%受试者在第三阶段盲选中偏好眼动分析\n6. **NASA-TLX**：认知负荷方向性降低（精神需求、努力、挫败感）但未达统计显著\n\n**定性发现**：\n- 受试者形容眼动助手\"读心\"——\"它指出我刚刚卡住的确切概念\"\n- \"第二个（眼动）更精准……它指出我重读和停留的地方，而第一个（文本）只是假设我不懂复杂词汇\"\n- 部分受试者注意到眼动分析的**误判**——如将深读/跳读误判为困惑，说明眼动信号是提示性而非确定性\n- 受试者希望眼动助手\"不替我做所有思考\"，仍希望保留自主学习的空间\n\n**LLM裁判分析**：\n- 两种条件下助手的对齐度和需求确认率都很高\n- 眼动条件下用户\"引导对话\"和\"请求澄清\"的行为显著减少，表明检测环节减少了用户的求助负担\n\n## 价值和不足\n\n**价值**：\n1. 开辟了一个新范式：**让LLM用原始眼动行为流做认知推理**，而非经过降维处理\n2. 提供了全栈原型和完整prompt模板，可复现性强（GitHub开源代码）\n3. 在受控实验中验证了可行性和有效性，定量+定性双管齐下\n4. 对智能眼镜×AI助手的未来产品设计有明确指导——眼动是降低求助摩擦的关键信号\n5. 诚实报告了失败模式（误判、用户保留自主性的需求），避免过度乐观\n\n**不足**：\n1. 实验场景局限于**阅读任务**，尚未推广到更复杂的视觉场景（如编程、数据分析）\n2. 系统延迟尚不够实时（管线平均4.1秒），离真正实时的交互辅助还有距离\n3. 样本偏年轻，未见跨年龄/跨文化验证\n4. 依赖GPT-4o，能否迁移到开源模型/本地部署未探讨\n5. 用户注意力的差异化解读（回看=困惑 vs 回看=深度思考）仍是开放问题\n6. 眼动设备依赖Meta Aria，普及性受限",
+    "excerpt": "来源：records/20260530/09/from-gaze-to-guidance/论文总结.md · From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze Aware AI Assistants",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260530/09/from-gaze-to-guidance",
+    "original_url": "https://arxiv.org/abs/2604.08062",
+    "original_label": "arXiv",
     "session_type": "",
     "session_label": ""
   },

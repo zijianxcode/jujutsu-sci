@@ -1,5 +1,69 @@
 [
   {
+    "file": "records/20260530/09/yersis-2505-09875",
+    "title": "",
+    "errors": [],
+    "warnings": [
+      "缺少来源信息",
+      "缺少日期",
+      "缺少领域标签",
+      "缺少 2 个规范章节: 关键洞察与跨域连接, 与人-AI协作的关联"
+    ],
+    "metadata": {
+      "title": true,
+      "authors": true,
+      "source": false,
+      "date": false,
+      "domain_tags": false
+    },
+    "sections_found": [
+      "研究背景与问题",
+      "研究方法",
+      "核心发现",
+      "批判性分析"
+    ],
+    "sections_missing": [
+      "关键洞察与跨域连接",
+      "与人-AI协作的关联"
+    ],
+    "has_role_ratings": true,
+    "score_valid": true,
+    "score_value": 4.0,
+    "gojo_review": null
+  },
+  {
+    "file": "records/20260530/09/megumi-multi-agent",
+    "title": "",
+    "errors": [],
+    "warnings": [
+      "缺少来源信息",
+      "缺少日期",
+      "缺少领域标签",
+      "缺少 6 个规范章节: 研究什么, 为什么研究, 别人做过什么, 作者怎么研究, 发现了什么, 价值和不足",
+      "缺少有效评分"
+    ],
+    "metadata": {
+      "title": true,
+      "authors": true,
+      "source": false,
+      "date": false,
+      "domain_tags": false
+    },
+    "sections_found": [],
+    "sections_missing": [
+      "研究什么",
+      "为什么研究",
+      "别人做过什么",
+      "作者怎么研究",
+      "发现了什么",
+      "价值和不足"
+    ],
+    "has_role_ratings": true,
+    "score_valid": false,
+    "score_value": null,
+    "gojo_review": null
+  },
+  {
     "file": "records/20260528/09/yersis-0001",
     "title": "Mental Health Impacts of AI Companions: Triangulating Social Media Quasi-Experiments, User Perspectives, and Relational Theory",
     "errors": [],
@@ -5936,6 +6000,32 @@
     "has_role_ratings": true,
     "score_valid": true,
     "score_value": 4.0,
+    "gojo_review": null
+  },
+  {
+    "file": "records/20260530/09/from-gaze-to-guidance",
+    "title": "From Gaze to Guidance: Interpreting and Adapting to Users' Cognitive Needs with Multimodal Gaze-Aware AI Assistants",
+    "errors": [],
+    "warnings": [],
+    "metadata": {
+      "title": true,
+      "authors": true,
+      "source": true,
+      "date": true,
+      "domain_tags": true
+    },
+    "sections_found": [
+      "研究什么",
+      "为什么研究",
+      "别人做过什么",
+      "作者怎么研究",
+      "发现了什么",
+      "价值和不足"
+    ],
+    "sections_missing": [],
+    "has_role_ratings": true,
+    "score_valid": true,
+    "score_value": 4.1,
     "gojo_review": null
   },
   {
