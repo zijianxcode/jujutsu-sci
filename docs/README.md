@@ -9,7 +9,8 @@
 | 采集应该写什么、怎么评分、哪些内容不要重复 | [COLLECTION_POLICY.md](COLLECTION_POLICY.md) | 采集契约、10 分制、去冗余规则 |
 | Hermes 应该写到哪个路径 | [HERMES_MIGRATION.md](HERMES_MIGRATION.md) | Hermes 职责边界、输出路径 |
 | 源目录如何同步成网页 | [CONTENT_SYNC.md](CONTENT_SYNC.md) | 本地生成、内容识别、时间解析、同步排查 |
-| 怎么发布到 GitHub / academy / CloudBase | [DEPLOYMENT.md](DEPLOYMENT.md) | 发布链路、academy 镜像范围、CloudBase 命令 |
+| 怎么发布到 bananabox.plus / CloudBase | [personal-homepage/docs/DEPLOYMENT-STABLE.md](/Users/zijian/Documents/Code/personal-homepage/docs/DEPLOYMENT-STABLE.md) | **站点级**发布 runbook（权威） |
+| 本仓库生成物与 academy 镜像 | [DEPLOYMENT.md](DEPLOYMENT.md) | 角色说明 + 指向权威文档 |
 | 首页和详情页的信息架构为什么这样设计 | [INFORMATION_ARCHITECTURE.md](INFORMATION_ARCHITECTURE.md) | 长期 IA 契约 |
 | 这次 IA 迭代前后对比与截图 | [IA_ITERATION_SUMMARY.md](IA_ITERATION_SUMMARY.md) | 复盘、截图、设计逻辑 |
 | 以前踩过什么坑 | [ISSUE_LOG.md](ISSUE_LOG.md) | 故障、根因、修复、预防措施 |
