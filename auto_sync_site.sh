@@ -321,7 +321,7 @@ verify_production() {
     return 0
   fi
 
-  echo "[$TIMESTAMP] verify: checking CloudBase academy content"
+  echo "[$TIMESTAMP] verify: checking homepage (/) and academy (/academy/)"
   if ! (
     cd "$HOMEPAGE_LOCAL" &&
     export CLOUDBASE_ACADEMY_URL="$CLOUDBASE_ACADEMY_URL" &&
