@@ -1,5 +1,71 @@
 # 问题记录与修复日志
 
+## 2026-05-31：主页学术入口改名未上线（只改了 Cursor 工作区 / 未 push + CDN 缓存）
+
+### 问题现象
+
+- 本地 Cursor 工作区 `index.html` 已改为「咒术研究所」
+- `bananabox.plus` 仍显示「咒术SCI高专 / 学术门户 ↗」或英文 `JUJUTSU SCI High School`
+
+### 根因判断
+
+1. 改名只存在于 `Documents/cursor/Personal Homepage`，权威仓库 `Code/personal-homepage` 与 GitHub `origin/main` 仍是旧文案。
+2. 修复 academy 滞后时虽在 Code 目录 `npm run deploy`，但当时 `index.html` 未一并改；CloudBase CDN 对 `index.html` 有 `max-age=300`，浏览器也可能继续用旧缓存。
+
+### 修复动作
+
+- 将入口文案同步到 `Code/personal-homepage/index.html` 并 `git push`
+- 再次 `npm run deploy` 刷新 CloudBase
+
+### 验证结果
+
+- `bananabox.plus` 与 CloudBase 默认域返回：`咒术研究所` / `Jujutsu Research Institute`
+
+## 2026-05-31：`bananabox.plus/academy/` 停在 5 月 20 日（CloudBase 用了旧工作区部署包）
+
+### 问题现象
+
+- 源数据与 [zijianxcode.github.io/jujutsu-sci/](https://zijianxcode.github.io/jujutsu-sci/) 已更新到 **2026-05-31 14:09**（总记录约 865）
+- [bananabox.plus/academy/](https://bananabox.plus/academy/) 仍显示 **2026-05-20 14:00**（总记录 796、成员记录 367）
+- `npm run verify:production` 报错：CloudBase academy 成员数落后于本地
+
+### 影响范围
+
+- 国内生产域名 `bananabox.plus/academy/` 展示落后 11 天的学术内容
+- 用户会误以为采集/生成停止，实际是发布源目录错误
+
+### 根因判断
+
+1. **权威副本已更新，但 CloudBase 未跟上**  
+   `/Users/zijian/Documents/Code/personal-homepage/academy/` 与 GitHub `origin/main` 已是 5/31；`auto_sync_site.sh` 的 mirror + push 已完成。
+2. **整站 `npm run deploy` 从 Cursor 工作区打出旧包**  
+   `/Users/zijian/Documents/cursor/Personal Homepage/academy/` 仍停在 5/20。某次在该目录执行 deploy，把旧 `academy/` 上传到了 CloudBase（`Last-Modified` 为 5/31，内容与 5/20 一致，属「新部署、旧文件」）。
+3. **易误判**  
+   推 GitHub ≠ `bananabox.plus` 自动更新；生产以 CloudBase `npm run deploy` 为准，且必须从 **Code/personal-homepage** 执行。
+
+### 修复动作
+
+1. 在权威目录重新发布：
+   ```bash
+   cd /Users/zijian/Documents/Code/personal-homepage
+   npm run deploy
+   npm run verify:production
+   ```
+2. 将 `Code/personal-homepage/academy/` rsync 到 Cursor 工作区，避免下次再从旧目录 deploy。
+3. 验收：`bananabox.plus/academy/` 与 CloudBase 默认域名的「最新时间」「成员记录」与本地一致。
+
+### 预防措施
+
+- **禁止** 从 `Documents/cursor/Personal Homepage` 对生产执行 `npm run deploy`；唯一发布目录：`Documents/Code/personal-homepage`。
+- 发布前跑 `npm run verify:production`；失败则不要当作已修复。
+- `auto_sync_site.sh` 已绑定 `HOMEPAGE_LOCAL=/Users/zijian/Documents/Code/personal-homepage`；若手动 deploy，先 `grep '2026-05' academy/index.html` 核对最新日期是否与 jujutsu-sci 一致。
+- 两个工作区并存时：以 **Code 路径** 为镜像与部署源，Cursor 工作区仅作编辑副本，发布前必须 rsync 或直接在 Code 目录操作。
+
+### 验证结果（2026-05-31）
+
+- `npm run verify:production` 通过
+- `bananabox.plus/academy/` 最新时间 **2026-05-31 14:09**，成员记录与本地一致
+
 ## 2026-05-19：首页时间检索不能按浏览器当天计算
 
 ### 问题背景
