@@ -1,5 +1,45 @@
 # 问题记录与修复日志
 
+## 2026-06-01：根路径 `index.html` 再次被 academy 覆盖（首页变成研究所）
+
+### 问题现象
+
+- `https://bananabox.plus/` 与 `https://bananabox.plus/index.html#work` 显示 **研究所**（academy 页面），无样式错乱、Work 导航消失
+- 个人主页应为 **aspera ad astra**，Work / Info / Things 三 Tab
+
+### 根因判断
+
+CloudBase 根目录的 `index.html` 被 **academy 首页** 覆盖。与 2026-05-24 同类事故：禁止的「只把 academy 部署到根路径 `.`」或等价误操作再次发生（可能来自定时同步 / 手工 `tcb hosting deploy` 未走 `npm run deploy` 验收）。
+
+GitHub `personal-homepage` 仓库内 `index.html` 仍是正确的 aspera 页面，问题只在 **CloudBase 生产文件**。
+
+### 修复动作
+
+```bash
+cd /Users/zijian/Documents/Code/personal-homepage
+npm run deploy
+npm run verify:production
+```
+
+必要时单独覆盖根 `index.html` 以刷新 CDN：
+
+```bash
+npm run build:cloudbase
+tcb hosting deploy .cloudbase-deploy/index.html index.html -e homepage-1gthisc4771d43ac
+```
+
+### 预防措施
+
+- **唯一合法发布**：`npm run deploy`（含 `verify-deploy-bundle.js`：根 `index.html` 必须是 aspera，不能是研究所）
+- **禁止**：`tcb hosting deploy academy/` 到 `.`、从 `jujutsu-sci` 仓库直接 deploy 到 CloudBase 根路径
+- `verify-production.js` 已增加对公网 `index.html` 的显式检查
+
+### 验证结果（2026-06-01）
+
+- `bananabox.plus/` 与 `bananabox.plus/index.html` 标题均为 aspera ad astra
+- `bananabox.plus/academy/` 仍为研究所
+- `npm run verify:production` 通过
+
 ## 2026-05-31：主页学术入口改名未上线（只改了 Cursor 工作区 / 未 push + CDN 缓存）
 
 ### 问题现象
