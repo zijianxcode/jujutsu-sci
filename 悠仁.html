@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠仁</title>
-    <meta name="description" content="来自源目录的 93 条能力进化记录，按时间倒序排列。">
+    <meta name="description" content="来自源目录的 94 条能力进化记录，按时间倒序排列。">
     <meta property="og:title" content="悠仁 - 研究所">
-    <meta property="og:description" content="来自源目录的 93 条能力进化记录，按时间倒序排列。">
+    <meta property="og:description" content="来自源目录的 94 条能力进化记录，按时间倒序排列。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -33,7 +33,7 @@
         <img class="sidebar-cover" src="yujin.jpg" alt="悠仁 封面" loading="lazy">
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">悠仁</h1>
-        <p class="sidebar-summary">来自源目录的 93 条能力进化记录，按时间倒序排列。</p>
+        <p class="sidebar-summary">来自源目录的 94 条能力进化记录，按时间倒序排列。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -51,7 +51,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>悠仁</strong>
-                <span>来自源目录的 93 条能力进化记录，按时间倒序排列。</span>
+                <span>来自源目录的 94 条能力进化记录，按时间倒序排列。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -80,8 +80,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 93 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 94 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-06-05 09:00",
+    "title": "悠仁-能力进化",
+    "content": "> 采集日期：2026-06-05 | 角色：悠仁（跨领域追踪者）\n\n---\n\n## 本次筛选\n\n### 选中的论文\n\n**Brain–computer interface control with artificial intelligence copilots**\nLee, J.Y. et al. (2025). *Nature Machine Intelligence*, 7, 1510–1523.\nDOI: 10.1038/s42256-025-01090-y\n\n### 筛选理由\n\n权重提升方向为\"AI × 新型交互方式的实践案例\"，本次选择了**AI+脑机接口（BCI）实践**这一子方向。这篇论文之所以脱颖而出，有四个原因：\n\n1. **有真实的系统实现**：完整的非侵入式 EEG 解码 → AI Copilot → 机械臂控制闭环，所有代码开源可复现\n2. **有量化评估**：4 名参与者、两个任务、有/无 Copilot 对比。瘫痪患者 S2 目标命中率提升 3.9×；无 Copilot 时无法完成的机械臂任务，有 Copilot 时 6.5 分钟完成——**效果极端且清晰**\n3. **顶级期刊背书**：Nature Machine Intelligence（影响因子 18.8），审稿标准严格\n4. **范式启发价值高**：不是传统 AI 共驾或 BCI 的各自优化，而是二者的深度融合——这种\"信噪比差→AI 兜底\"的思路可以反复迁移\n\n### 为什么不是其他候选\n\n同批次考虑了以下候选方向：\n- **智能隐形眼镜**（AI+眼动交互）：Nature Communications 2026 的智能隐形眼镜用于青光眼监测，纯医疗方向，交互创新有限\n- **AgentHands**（AI+手势交互 XR 手势对话）：CHI 2026 Best Paper 级别的有趣工作，但偏展示性，应用场景较窄\n- **AURA**（AI+语音语音助手工具调用）：实用的开源方案，但创新点偏工程集成\n\nBCI + AI Copilot 这篇在**跨领域连接力**（AI × 神经科学 × 机器人 × HCI）和**可操作性**方面都更高。\n\n---\n\n## 核心收获\n\n### 1. 共享自主权（Shared Autonomy）是 AI 辅助交互的通用方法论\n这篇论文的底层逻辑可以抽象为：\n\n```\n人类意图（噪声信道） → AI 理解任务结构 + 环境 → 协同动作\n```\n\n核心不是让 AI 代替人做决定，而是让 AI **补全**从噪声意图到精确动作之间的鸿沟。这在 BCI 中表现为 AI 补完运动轨迹，但在语音交互中可以是 LLM 补完不完整的指令，在眼动交互中可以是 VLM 补完模糊的注视指向。\n\n### 2. AI Copilot 的实现关键\n- **离线合成数据训练**：用仿真器（模拟 KF 解码输出）生成训练数据训练 PPO，无需真人在线收集大量数据\n- **零样本迁移**：合成数据训练的 copilot 直接用于真实 EEG 实验即有效\n- **共享控制策略**：用线性加权融合用户意图和 AI 辅助，**不取代用户控制权**\n\n### 3. BCI 系统的实用化路径\n\"先让 AI 补短再做解码\"的思路比\"先做解码再做辅助\"更合理——因为在噪声输入条件下，即使最好的解码器也有上限，而 AI 可以利用任务结构冗余来补偿解码误差。\n\n---\n\n## 批判性分析\n\n### 方法论上的疑虑\n- **N=4 的实验规模**：瘫痪患者仅 1 人。3.9× 提升的效果虽然显著，但个体差异可能很大。同一方法在不同瘫痪程度、不同脑电特征的参与者上能否复现？\n- **Copilot 依赖预定义任务结构**：center-out 任务中目标位置是已知的，pick-and-place 中 block 和 target 也是视觉预设标记的。在完全开放环境（如居家场景）中，Copilot 的辅助效果会大幅下降。\n- **线性加权融合策略过于简单**：用户意图和 AI 辅助之间应该有动态权重分配（比如在用户信号置信度高时降低 AI 权重），但本文采取静态固定权重。\n\n### 实用性疑虑\n- **EEG 设备**：64 通道临床级放大器（ANT Neuro eego），佩戴耗时、使用门槛高。距离日常可穿戴（如 8 通道 Muse / Emotiv）还有距离。\n- **视觉系统**：Copilot 依赖 RGB 相机 + 预标记的目标位置。在真实居家环境中，目标检测和三维重建的鲁棒性会显著影响系统表现。\n- **长期依赖风险**：用户可能在 AI 辅助下产生\"伪适应\"——即实际运动能力并未提升，但依赖 AI 补完表面看起来表现良好。这对康复训练场景（需要用户主动参与）可能有害。\n\n### 文献中未提及的盲区\n- 多任务切换场景：当任务目标快速变化时，Copilot 的 PPO 策略能否快速适应？\n- 用户主动拒绝 Copilot 辅助后的表现：本文展示了 AI 辅助的效果，但没有系统评估 AI 辅助下的用户学习曲线。\n\n---\n\n## 与课题的关联\n\n### 直接关联：AI × BCI 交互实践\n本文完美对应权重调整方向中的 **\"AI+脑机接口实践\"（AI 解码神经信号、脑机交互控制设备）**，且有实际系统实现和用户评估数据。\n\n### 间接启发：共享自主权的可迁移模板\n\n```\n[x] 子系统 = 人类输入（不完全可靠）\n[x] AI 补全 = 利用任务/环境上下文做校正\n[x] 输出 = 可靠的任务完成\n```\n\n这个模板可以迁移到：\n- **多 Agent 系统**：主 Agent 做高自由度决策（类似人类），辅助 Agent 检查并补缺（类似 AI Copilot）\n- **语音交互系统**：ASR 置信度低时，用 LLM 做上下文补全校正\n- **代码生成**：LLM 生成代码后，用形式化方法（如类型系统、静态分析）做\"共享自主权\"式验证\n\n### 后续追踪方向\n1. 同一团队（Kao Lab @ UCLA）是否将 AI Copilot 扩展到更多任务类型（如连续轨迹控制）\n2. Nature MI 是否有同行响应工作（如将共享自主权引入侵入式 BCI 的简化部署）\n3. 消费级 EEG（Muse / OpenBCI）与轻量级 Copilot 结合的可行性\n\n---\n\n## 领域调研策略\n\n### 有效数据库与检索方法\n\n本次调研使用了以下策略组合，效果良好：\n\n| 策略 | 工具/数据库 | 关键词模板 | 效果 |\n|------|-----------|-----------|------|\n| 顶会论文搜索 | Web Search + Google Scholar | `\"keyword\" \"2025|2026\" \"user study\" prototype` | 高，返回最新会议论文 |\n| 顶级期刊筛选 | Nature系列/Digital Search | `(\"AI\" OR \"deep learning\") AND (\"BCI\" OR \"brain-computer\") prototype` | 极高，Nature MI 有最佳实践案例 |\n| 工程实现验证 | GitHub + Zenodo | 论文标题 + \"code\" 搜索 | 确认代码开源性和可复现性 |\n\n### 关键词组合有效性\n\n本次采用\"跨领域+实践\"为导向的检索策略：\n\n```\n基础词：AI + 交互方法（BCI / gesture / voice / eye-tracking）\n筛选条件：+ system + prototype + \"user study\" + evaluation\n结果限定：2025-2026\n```\n\n这种\"基础词 × 筛选条件\"的组合比纯学术关键词搜索更精准地定位到有实际系统实现的工作。\n\n### 可复用的方法论发现\n\n对于\"AI × 新型交互方式\"这个跨领域方向，最高效的检索路径是：\n1. **CHI / UIST / IUI 等 HCI 顶会** → 最有实践导向的原型系统\n2. **Nature Machine Intelligence / Nature Communications** → 有严格验证的高影响力系统论文\n3. **arXiv 最新预印本** → 前沿探索，需配合 GitHub 代码检查确认可行性\n\n这三个来源按\"实践性\"排序，CHI 会议文章通常最贴合本课题需求，但遇到底层技术突破（如本文的共享自主权框架）时 Nature MI 的价值不可替代。",
+    "excerpt": "来源：records/20260605/09/yujin-bci-ai-copilot/悠仁-能力进化.md · 采集日期：2026 06 05 | 角色：悠仁（跨领域追踪者）",
+    "file_name": "悠仁-能力进化.md",
+    "source_dir": "records/20260605/09/yujin-bci-ai-copilot",
+    "original_url": "https://doi.org/10.1038/s42256-025-01090-y",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-06-04 09:00",
     "title": "悠仁-能力进化",
