@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悠仁</title>
-    <meta name="description" content="来自源目录的 94 条能力进化记录，按时间倒序排列。">
+    <meta name="description" content="来自源目录的 95 条能力进化记录，按时间倒序排列。">
     <meta property="og:title" content="悠仁 - 研究所">
-    <meta property="og:description" content="来自源目录的 94 条能力进化记录，按时间倒序排列。">
+    <meta property="og:description" content="来自源目录的 95 条能力进化记录，按时间倒序排列。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -33,7 +33,7 @@
         <img class="sidebar-cover" src="yujin.jpg" alt="悠仁 封面" loading="lazy">
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">悠仁</h1>
-        <p class="sidebar-summary">来自源目录的 94 条能力进化记录，按时间倒序排列。</p>
+        <p class="sidebar-summary">来自源目录的 95 条能力进化记录，按时间倒序排列。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -51,7 +51,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>悠仁</strong>
-                <span>来自源目录的 94 条能力进化记录，按时间倒序排列。</span>
+                <span>来自源目录的 95 条能力进化记录，按时间倒序排列。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -80,8 +80,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 94 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "悠仁", "subtitle": "来自源目录的 95 条能力进化记录，按时间倒序排列。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-06-06 09:00",
+    "title": "悠仁-能力进化",
+    "content": "## 筛选理由\n\n**采集日期**: 2026-06-06 | **采集方向**: AI × 新型交互方式\n\n**论文**: Prop-Chromeleon: Adaptive Haptic Props in Mixed Reality through Generative Artificial Intelligence (DIS '26)\n\n**选择理由**：\n1. **精准命中触觉交互方向**：本文属于\"AI+触觉/力反馈交互实践\"——使用 GenAI 将日常物品动态转变为触觉道具，有完整的系统原型和可操作的实现\n2. **跨域交叉清晰**：生成式 AI（ControlNet + Stable Diffusion + TripoSR）× 混合现实（MR）× 触觉交互（被动触觉设计）的三域融合\n3. **有实质评估数据**：技术评估（90% 成功率 + 几何一致性指标）+ 用户研究（N=12，HX 量表统计显著差异）\n4. **实际问题驱动**：解决 MR 中视觉-触觉不一致的核心痛点，而非纯概念探索\n5. **顶会论文**：DIS '26（HCI 顶会之一），作者来自 University of Toronto DGP Lab 和 Imperial College London，学术信用可靠\n\n**排除的其他候选**：\n- AgentHands（Google XR Labs, CHI '26）：已被采集两次\n- From Gaze to Guidance（Microsoft Research）：已被采集四次\n- Objestures（CHI '26）：AI 成分弱，偏交互设计分类学，评分下界\n\n---\n\n## 核心收获\n\n### 1. GenAI × 触觉交互的设计空间\nProp-Chromeleon 展示了 GenAI 在触觉领域的一种特殊应用方式——不是生成触觉信号本身，而是生成与物理物体形状匹配的视觉覆盖层，利用\"形状对齐\"来实现视觉-触觉一致性。这种\"视觉驱动触觉体验\"的思路不同于常见的声音到振动（Sound2Hap）、场景到触觉（Scene2Hap）等范式，为 AI 在触觉交互中的应用提供了新方向。\n\n### 2. 形状对齐是触觉真实感的杠杆点\n用户研究的关键发现是：当生成的虚拟模型与物理物体形状对齐时，触感被感知为\"自然\"；不对齐时产生强烈的视觉-触觉脱节。这说明在被动触觉设计中，**几何一致性比纹理或色彩真实度更重要**——这是触觉交互设计的一条可迁移的洞见。\n\n### 3. 实时 GenAI 流水线的工程可行性\n系统在 2026 年的硬件条件下实现了可工作的实时流水线（深度捕获 → T2I → 3D 重建 → 追踪锚定），证明当前 GenAI 模型（Stable Diffusion + TripoSR + ControlNet）的组合已经可以在 MR 应用中达到实用水平，尽管延迟和稳定性仍有改进空间。\n\n---\n\n## 批判性分析\n\n### 值得肯定的地方\n- **问题定义清晰**：直击 MR 的核心缺陷（视觉-触觉不一致），不做过多理论包装\n- **技术路径务实**：选择 ControlNet + TripoSR 的成熟组合而非追求最新模型，保持系统可复现性\n- **评估设计合理**：对比条件（AI 生成但不做形状对齐）隔离了核心变量的影响\n\n### 存疑之处\n- **触觉的\"被动性\"局限**：系统只提供形状对齐的被动触觉，不模拟纹理、温度、力反馈等触觉维度。在真实 MR 交互中，用户可能期望更丰富的触觉体验\n- **交互深度不足**：用户角色仅限于\"输入提示 → 体验生成结果\"的一轮交互，缺少迭代优化的反馈回路\n- **延迟问题被低估**：全流水线端到端延迟未量化报告。在 MR 中，超过秒级的延迟会显著破坏沉浸感\n- **样本代表性问题**：12 名参与者对触觉的专业敏感度和技术背景可能影响外部有效性\n\n### 跨领域关联\n- **与本课题（jujutsu-sci）的关联**：本文展示了 AI 作为\"触觉交互的简化器\"的角色——非技术用户可以通过自然语言描述来创造触觉体验。这与 AI 降低专业壁垒、赋能领域外用户的趋势一致\n- **与人类认知研究的关联**：形状对齐影响触觉感知的发现，与心理学中的跨模态一致性（cross-modal correspondence）研究（如 McGurk 效应、物质-声音关联）相呼应\n- **与具身认知的关系**：MR 中触觉道具的视觉覆盖影响了用户的触摸行为和互动策略，提示\"感知即交互\"的具身认知视角\n\n---\n\n## 与课题关联\n\nJujutsu-sci 关注 AI 如何在不同领域产生实际影响。本文的启示：\n\n1. **AI 不是替代而是增强触觉设计**：GenAI 不是取代设计师的角色，而是让非专业用户能够表达触觉意图并看到实时反馈——这是 AI 作为\"交互媒介\"的典型案例\n2. **场景化应用的可迁移性**：这种\"按需生成触觉道具\"的思路可以迁移到教育（让教室里的物品变成教学道具）、游戏（日常物品变成游戏控制器）、康复（日常物品变成训练工具）等场景\n3. **技术门槛下降趋势**：本研究证明，2026 年的 GenAI 模型已经可以在消费级 MR 头显上实现有意义的触觉增强——这一趋势只会加速\n4. **方法论启示**：将生成质量分解为\"几何一致性\"和\"提示保真度\"两个正交维度的评估框架，对其他 AI 生成系统的评估有参考价值\n\n---\n\n## 领域调研策略\n\n### 有效数据库和关键词组合\n\n在本次采集过程中，发现了以下几个高效的检索策略：\n\n**arXiv 搜索策略**：\n- `cs.HC` + `(generative AI OR LLM) AND (haptic OR tactile OR touch)` → 覆盖 AI+触觉研究\n- `cs.HC` + `(gaze OR eye tracking OR attention) AND (AI OR LLM OR assistant)` → 覆盖眼动/注意力交互\n- `cs.HC` + `(gesture OR hand tracking) AND (AI OR LLM) AND (interaction OR system)` → 覆盖手势交互\n\n**CHI/DIS/UIST 搜索策略**：\n- 按年度浏览程序（program）比全文搜索更高效——CHI '26 和 DIS '26 的在线程序已有结构化过滤\n- 使用 DOI 前缀识别：`10.1145/37723*` (CHI '26), `10.1145/38006*` (DIS '26), `10.1145/38086*` (UIST '26)\n\n**搜索关键词交叉组合**：\n- `prototype AND user study AND (AI OR LLM)` + 具体的交互方式名称\n- `deployment AND system AND evaluation` + 交互领域术语\n- 注意使用英文关键词搜索中文资源时，优先搜索\"实践案例\"而非\"论文综述\"\n\n### 方法论发现\n- 通过组合多个角的搜索来覆盖同一领域的不同侧面比单一大搜索更有效\n- 优先搜索顶会程序（已发布的 Accepted Papers）而非通用网络搜索，前者质量更高、结构化更好\n- 找到候选论文后，先查 arXiv ID 去重可以大幅减少无效工作",
+    "excerpt": "来源：records/20260606/09/yujin-prop-chromeleon/悠仁-能力进化.md · 采集日期 : 2026 06 06 | 采集方向 : AI × 新型交互方式",
+    "file_name": "悠仁-能力进化.md",
+    "source_dir": "records/20260606/09/yujin-prop-chromeleon",
+    "original_url": "https://doi.org/10.1145/37723",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-06-05 09:00",
     "title": "悠仁-能力进化",
