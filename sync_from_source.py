@@ -14,7 +14,7 @@ CONFIG_PATH = SCRIPT_DIR / 'config.json'
 LOCAL_CONFIG_PATH = SCRIPT_DIR / 'config.local.json'
 
 DEFAULT_CONFIG = {
-    'source_root': '/Users/zijian/Library/Mobile Documents/com~apple~CloudDocs/SCI/2026sci1/学术小龙虾',
+    'source_root': '/Users/zijian/Documents/Code/jujutsu-sci-source',
     'project_root': '.',
     'obsidian_vault': '',
     'obsidian_folder': '',
