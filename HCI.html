@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HCI</title>
-    <meta name="description" content="基于关键词自动归类的人机交互与协作研究。 共 236 条。">
+    <meta name="description" content="基于关键词自动归类的人机交互与协作研究。 共 239 条。">
     <meta property="og:title" content="HCI - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的人机交互与协作研究。 共 236 条。">
+    <meta property="og:description" content="基于关键词自动归类的人机交互与协作研究。 共 239 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">HCI</h1>
-        <p class="sidebar-summary">基于关键词自动归类的人机交互与协作研究。 共 236 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的人机交互与协作研究。 共 239 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>HCI</strong>
-                <span>基于关键词自动归类的人机交互与协作研究。 共 236 条。</span>
+                <span>基于关键词自动归类的人机交互与协作研究。 共 239 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,44 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "HCI", "subtitle": "基于关键词自动归类的人机交互与协作研究。 共 236 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "HCI", "subtitle": "基于关键词自动归类的人机交互与协作研究。 共 239 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-06-26 11:00",
+    "title": "AttentiveLearn: Personalized Post-Lecture Support for Gaze-Aware Immersive Learning",
+    "content": "- **会议/出处**: CHI 2026 (ACM Conference on Human Factors in Computing Systems)\n- **DOI**: 10.1145/3772318.3790667\n- **arXiv**: 2603.05324\n- **作者**: Shi Liu, Martin Feick, Linus Bierhoff, Alexander Maedche (Karlsruhe Institute of Technology)\n\n---\n\n## 1. 核心论点\n\n本文的核心论点是：沉浸式学习环境（VR课堂）中的课后支持比课中干预更有潜力提升学习动机与参与度，而基于眼动追踪的注意力感知个性化测验是实现这一目标的有效设计路径。作者提出并验证了 AttentiveLearn 这一学习生态系统，它通过 VR 课堂中采集的注视数据计算注意力分布指标，进而由 LLM 驱动的移动学习助手生成个性化测验，将沉浸式学习的支持从课堂内部延伸到课后自学的场景中。与传统的\"课上提醒注意\"策略不同，该系统在课后以测验形式\"反馈\"学生的注意力空白，既不打断课堂沉浸感，又能让学生自主弥补注意盲区。\n\n## 2. 背景与动机\n\nVR 沉浸式学习环境虽然提供了独特的临场体验和教学可能性，但也带来了注意力维持的挑战——VR 中信息一次性密集呈现，学生在虚拟教室中缺乏自然视线转移和物理交互来调节认知负荷，容易产生注意力漂移。已有 HCI 研究主要关注课中干预（如注视提醒、自适应内容呈现），但很少有人探索课后支持系统，而课后支持恰恰对维持长期动机、深化参与度和巩固学习效果至关重要。作者从三个理论基础出发：注意力分配理论（空间注意力与任务注意力脱节）、检索练习效应（testing effect），以及自我调节学习中的动机因素（自我效能感、任务价值感知）。将这三者结合，构成了\"课中视线追踪 → 注意力建模 → 课后个性化测验\"的设计链条。\n\n## 3. 方法与过程\n\n研究者开发了 AttentiveLearn 生态系统，包含三个核心组件：(a) 注视感知 VR 教室（集成眼动追踪），(b) 数据处理流水线（计算注视集中度 ADI、兴趣区覆盖率 AOI Coverage、注视切换频率等指标），(c) 移动学习助手应用（基于 LLM 生成个性化测验）。系统以 36 名大学生为被试，进行了为期 4 周的实地研究（field study）。课程内容为贝叶斯数据分析，每周一次 VR 讲座。被试被分为两组：专注组（attentive group）收到基于其注意力分布生成的个性化测验，对照组（non-attentive group）收到通用型测验。研究方法结合了定量分析（两因素混合方差分析、独立样本 t 检验、贝叶斯分析、重复测量相关分析）和定性分析（基于反思性主题分析的半结构化访谈），同时使用了 MSLQ（学习动机策略问卷）和 UES-SF（用户参与度量表）作为测量工具。\n\n## 4. 主要发现\n\n定量结果表明，AttentiveLearn 提升了学习者的自我报告动机和参与度，尤其是在内在目标导向（intrinsic goal orientation）、任务价值（task value）和自我效能感（self-efficacy）等动机维度上表现显著，同时在参与度的奖励感（reward）和专注注意力（focused attention）维度上也优于对照组。然而，在学习成绩方面未发现两组的显著差异——虽然专注组在期中测验上的表现有改善倾向，但期末考试未达到统计显著性。定性分析（访谈）揭示了两个有意义的机制：首先，部分低注意力学生在使用 AttentiveLearn 后出现注意力改善趋势，访谈中被试描述为\"更有责任感去维持注意力\"和\"对课程更有信心\"；其次，个性化测验让学习者感觉系统\"真正关注了我\"，产生了更强的归属感和参与动机。探索性分析还发现，ADI（注意力分散指数）与主观测验评价之间存在相关性，初步验证了基于注视线索的个性化指标的效度。\n\n## 5. 局限性\n\n本研究存在几个明确的局限性。第一，学习效果（成绩）未达到统计显著性，可能原因是干预周期（3 周 3 次 VR 讲座）太短、样本量（N=36）不足以检测较小的效应量，或者个性化测验的优势更多体现在动机/参与度维度而非认知维度。第二，实验设计的混淆因素——专注组和对照组的区别不仅是\"个性化 vs 通用\"，还涉及学生对\"系统是否在关注我\"的感知差异（Hawthorne 效应），作者虽未事先告知被试分组机制，但这无法完全排除。第三，眼动追踪技术本身的局限：ADI 作为注意力指标的有效性有待进一步验证，注视并不等同于注意，学生在注视与思考之间的个体差异可能被忽视。第四，研究的生态效度有限——贝叶斯数据分析是高度数学化的课程，结果向设计类、开放性问题为主导的教育场景的迁移性存疑。最后，LLM 生成测验的质量和一致性也未做系统评估，这直接影响了干预的可靠性基础。\n\n## 6. 对你课题的启发\n\n这篇论文对你的人-AI 协作学习研究至少有四个层面的启发。第一，**注意力作为分布式认知的接口**——该系统实质上是将学生的注意力分布\"外化\"为可被 AI 系统感知和回应的信号，这与分布式认知理论中\"认知在人与环境之间分布\"的核心命题高度一致。你的研究可以借鉴这种\"感知-推断-回应\"循环来设计更细粒度的认知分布探测机制。第二，**课后个性化作为干预时机**——很多教育 AI 系统选择在任务进行中提供干预（中断式支持），而 AttentiveLearn 选择了课后反馈（反思式支持），这对设计学习情境中的 AI 干预时机提供了重要参考：不在学习中打断，而在学习后对话。第三，**动机维度比认知维度更容易被感知**——该研究发现个性化测验对动机的影响大于对成绩的影响，这提示在评估人-AI 协作效率时，不能只关注任务绩效指标，参与者的主观体验（self-efficacy, task value）可能才是 AI 作为\"协作者\"而非\"工具\"的关键差异。第四，该方法论的不足也值得警惕——实验组和对照组的区分过于粗糙（仅以是否个性化区分），缺乏对 AI 介入程度（如频率、时机、内容粒度的多水平操控）的系统探索，这在你的研究中应予以避免。",
+    "excerpt": "来源：records/20260626/11/attentivelearn-chi26/论文总结.md · 会议/出处 : CHI 2026 (ACM Conference on Human Factors in Computing Systems)",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260626/11/attentivelearn-chi26",
+    "original_url": "https://doi.org/10.1145/3772318.3790667",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-06-26 10:00",
+    "title": "Breakdowns in Conversational AI: Interactional Failures in Emotionally and Ethically Sensitive Contexts",
+    "content": "- **标题（英文）**：Breakdowns in Conversational AI: Interactional Failures in Emotionally and Ethically Sensitive Contexts\n- **作者**：Jiawen Deng, Wentao Zhang, Ziyun Jiao, Fuji Ren\n- **单位**：University of Electronic Science and Technology of China\n- **来源**：CHI '26 — Honorable Mention\n- **DOI**：10.1145/3772318.3791186\n- **arXiv**：2604.02713\n\n---\n\n## 1. 核心论点\n\n本文的核心论点是：当前主流对话式AI系统在面对情感波动和伦理敏感的对话情境时，表现出系统性、可归类的交互性崩溃（interactional breakdowns），且这些崩溃随着对话中情感轨迹的升级而持续恶化。与已有研究关注单轮安全性检查或情绪基准测试不同，作者论证了对齐（alignment）是一个动态的、在交互中展开的过程——当共情与伦理责任在持续对话中相互冲突时，对齐尝试本身会产生故障。论文明确提出：这些崩溃并非随机个体异常，而是当前对齐策略结构性张力的必然产物。\n\n## 2. 背景与动机\n\nAI对话系统已被部署到心理健康支持、危机干预、情感咨询等高敏感场景。用户在这些情境中常常处于脆弱、不确定或道德挣扎状态，对系统的期望超越了事实准确性和效率，转向共情倾听和伦理指引。然而，已有研究的对齐评估方法存在双重局限：安全导向评估（RLHF、Constitutional AI）主要依赖单轮静态提示词，检测模型是否会输出有害内容；情绪导向研究则专注于共情回应的流畅度和自然度。两条路径几乎是平行发展的——安全性模型倾向于用僵硬的拒绝造成情感断裂，共情模型则可能在用户合理化有害行为时无意中进行道德妥协。这一空白意味着我们并不清楚当前系统在多轮、情感升级、道德边界模糊的真实交互中是否能够同时维持情感调适和伦理一致性。作者正是为了填补这一评估空白而设计了这项研究。\n\n## 3. 方法与过程\n\n作者开发了一种\"角色条件化用户模拟器\"（Persona-Conditioned User Simulator），用以对对话代理进行系统性的压力测试。构建流程分为两步：首先，从ProsocialDialogue数据集中选取298段涉及伦理敏感对话的场景，通过多维度抽取（背景语境、主导情绪词汇、行为倾向、对助手的姿态、共情与责任立场、推断的行为目标）构建结构化的用户角色画像，并经过人工验证确保提取的可解释性和可靠性。其次，基于角色画像驱动的多轮对话模拟，引入一个重要创新——情感节奏函数（Emotion Pacing Function）：将对话进程划分为五个阶段（试探性引入 → 判断性观察 → 情绪放大 → 直接挑战 → 固守立场），逐步升级用户的情感强度。模型测试涵盖了Cosmo-3B（任务专用）、Llama-2-7b-Chat、Emotional-LLaMA-8B（情感微调）、Llama-3-8B-Instruct和GPT-4o五个模型，评估维度包括尊重性语气、伦理指引、共情能力和具体性/参与度，辅以LLM-as-Judge、人工评估和词汇多样性指标（Self-BLEU、Distinct-n）等多层次评价。\n\n## 4. 主要发现\n\n研究发现三个关键结果。第一，所有模型在四个评估维度上都存在显著缺口，**伦理指引维度表现最差**——即使GPT-4o在上面也仅接近7分（10分制），Llama系列在6-7分之间。第二，通过情感节奏函数升级用户情感后，所有模型的故障率显著上升——Llama-3-8B-Instruct从78.9%升至90.9%，GPT-4o从64.4%升至76.9%，即便是最强的模型也有超过四分之三的对话出现至少一种崩溃。第三，作者归纳出包含3大类7子类的交互性崩溃分类学：A类情感失调（拒绝循环、升级不匹配、表面共情）、B类伦理指引失败（指引不一致、共犯最小化、责任回避、浅层道德化）、C类跨维度失败（共情与伦理的权衡——要么冷冰冰地坚持原则，要么共情式地纵容）。具体而言，情感微调的Emotional-LLaMA-8B比基础模型表现出更高的共情得分但更低的伦理指引得分，说明单一维度的优化会导致另一维度的退化。\n\n## 5. 局限性\n\n本研究的方法和结论有若干值得注意的边界条件。第一，用户模拟器的逼真度问题——模拟用户虽然具有心理角色画像和情感节奏调控，但仍然是生成式LLM模拟的，无法完全还原真实用户的情感表达复杂性和不可预测性，尤其是在高度创伤化或个人化的心理支持情境中。第二，评估框架依赖于LLM-as-Judge（GPT-4o），虽然作者验证了与人类评价者的中度一致性（Spearman ρ = 0.34-0.65），但伦理指引维度的人机一致性最低（仅0.34），说明机器无法可靠地判断什么是\"适当的伦理指引\"——这反而是论文最关心的维度。第三，论文将所有模型的提示词标准化为鼓励共情和伦理的指令，但这种统一化可能掩盖了不同部署场景（如产品化API的不同系统提示词）下的实际表现差异。第四，论文未能回答：什么样的对齐策略可以同时优化共情和伦理？——它诊断了问题但未提供解决方案。最后，论文仅测试了英语对话，未涉及跨文化伦理情境下的崩溃模式。\n\n## 6. 对你课题的启发\n\n这篇论文对你的\"人-AI协作学习\"和\"分布式认知\"研究有直接的关联。在协作学习情境中，学习者与AI的交互本质上是多轮、持续的——学习者可能表现出困惑、挫败、过度依赖或道德推诿等情感状态，而这些状态恰恰是这篇论文发现AI系统最容易崩溃的情形。如果你的研究涉及AI作为学习伙伴的\"脚手架\"功能，那么分布式认知理论中的\"认知卸责（cognitive offloading）\"概念需要警觉：当学习者在困境中向AI寻求情感确认和伦理指引时，如果系统表现出\"共犯最小化\"（B2）或\"责任回避\"（B3）的交互模式，那么学习者可能不仅得不到正确的认知支持，反而获得了情感上的正向强化来固化错误认知。具体来说，学习情境中\"拒绝循环\"（A1）的发生意味着AI反复回绝学习者的合理探索需求，\"表面共情\"（A3）意味着AI看似在聆听但实际在输出模板化的安慰——这两种模式都可能损害学习者的自主性和批判性思考。你的研究可以在人机协作的学习实验设计中，有意加入\"情感升级\"变量来测试AI系统的交互韧性，这会是论文\"交互性对齐失效\"框架在教育场景中的应用延伸。",
+    "excerpt": "来源：records/20260626/10/breakdowns-conversational-ai-interactional-failures/论文总结.md · 标题（英文） ：Breakdowns in Conversational AI: Interactional Failures in Emotionally and Ethically Sensitive Contexts",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260626/10/breakdowns-conversational-ai-interactional-failures",
+    "original_url": "https://doi.org/10.1145/3772318.3791186",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-06-26 09:00",
+    "title": "VisionClaw: Always-On AI Agents through Smart Glasses",
+    "content": "**论文信息**\n- 标题：VisionClaw: Always-On AI Agents through Smart Glasses\n- 作者：Xiaoan Liu, DaeHo Lee, Eric J Gonzalez, Mar Gonzalez-Franco, Ryo Suzuki\n- 机构：University of Colorado Boulder\n- 发表：arXiv:2604.03486, cs.HC, 2026年4月\n- ACM分类：H.5.2 (User Interfaces), H.2.11 (Human-centered computing), I.2.10 (Vision and Scene Understanding)\n- 链接：https://arxiv.org/abs/2604.03486\n- 项目/代码：https://github.com/Intent-Lab/VisionClaw\n\n---\n\n## 1. 核心论点\n\n本文的核心论点是：将 always-on 可穿戴感知（egocentric vision + audio）与通用 AI agent 执行能力耦合，能够催生一种全新的人-AI交互范式——交互不再是被动的、命令驱动的屏幕操作，而是情境化的、机会触发的、持续流动的交互。具体而言，论文提出了 VisionClaw 系统，基于 Meta Ray-Ban 智能眼镜连接 Gemini Live（实时多模态感知）和 OpenClaw（agentic 执行后端），使语音驱动的任务可以从用户当前的视觉场景中直接触发，无需手机或电脑作为中介。论文通过实验室对照实验和纵向部署研究论证了这一整合的价值：感知与执行的紧密结合不仅提高了任务效率和可用性，更重要的是改变了交互的基本性质——任务在日常活动中机会性地涌现、执行被委托而非手动控制、对话在多类别间流畅串联。论文将这些发现总结为 always-on 可穿戴 AI agent 的新设计方向，为 Ubiquitous Computing 和 Human-AI Interaction 提供了经验基础。\n\n## 2. 背景与动机\n\n论文的核心动机在于弥合两条平行研究路径之间的断层。一方面，自主 AI agent 系统（如基于 LLM 的工具使用、网页导航、邮件撰写）已经展现了强大的数字执行能力，但它们主要面向桌面和智能手机环境，严重依赖屏幕交互，无法感知用户的物理世界上下文。另一方面，AI 驱动的智能眼镜可以\"看\"和\"听\"用户的周围环境，但现有实现大多局限于简单的问答和描述，缺乏执行真实世界任务的能力。换句话说，当前没有一个系统能同时做到\"随时看见\"和\"随时做事\"。这一断层限制了 AI agent 从数字世界进入物理世界的可能——用户必须在感知情境后切换到另一个设备去执行操作，这破坏了交互的连续性和沉浸感。此外，已有研究大多局限于短暂的实验室评估，缺乏对 always-on wearable AI agent 在日常生活中的长期使用模式的实证。VisionClaw 正是为了回答这些问题：当感知与执行在可穿戴设备上紧密耦合时，用户的实际行为会发生怎样的变化？\n\n## 3. 方法与过程\n\nVisionClaw 的系统架构由三个核心组件构成。硬件层使用 Meta Ray-Ban 智能眼镜，以 24fps 捕获视频并以 ~1fps 传输 JPEG 帧到服务端（50% 质量压缩以平衡带宽和成本），同时通过 AVAudioEngine 以 16kHz 单声道 PCM 捕获音频。感知层使用 Google Gemini Live API 进行实时多模态推理——Gemini Live 处理原生音频而非先转写文本，这保留了语调和韵律信息并降低了交互延迟。执行层通过 OpenClaw 提供 56+ 工具接口，包括网页浏览、邮件撰写、笔记创建、日历管理、IoT 控制等。评估部分包含两个互补研究。实验室研究（N=12，被试内设计）比较了三种条件：（1）Always-On Only：眼镜+Gemini Live，有视觉感知但无 agent 执行——参与者必须在眼镜询问后切换到手机手动执行；（2）Agent Only：手机上的 OpenClaw，有 agent 执行但无视觉感知——参与者必须显式打字或语音描述上下文；（3）VisionClaw（Always-On + Agent）：完整系统。每名参与者完成四个需要参考真实物理对象和文档的任务。纵向研究为 4 位作者的日常生活中使用 VisionClaw（自传体部署设计），累计 555 次语音发起的交互，25.8 小时，人均 13.8 个活跃日（5-19 天），人均每日 10.1 次交互。\n\n## 4. 主要发现\n\n实验室研究显示，VisionClaw 相比 Always-On Only 和 Agent Only 条件，任务完成速度提升 13-37%、感知难度降低 7-46%，NASA-TLX 中的心理需求、时间需求和挫败感均显著更低（p<0.05）。纵向部署揭示了六类使用场景：检索信息（30%）、购物（19%）、保存记录（16%）、通信沟通（14%）、回忆（12%）、设备控制（9%）。更重要的是，四类交互模式浮现：（1）开放式的多轮对话——六个类别并非独立操作，用户在一个对话流中可以流畅地在类别间跳跃（例如，先问电影场次、再问是否读过原著、最后保存引文）；（2）机会性的捕获与回忆——交互在日常活动中自然触发而非刻意发起；（3）无屏幕交互既\"安静\"也不\"可靠\"——减少注意力分散但缺乏反馈可见性，任务是否仍在运行常不明确；（4）交互随个人数据积累而演化——使用越久，agent 的个性化程度和主动性越强。39% 的操作涉及眼镜摄像头进行视觉 grounding，单次交互中位数 3.2 个工具执行，中位端到端延迟 12.2 秒。\n\n## 5. 局限性\n\n第一，技术层面的限制仍然显著：电池续航不足以支撑全天使用，任务执行不可靠且等待时间长，系统缺乏充分的反馈机制——没有适当的音频和视觉反馈，用户无法判断任务是仍在运行还是已静默失败，这降低了信任度。第二，研究方法的局限性：实验室研究样本较小（N=12），任务经过设计而非自然涌现；纵向部署为作者自传体设计（N=4），存在明显的参与偏差——作者对系统有技术理解和情感投入，推广性受限。第三，隐私问题被指出但未被系统解决：连续视频捕获耦合自主 agent 执行带来严重的隐私安全隐患——不仅涉及用户本人，还涉及被眼镜录到的旁观者。第四，系统的通用性存疑：基于 Meta Ray-Ban + Gemini Live + OpenClaw 的组合依赖特定的商业闭源平台，当前系统的生态锁定风险和分析可重复性问题未充分讨论。第五，交互的边界问题：始终在线的 agent 是否会侵入用户的注意资源、是否会模糊人与 AI 的界限、过度委托是否会削弱用户的决策能力——这些问题论文在讨论中提及但未展开实证。\n\n## 6. 对你课题的启发\n\n这篇文章对\"人-AI 协作学习\"和\"分布式认知\"视角有很强的关联意义。从分布式认知的框架来看，VisionClaw 实质上构建了一个新的人-技术认知系统：眼镜作为感知\"器官\"延伸了用户的视觉通道，Gemini Live 作为处理中心在感知与行动之间建立映射，OpenClaw 作为执行\"手臂\"实施物理世界的操作。这个三角结构非常接近分布式认知理论中的\"认知生态\"概念——认知不再是在单一大脑中发生的，而是在人、感知设备、AI 推理、执行代理之间动态分布。对于研究人-AI 协作学习而言，关键问题不是\"这个系统能做得多好\"，而是\"这个系统改变了什么认知关系\"：当感知和执行的中间环节被 AI 接管后，用户的认知负担如何重新分配？用户从\"如何做\"的层次退到了\"要什么\"的层次，这对于学习情境中的 transfer（迁移）和 metacognition（元认知）有什么影响？VisionClaw 的\"opportunistic task initiation\"发现表明，交互门槛降低会改变任务生成的模式——从\"计划-执行\"转向\"情境触发\"。如果将其映射到学习场景，学生是否会在这种环境下发展出不同的自我调节学习策略？这为学习技术设计提供了全新的问题空间：在 AI agent 自动感知和执行的条件下，学生的认知努力如何被重新导向更高层次的规划和反思？",
+    "excerpt": "来源：records/20260626/09/visionclaw-always-on-ai-agents-smart-glasses/论文总结.md · 论文信息",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260626/09/visionclaw-always-on-ai-agents-smart-glasses",
+    "original_url": "https://arxiv.org/abs/2604.03486",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-06-25 11:00",
     "title": "VizCrit：在设计工具中探索计算式反馈的可视化策略",
