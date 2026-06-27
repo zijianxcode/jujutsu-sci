@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV</title>
-    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 140 条。">
+    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 141 条。">
     <meta property="og:title" content="CV - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 140 条。">
+    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 141 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">CV</h1>
-        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 140 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 141 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>CV</strong>
-                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 140 条。</span>
+                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 141 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 140 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 141 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-06-27 09:00",
+    "title": "GuideAI: A Real-time Personalized Learning Solution with Adaptive Interventions",
+    "content": "**论文信息**\n- 标题：GuideAI: A Real-time Personalized Learning Solution with Adaptive Interventions\n- 作者：Ananya Shukla, Satvik Bajpai, Chaitanya Modi, Siddharth Siddharth\n- 发表：IUI 2026 (Proceedings of the 31st International Conference on Intelligent User Interfaces, pp. 1218–1234)\n- arXiv：2601.20402\n- DOI：10.48550/arXiv.2601.20402\n\n---\n\n## 一、核心论点\n\nGuideAI 的核心主张是：当前 LLM 驱动的学习系统虽然能力强大，但完全缺乏对学习者认知状态和生理状态的实时感知能力，因此无法做到真正个性化的自适应教学。本文提出一个多模态框架，通过整合眼动追踪、心率变异性、姿态检测和数字笔记行为四种生物感知信号，让 LLM 能够动态感知学习者的认知负荷、注意力波动和参与度水平，并据此实时调整学习内容和节奏。这一论点将自适应学习从\"基于知识追踪的路径规划\"推进到\"基于多模态生理-行为信号融合的实时认知状态感知\"层面。\n\n## 二、背景与动机\n\nLLM 作为学习工具的潜力已被广泛验证，但现有系统的自适应能力存在根本性局限。传统的自适应学习技术（结构化学习路径、知识追踪、通用自适应测试）只能在宏观层面调整学习内容，无法感知学习者在具体时刻的认知负荷过载、注意力流失或疲劳状态。同时，认知科学已经充分证明，学习效果的关键瓶颈往往不是内容本身，而是学习者的认知状态是否处于\"最佳学习区\"（Zone of Proximal Development）。这一矛盾构成了 GuideAI 的核心动机：如何让 AI 教学系统具备类似人类导师的感知能力，能够\"看到\"学习者何时困惑、何时分心、何时疲劳，并据此调整教学策略。\n\n## 三、方法与过程\n\nGuideAI 的系统架构分为三个核心模块。传感器模块采集眼动追踪（注视点、扫视模式、回视率）、心率变异性（通过可穿戴设备）、姿态检测（摄像头识别头部前倾、驼背等姿势）和数字笔记行为（截图分析笔记频率和内容）。处理模块将原始信号转化为 6 个认知维度的实时评估指标：认知负荷、注意力、参与度、理解度、压力、疲劳。推理模块运行一个闭环干预模型，基于评估结果动态选择干预策略。干预分为三个层级：微观层（调整内容节奏和复杂度）、中观层（注意力引导和情绪调节）、宏观层（元认知引导）。整个框架基于认知负荷理论、自我调节研究和 ZPD 理论设计，干预分为认知-注意力、生理、理解导向和挑战增强四个类别。系统支持文本、图像、音频、视频四种学习模态。\n\n## 四、主要发现\n\n研究通过两阶段验证：先导用户研究（N=66）提炼设计需求，主实验（N=25）评估效果。结果显示 GuideAI 在问题解决能力和回忆型知识评估两项指标上均有统计显著的提升。NASA-TLX 量表分析显示，使用 GuideAI 后学习者的心理需求降低 Δ=0.49（p<0.05）、体力需求降低 Δ=0.23（p<0.05）、努力程度降低 Δ=0.28（p<0.05）、挫败感降低 Δ=0.54（p<0.05），同时自评表现提升 Δ=0.34（p<0.05）。这些结果在所有四种学习模态（文本/图像/音频/视频）中保持一致性，表明 GuideAI 的认知负荷减轻效应具有跨模态鲁棒性。\n\n## 五、局限性\n\nGuideAI 存在几个明显的局限性。第一，主实验样本量（N=25）较小，且为短期单次实验，缺乏纵向跟踪数据来验证长期学习效果和习惯适应性。第二，生物感知设备（眼动仪、HRV 穿戴设备、摄像头）的部署门槛较高，距离大规模教育场景的实际应用还有硬件成本和隐私方面的障碍。第三，论文没有报告干预误报率——即系统在错误的时间（如学习者正在深度思考时）发出干预会带来怎样的负面影响。第四，六维认知状态的评估完全依赖传感器数据的间接推断，没有引入学习者的自我报告作为校准信号，可能存在系统误差。第五，实验参与者可能受到\"新奇效应\"影响——对生物感知教学系统的新奇感本身可能提升了参与度，而非干预机制本身的效果。\n\n## 六、对你课题的启发\n\nGuideAI 与你的人-AI 协作学习研究有多个交汇点。首先，GuideAI 的核心假设——AI 系统需要感知学习者的认知状态才能有效协作——与分布式认知理论中\"认知系统需要协调各组成部分的状态信息\"的命题高度一致。GuideAI 的传感器模块实际上是在构建一个分布式认知系统中的\"系统级感知层\"，让 AI 能够参与原本只有人类导师才能完成的认知状态监控。其次，GuideAI 的三层干预模型（微观/中观/宏观）为设计人-AI 协作学习的\"干预粒度\"提供了可操作的框架参考——在什么层级、什么时机进行干预，这对你的学习情境设计有直接的方法论价值。第三，GuideAI 将认知负荷理论、ZPD 和自我调节学习三种理论框架整合进一个实际操作系统中，这种\"从理论到系统\"的转换路径正是你课题中可以借鉴的研究范式。第四，GuideAI 的局限性也提示了你的研究需要注意的问题：生物感知的隐私边界、干预时机与认知干扰的权衡、以及长期使用中的适应效应。",
+    "excerpt": "来源：records/20260627/09/guideAI-adaptive-learning-biosensory/论文总结.md · 论文信息",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260627/09/guideAI-adaptive-learning-biosensory",
+    "original_url": "https://doi.org/10.48550/arXiv.2601.20402",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-06-26 09:00",
     "title": "VisionClaw: Always-On AI Agents through Smart Glasses",
