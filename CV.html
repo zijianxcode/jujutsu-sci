@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV</title>
-    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 153 条。">
+    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 154 条。">
     <meta property="og:title" content="CV - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 153 条。">
+    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 154 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">CV</h1>
-        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 153 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 154 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>CV</strong>
-                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 153 条。</span>
+                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 154 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 153 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 154 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-07-08 09:00",
+    "title": "ARGESTUREAID: A Voice-Based, Adaptive, and Context-Aware Conversational Assistant for Supporting Mid-Air Gesture Discovery and Execution",
+    "content": "**原文信息**：Anjali Khurana, Amy Karlson, Christopher Collins, Mengjie Yu, Vinay Jayaram, Hrvoje Benko, Parmit K. Chilana. Proceedings of the ACM on Interactive Mobile Wearable and Ubiquitous Technologies (IMWUT), 2026. DOI: 10.1145/3810212\n\n---\n\n## 一、核心论点\n\n本文提出并验证了一个核心理念：对于AR环境中不熟悉的空中手势操作，自适应、上下文感知的语音对话助手比传统通用语音助手更有效地帮助用户发现和执行手势。ARGestureAid通过将用户语音描述与形式化的手势表示相结合，辅以LLM推理，提供两种关键支持——操作前引导（feedforward，指导正确的手势姿态、位置和放置方式）和操作后纠错反馈（corrective feedback，针对用户具体执行错误提供修正指令）。这一设计超越了传统的\"教你怎么做\"的静态引导，转向\"根据你的操作实时调整\"的动态辅助范式。\n\n## 二、背景与动机\n\n消费级AR设备（如Meta Quest系列、Apple Vision Pro）的普及使空中手势交互成为主流的输入方式，但用户普遍面临手势发现困难的问题——他们不知道某个任务应该用什么手势，或者知道手势名称但无法正确执行。现有解决方案包括应用内教程、手势图例等，但这些方法要么脱离实际操作上下文，要么无法针对个体用户的执行偏差进行校正。这一问题在AR的多任务场景中尤为突出：用户在虚实融合环境下同时需要认知资源处理任务内容，难以分心记忆手势操作手册。作者指出，尽管LLM驱动的语音助手已经在日常生活中普及（如Siri、Alexa），但它们在AR手势辅助这一垂直场景中存在\"通用但不精准\"的局限——它们能回答\"如何旋转物体\"这类问题，但无法感知用户此刻手的位置、姿态偏差，并给出针对性的修正指导。本文的核心动机正是填补这一空白：构建一个\"沉浸式AR环境中的专属手势教练\"。\n\n## 三、方法与过程\n\nARGestureAid的系统架构包含三个核心模块。第一，语音理解模块接收用户的自然语言任务描述（如\"我想旋转这个物体\"），将其解析为意图与目标手势的映射。第二，手势表征模块将空中手势形式化为多层参数——包括手掌朝向（palm orientation）、手指姿态（finger pose）、手部空间位置（hand position relative to target）和运动轨迹（motion trajectory），这些参数与用户实时手部追踪数据进行比较，定位执行偏差。第三，LLM驱动的关系引擎接收上述两路输入，结合预定义的错误模式知识库，生成自适应反馈。反馈分为两个阶段：操作前（feedforward）和操作后（corrective feedback）。研究采用两阶段实验设计。第一阶段可行性研究（N=15）：参与者执行一组标准AR手势任务，ARGestureAid生成的辅助指令与人工标注的标准参考集进行对比，评估指令准确率。第二阶段对比用户研究（N=15）：采用组内设计，参与者分别在ARGestureAid和基础LLM语音助手两种条件下执行单手手势任务和双手手势任务，测量任务完成率、感知手势可发现性（perceived discoverability）和感知有用性（perceived usefulness），并对参与者进行半结构化访谈获取定性反馈。\n\n## 四、主要发现\n\n第一阶段可行性研究发现，ARGestureAid的指令生成总体准确率达81.3%，证明将形式化手势表示与LLM推理结合来生成上下文感知的手势辅助是可行的。第二阶段对比研究结果表明，ARGestureAid在任务完成率上显著优于基础LLM语音助手，尤其在双手手势任务中差异更加明显。参与者在感知手势可发现性维度上对ARGestureAid给出更高评分——他们认为系统不仅告诉他们\"做什么手势\"，还通过实时反馈帮他们\"纠正手势做对了没有\"。定性访谈进一步揭示，参与者特别看重feedforward机制的预防性价值——\"在开始做之前就知道正确的位置，比做错了再纠正省力很多\"。部分参与者指出，系统在识别极细微的手部姿态偏差时偶有不精确，但整体而言，这种\"边做边学\"的交互式辅助远比静态教程直觉和有效。\n\n## 五、局限性\n\n本研究存在以下几方面局限。第一，系统目前仅支持有限的手势集，对于更复杂或领域特定的手势（如医疗AR中的器械操作手势、工业维修中的组合手势）尚未验证，其泛化能力有待探索。第二，ARGestureAid依赖设备自带的hand tracking精度，当前主流AR头显在手指微姿态（如指尖的精细转动）的追踪分辨率有限，这限制了系统在最细微修正层面的准确性——当手势差异在毫米级时，系统可能给出不精确或不必要的修正建议。第三，研究的实验环境为受控实验室场景，参与者的注意力基本集中在任务上，真实世界中的多任务干扰、环境噪声、社交情境等因素可能削弱语音辅助的效果。第四，用户对语音交互的接受度存在个体差异，部分用户可能更偏好视觉提示（如箭头叠加、手部虚拟覆盖）而非语音描述。第五，论文明确标注为\"概念验证（proof-of-concept）\"，系统在实时性、跨平台兼容性和长期使用效果等方面还未达到产品级成熟度。\n\n## 六、对你课题的启发\n\n这篇论文与你的研究（人-AI协作学习、分布式认知）有三层关联。第一层：接口层面的\"辅助-执行\"循环类比。ARGestureAid的feedforward + corrective feedback双阶段模式，本质上构建了一个\"AI教练-人类执行者\"的交互环路，这与你在协作学习场景中研究的人-AI任务分配与反馈机制有直接的可迁移性——AI何时应该\"提前指导\"、何时应该\"事后纠错\"、何时应该\"保持沉默\"，这一时序决策问题在认知学习理论中有丰富的理论资源（如Vygotsky的最近发展区理论、scaffolding框架）。第二层：外部表征与认知卸载。论文中形式化手势表示作为AI推理的中介表征，实际上是认知分布式理论的一个技术实例——将隐性的手势知识外化为机器可处理的参数结构，再通过自然语言反馈\"归还\"给用户。这种外部表征的循环（隐式→形式化→语言化→内化）与你在分布式认知框架中关心的\"表征如何在人与AI之间流动和转化\"直接对应。第三层：交互中的元认知支持。ARGestureAid不仅帮助用户完成任务，还帮助用户\"意识到\"自己的手势执行偏差——这实质上是一种元认知支持（用户对自己操作过程的觉知和反思）。在你的研究语境中，AI Agent是否能为学习者的认知过程提供类似的元认知反射功能（如\"你刚才为什么会选这个策略？\"），是一个值得深挖的课题。此外，论文采用的\"对比基准条件\"实验范式（ARGestureAid vs. 通用LLM助手）本身也为你在设计人-AI协作实验时的条件对比设计提供了参考——关键不是加不加AI，而是加了\"什么样的AI\"以及\"AI的认知模型是否匹配用户的认知需求\"。",
+    "excerpt": "来源：records/20260708/09/argestureaid-imwut2026/论文总结.md · 原文信息 ：Anjali Khurana, Amy Karlson, Christopher Collins, Mengjie Yu, Vinay Jayaram, Hrvoje Benko, Parmit K. Chilana. Proceedings of the ACM on Interactive Mobile Wearable and Ubiquitous Technologies (IMWUT), 2026. DOI: 10.1145/3810212",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260708/09/argestureaid-imwut2026",
+    "original_url": "https://doi.org/10.1145/3810212",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-07-07 10:00",
     "title": "Dark Patterns Meet GUI Agents: LLM Agent Susceptibility to Manipulative Interfaces and the Role of Human Oversight",
