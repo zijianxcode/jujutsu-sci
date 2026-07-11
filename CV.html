@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV</title>
-    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 156 条。">
+    <meta name="description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 157 条。">
     <meta property="og:title" content="CV - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 156 条。">
+    <meta property="og:description" content="基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 157 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">CV</h1>
-        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 156 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 157 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>CV</strong>
-                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 156 条。</span>
+                <span>基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 157 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 156 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "CV", "subtitle": "基于关键词自动归类的视觉、图像、视频与 3D 研究。 共 157 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-07-11 09:00",
+    "title": "AwareLLM: A Proactive Multimodal Ecosystem for Personalized Human-AI Collaboration to Enhance Productivity",
+    "content": "- **机构**：HTI Lab, Plaksha University (India); MBZUAI (UAE)\n- **来源**：arXiv:2605.09625v2 [cs.HC], 2026年5月提交，6月修订\n- **关键词**：Multimodal Sensing, Large Language Models, Proactive AI, Human-AI Collaboration, Productivity, Personalization\n\n---\n\n## 1. 核心论点\n\n本文的核心论点是：当前AI助手（ChatGPT、Copilot等）受限于被动响应式和缺乏对用户身心状态感知的设计范式，无法有效支撑知识工作者的生产力。为此，作者提出AwareLLM——一个将多模态生理传感（眼动追踪、心电图、姿态估计、屏幕活动）与LLM推理能力深度融合的主动式AI协作生态系统，能够实时感知用户的心理生理状态，并在恰当时机提供个性化、情境感知的干预，从而实现从\"用户适应AI\"到\"AI适应人\"的范式转换。\n\n## 2. 背景与动机\n\n知识工作者的生产力高度受认知状态和生理反应的影响，但现有AI助手存在三个关键鸿沟：一是\"身心脱节\"——用户超过45%的在遇到工作障碍时选择身体调节策略（休息、补水、拉伸），而AI对此完全不可见；二是\"意识缺口\"——58.3%的用户认为AI需要过多的显式提示，缺乏主动发现用户陷入困境并施予援手的能力；三是\"情境空白\"——高达70.8%的用户指出AI无法感知和理解他们的压力水平，个性化评分随用户经验增长从6.8/10骤降至1.7/10。作者通过一项形成性研究（N=72）系统验证了这些需求，明确指出当前AI系统\"缺乏适应性的根本原因在于对使用者的心理生理状态完全盲视\"，这为AwareLLM的设计提供了坚实的实证基础。\n\n## 3. 方法与过程\n\nAwareLLM采用三层感知架构设计。物理层通过Logitech C920摄像头结合MediaPipe Pose Landmarker实时提取骨骼关键点进行姿态评估；环境层通过Pupil Labs眼动追踪仪（120Hz）捕获注视、瞳孔直径和第一人称视觉环境，同时通过桌面截图分析数字活动上下文；生理层通过MAX ECG胸带（125Hz）测量心率和心率变异性（HRV）作为压力指标。数据处理模块将各模态信号编码为结构化JSON，并建立个性化的基线校准——前60秒丢弃用于传感器稳定，后续通过与基准的偏差程度进行分类（低/正常/高）。最具创新性的设计是双循环推理架构：高频循环（HF Loop）每15秒采样一次，每分钟聚合一次摘要供LLM推理，负责捕捉姿态、屏幕活动等快速变化信号；低频循环（LF Loop）每3分钟聚合一次，负责处理心率和瞳孔等慢变生理信号，避免对瞬态波动的过度反应。LLM（GPT-4o-mini）基于结构化JSON、用户偏好和少量示例进行跨模态推理，生成结构化的干预决策（{类型，紧迫性，消息，置信度}）。干预分为两类：任务导向型（低紧迫，在聊天界面提供代码建议、结构框架）和用户导向型（高紧迫，通过系统通知发送姿态纠正、压力提示）。\n\n## 4. 主要发现\n\n用户研究采用受控的within-subject设计（N=20，平衡顺序效应），涵盖文献综述、前端开发和数据科学三项任务。NASA-TLX结果显示：Mental Demand降低22.1%（p=0.003），Temporal Demand降低25.7%（p=0.003），Performance提升15.3%（p=0.012）。分任务分析中，文献综述任务Mental Demand从4.00降至2.81（p=0.013），数据科学任务Effort降低23.2%（p=0.008）。系统问卷显示，专注力（p=0.009）、工作质量（p=0.005）、个性化感知（提升58%，p=0.004）、时间管理（p=0.022）和整体生产力（提升33%，p=0.007）均达到统计显著。专家评估也确认了任务输出质量的显著改善。被试的质性反馈特别强调了三个体验特征：一是\"似乎知道我在什么时候挣扎\"的时机准确性；二是\"像一个高级开发人员站在我身后只在需要时介入\"的非侵入感；三是根据情绪状态调整语气的语调适应性带来的自然感。\n\n## 5. 局限性\n\n从方法层面看，AwareLLM的传感器配置（专用眼动追踪仪、ECG胸带、外接摄像头）在实验室环境中可行，但部署到真实办公场景面临巨大的隐私接受度和设备便利性挑战。作者也承认这一点，指出未来需要探索利用智能手表等现有硬件替代专用传感器。实验设计方面，N=20的样本量较小，虽然统计显著但效应量的可推广性仍需更大样本验证。三项任务各20分钟的时间限制也不足以评估长期使用中的疲劳适应、习惯化效应和隐私疲劳问题。从技术角度看，双循环架构中高频循环每分钟调用LLM一次，在规模化部署中推理成本和延迟值得关注。最后，论文尚未讨论一个关键问题：当系统主动干预被用户持续忽略或关闭时，系统如何学习和适应——即\"主动式AI的被动式拒绝\"这一交互死局。\n\n## 6. 对你课题的启发\n\n这篇论文与你的人-AI协作学习和分布式认知研究有深刻关联。首先，AwareLLM清晰地展示了\"认知分布\"的一个新维度——认知不仅分布在人-AI之间，还分布在人-生理传感器-AI-环境的多层之间。系统中LLM的推理实际上依赖于一组\"分布式认知表征\"（姿态评分、HRV分类、瞳孔指标等），这些表征在不同模态和不同时间尺度上共同构建了对用户状态的认知。这启发你在研究人-AI协作学习时，可以将\"学习者状态感知\"视为分布式认知系统中的一个功能性节点，而不仅仅是AI端的外部输入。其次，AwareLLM的双循环架构（快慢结合的推理时序）在认知科学上对应着\"速思-慢思\"的双系统理论，这为设计自适应学习系统中的干预时机提供了清晰框架——哪些行为需要即时反馈，哪些状态需要累积观察后再介入。最重要的是，AwareLLM提出的\"主动式-反应式双模式协作\"为教育场景中AI的角色设计提供了新思路：AI不总是被动回答问题的工具，也可以在检测到学习者困惑、疲劳或注意力漂移时主动提供脚手架，关键在于如何在不破坏学习者自主性的前提下实施这种主动干预。",
+    "excerpt": "来源：records/20260711/09/awarellm-proactive-multimodal/论文总结.md · 论文标题 ：AwareLLM: A Proactive Multimodal Ecosystem for Personalized Human AI Collaboration to Enhance Productivity",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260711/09/awarellm-proactive-multimodal",
+    "original_url": "https://arxiv.org/abs/2605.09625",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-07-10 09:00",
     "title": "VueBuds：通过摄像头集成无线耳机实现视觉智能",
