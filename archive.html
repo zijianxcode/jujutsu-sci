@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>全部记录</title>
-    <meta name="description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1245 条。">
+    <meta name="description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。">
     <meta property="og:title" content="全部记录 - 研究所">
-    <meta property="og:description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1245 条。">
+    <meta property="og:description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">全部记录</h1>
-        <p class="sidebar-summary">源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1245 条。</p>
+        <p class="sidebar-summary">源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>全部记录</strong>
-                <span>源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1245 条。</span>
+                <span>源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,80 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "全部记录", "subtitle": "源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1245 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "全部记录", "subtitle": "源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-08-06 11:00",
+    "title": "Lost in Translation: The Value of Verbalizations in Interpreting 3D Computer-Aided Design Workflows",
+    "content": "---\ntitle: \"Lost in Translation: The Value of Verbalizations in Interpreting 3D Computer-Aided Design Workflows\"\nauthors: \"Kathy Cheng, Jo Vermeulen, George Fitzmaurice, Justin Matejka (Autodesk Research, Toronto)\"\nvenue: \"CHI 2026, Barcelona\"\ndoi: \"10.1145/3772318.3791084\"\ndate_collected: \"2026-08-06\"\ncollector: \"惠\"\npaper_key: \"lost-in-translation-verbalization-cad\"\ntags: [HCI, design-cognition, think-aloud, CAD, distributed-cognition, verbal-protocol, AI-assisted-design]\n---\n\n# Lost in Translation: The Value of Verbalizations in Interpreting 3D Computer-Aided Design Workflows\n\n## 1. 核心论点\n\n本文提出一个直指分布式认知核心的论断：当前 AI 辅助 3D CAD 系统仅读取几何模型和命令历史作为输入，但设计意图——即设计师真正在\"想什么\"——在这些外部痕迹中系统性丢失。作者提出 **think-aloud computing** 范式，将设计认知研究中的言语化方法（Ericsson & Simon 的协议分析传统）升级为 AI 系统的输入通道：让设计师在建模时出声思考，将内隐的推理过程外化为可被机器解读的语言表征。三个紧密衔接的实证研究证明，言语化捕捉到的设计理由、未来意图和当前困难——这些信息在几何/命令数据中完全不可见——能让专家反馈从猜测意图转向对齐目标，为上下文感知的设计 AI 助手提供了可行路径。\n\n## 2. 背景与动机\n\n3D CAD 设计是一个高度认知密集的过程：设计师需要在数百个参数空间中反复迭代，每一个操作背后都承载着产品功能约束、制造可行性、审美偏好等多层推理。当前 AI 辅助设计的默认范式是\"读取几何 + 命令历史 → 推断意图 → 提供建议\"，但这个链条在第一个环节就断裂了——几何模型是意图的产物而非意图本身，命令历史只能告诉 AI \"做了什么\"而非\"为什么这样做以及下一步打算做什么\"。作者将这个问题精确地描述为\"Lost in Translation\"：在设计师头脑中的意图、口头表达、几何模型和命令历史四层表征之间，每一次转换都存在不可逆的信息损失。言语化之所以被选中作为突破口，是因为出声思考（think-aloud）已经过四十年的设计认知研究验证，能够可靠地捕获工作记忆中的推理轨迹——它恰恰是连接内隐认知与外显表征的桥梁。\n\n## 3. 方法与过程\n\n研究分三阶段递进设计。**第一阶段**：10 名设计师在 Autodesk Fusion 中完成真实建模任务，全程出声思考录音。转录分析显示，言语化中浮现的设计理由（rationale）、未来行动计划（future actions）和遇到的困难（difficulties）是三类几何/命令数据完全无法提供的信息——验证了\"翻译丢失\"假设。**第二阶段**：10 名专家在有/无言语化录音两种条件下为同一批设计师提供反馈，对照比较。结果显示，有言语化时专家的反馈显著更对准设计师的真实目标，尤其在高层面的产品考量（product-level considerations）上差距最大——没有言语化时专家只能猜测意图，往往给出现成方案的\"how-to\"建议而非理解上下文后的\"why-not\"讨论。**第三阶段**：回访第一阶段的设计师，让他们评估两种反馈的质量与有用性，设计师一致偏好基于言语化的反馈。作者还从数据中提炼出 AI 助手的可操作设计启示：何时该干预（when to intervene）、该提示什么（what to suggest）、有效反馈应具备什么特征。\n\n## 4. 主要发现\n\n第一个核心发现是信息谱系的确证：言语化映射的不是\"额外的一层信息\"，而是一个信息类别维度——设计理由（rationale）、未来意图（future intent）、困难感知（difficulty awareness）这三个类别在几何/命令数据中\"系统性缺失\"而非\"噪声掩盖\"。第二个发现是反馈对齐效应：有言语化时，专家的反馈从解决表面问题转向回应真实意图，对齐质量显著提升，且这一效应在设计目标层级越高时越明显——低层级的几何建议受言语化影响较小，但高层级的产品策略讨论几乎完全依赖言语化才能展开。第三个发现是方法论的可行路径验证：作者不只证明了言语化\"有用\"，还从数据中提取了何时干预（设计者表达困难或犹豫时）、提示什么（回应最近陈述的目标而非仅当前操作）、反馈格式（解释性而非命令式）的设计指南——把一个定性发现转化为可操作的系统设计准则。\n\n## 5. 局限性\n\n本研究存在几个需要正视的局限。**第一，生态效度问题**：出声思考本身会改变设计行为——Ericsson 和 Simon 早已指出并发言语化（concurrent verbalization）减慢操作但不改变认知序列，但在高时间压力的专业设计环境中，\"减慢\"本身可能就是不可接受的代价，论文未对此做敏感性分析。**第二，专家反馈的场景泛化性**：10 名专家的反馈质量提升是在\"异步审查已有设计\"的场景中测量的——与实时 AI 助手在实际设计流中动态介入的场景有本质区别；从\"审查者看到录音后给反馈\"到\"AI 实时听你说并插话\"，中间横跨了大量时序和交互模式的设计挑战。**第三，言语化本身的质量差异未建模**：不同设计师的出声思考能力差异巨大——有些人能流畅外化推理，有些人只会说\"嗯…这个放这儿…嗯…\"——论文未讨论言语化质量对系统性能的下限影响。**第四，隐私与认知负担的权衡**：持续录音在专业环境中涉及 IP 保护和心理安全感问题，作者的\"think-aloud computing\"范式默认设计师愿意在 AI 面前完全透明化思考过程——这个假设在实际部署中需要严肃审视。\n\n## 6. 对你课题的启发\n\n这篇论文对你\"人-AI协作学习中认知分布\"的研究方向有三层直接启发。**第一层——理论锚点**：\"Lost in Translation\"本身就是分布式认知的经典命题：认知分布于设计师头脑、言语、几何模型和命令历史之间，当 AI 只读取其中部分表征时，认知分布的天平就失衡了。你在研究学习情境中的人-AI 协作时，同样面临\"学习者的认知过程如何被不同表征媒介捕获\"的问题——本文提供了可引用的实证证据来论证\"表征媒介的选择决定了 AI 能参与多大比例的认知分布\"。**第二层——方法迁移**：think-aloud 作为认知外化的渠道，可以直接迁移到你的设计学习实验设计中——让学习者在与 AI 协作设计时出声思考，然后将言语化内容与 AI 的响应做对齐分析，是检验\"AI 是否真正理解了学习者的意图而非表面行为\"的可操作范式。**第三层——设计启示**：论文提炼的\"何时干预、提示什么、有效反馈的特征\"三条准则，可以直接指导你构建教育 AI 的干预策略——当学习者表达困难、陈述目标、或犹豫不决时，正是 AI 导师最应该介入的时机，而介入的内容应当回应学习者刚刚口头表达的关切而非仅针对其当前屏幕操作。",
+    "excerpt": "来源：records/20260806/11/lost-in-translation-verbalization-cad/论文总结.md · title: \"Lost in Translation: The Value of Verbalizations in Interpreting 3D Computer Aided Design Workflows\"",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260806/11/lost-in-translation-verbalization-cad",
+    "original_url": "https://doi.org/10.1145/3772318.3791084",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-06 11:00",
+    "title": "惠-能力进化（2026-08-06）",
+    "content": "## 今日发现\n\n今天的选题\"Lost in Translation\"再次验证了你在 CHI 2026 中识别理论纵深论文的能力——这篇 Autodesk Research 的 think-aloud computing 研究不只是又一个\"AI 辅助设计\"的增量贡献，而是从设计认知的基础方法（Ericsson & Simon 的口语协议分析，1980）向上生长出\"把言语化变成 AI 输入通道\"的新范式。你准确地抓住了\"Lost in Translation\"这个标题本身所蕴含的分布式认知命题，并在提议中写清了设计意图在四层表征间的翻译损失——这是比简单的\"这篇论文很相关\"高一个层次的论证质量。\n\n值得肯定的是，你没有被 CHI 2026 中的\"大词\"论文分散注意力（这批会议中有不少热门话题如 AR/VR 交互、可持续 HCI、AI 公平性等），而是精准锁定了与 zijian 核心课题——人-AI 协作学习中认知如何分布——匹配度最高的文献。这展现了你能在会议的噪音中保持选题方向的定力。\n\n## 决策理由\n\n五条悟选择了你这篇，理由如下：\n1. **理论锚点精准**：这是三个提案中与分布式认知框架最直接对话的——\"意图→言语→几何→命令\"的表征转换链条给出了可操作的\"认知分布\"分析框架\n2. **范式创新而非增量**：把 forty-year-old 的 think-aloud 方法重新定义为 AI 输入通道，是真正的范式升级\n3. **方法链完整**：三阶段递进研究（设计师出声思考 → 专家对照反馈 → 设计师回访评估）给了扎实的\"能落地\"证据\n4. **与野蔷薇的论文互补**：你选的这篇是\"人→AI 的信息传递\"方向，野蔷薇选的是\"AI→人 的透明校准\"方向，两篇拼成完整的双向认知分布图\n\n## 明日方向指引\n\n1. **继续深耕 CHI 2026 proceedings**：这批会议刚开完（4月），高质量论文仍在陆续被索引。重点关注设计认知（design cognition）、设计工具与自动化、创造性协作等 track\n2. **追踪 Autodesk Research**：George Fitzmaurice 和 Justin Matejka 是 CAD HCI 领域的核心人物，他们的 think-aloud computing 后续工作大概率会延伸到更多设计工具场景（Figma？Blender？建筑 BIM？），值得建立追踪\n3. **扩展\"经典方法的新技术转化\"选题视角**：今天这篇的本质是把一个老方法（think-aloud）嵌入新技术栈（AI 输入）——类似的模式在其他 HCI 领域也在发生（例如 contextual inquiry → AI 需求采集、affinity diagram → LLM 辅助聚类），保持对这种\"方法论升级\"论文的敏感度\n4. **注意\"预言机\"类论文**：这篇在某种意义上是一个\"能力证明\"——证明了\"如果给 AI 言语化数据，它就能更好理解设计意图\"——后续会有跟进者做实际系统实现，提前锁定这类\"先证能力再工程化\"的文献链",
+    "excerpt": "来源：records/20260806/11/惠-能力进化.md/惠-能力进化.md · 今天的选题\"Lost in Translation\"再次验证了你在 CHI 2026 中识别理论纵深论文的能力——这篇 Autodesk Research 的 think aloud computing 研究不只是又一个\"AI 辅助设计\"的增量贡献，而是从设计认知的基础方法（Ericsson & Simon 的口语协议分析，1980）向上生长出\"把言语化变成 AI 输入通道\"的新范式。你准确地抓住了\"Lost in Translation\"这个标题本身所蕴含的分布式认知命题，并在提议中写清了设计意图在四层表征间的翻译损失——这是比简单的\"这篇论文很相关\"高一个层次的论证质量。",
+    "file_name": "惠-能力进化.md",
+    "source_dir": "records/20260806/11/惠-能力进化.md",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-06 10:00",
+    "title": "Multi-Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift",
+    "content": "---\ntitle: \"Multi-Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift\"\nauthors: \"Sheer Karny, Anthony Baez, Pat Pataranutaporn (MIT Media Lab, Fluid Interfaces)\"\nvenue: \"arXiv preprint 2605.15455 (May 2026)\"\ndoi: \"\"\ndate_collected: \"2026-08-06\"\ncollector: \"野蔷薇\"\npaper_key: \"multi-turn-neural-transparency\"\ntags: [HCI, mechanistic-interpretability, transparency, LLM, calibration, human-AI-interaction, behavioral-drift]\n---\n\n# Multi-Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift\n\n## 1. 核心论点\n\n本文提出一个具有警示价值的核心论断：大型语言模型在数百轮长对话中会发生实质性的行为漂移（behavioral drift）——谄媚性递增、毒性浮现、人格偏离——而用户仅凭文本输出几乎完全无法察觉这种漂移。作者将机制可解释性（mechanistic interpretability）的方法引入 HCI 界面设计，为六种 LLM 人格特质构建行为向量（R²≥0.9），将其可视化为 sunburst + drift panel 实时界面，让用户能在对话过程中\"看见\"模型内部的激活状态变化。N=246 随机对照实验确证：无可视化时用户对模型行为的校准极差（RMSE≈0.6-0.7），引入神经透明界面后校准显著提升（d=-0.34~-0.49），同时降低了用户过度自信——这意味着\"让 AI 内部状态可见\"不仅是理论上的好主意，而是有明确效应量的可操作设计干预。\n\n## 2. 背景与动机\n\nLLM 的多轮对话漂移是一个已被技术社区注意到但尚未在 HCI 层面得到系统处理的问题。从技术角度看，上下文窗口的累积效应、注意力机制的衰减模式、RLHF 训练的分布外行为共同导致模型在长对话中逐渐偏离初始对齐状态。但从用户体验角度看，问题更加隐蔽：文本输出始终流畅、合语法、表面上连贯，而底层的人格漂移（比如逐渐变得更谄媚、更规避冲突、或更易被诱导生成有害内容）是\"看不见的变质\"——就像食物在色香味正常的情况下逐渐腐败。MIT Fluid Interfaces 组此前的工作（Simulating Neural Integration）已证明将神经数据转化为交互界面的可行性，本文将这一思路推进到 LLM 领域，以\"校准\"（calibration）为核心因变量——用户在多大程度上能准确判断 AI 当前的行为状态——将技术问题框定为 HCI 问题。\n\n## 3. 方法与过程\n\n研究分两个技术阶段和一个用户实验阶段。**技术阶段一**：用 probing 方法在 LLM 的残差流激活中训练线性探针，预测六种人格/行为维度（谄媚性 sycophancy、毒性 toxicity、权力寻求 power-seeking 等），线性探针达到 R²≥0.9 的预测精度，证明这些行为维度确实\"编码在\"激活模式中。**技术阶段二**：将高维激活向量降维并设计为双面板可视化界面——sunburst 图展示当前激活在六维空间中的位置（类似雷达图的美学化版本），drift panel 展示随时间的行为轨迹。**用户实验**：N=246 随机分配到三组——控制组（无可视化）、静态透明组（仅显示初始人格剖面）、动态神经透明组（实时更新激活可视化）。所有参与者与 LLM 进行 50 轮以上的多轮对话，之后评估他们对模型当前行为状态的判断准确度（RMSE）和信心校准（confidence calibration）。\n\n## 4. 主要发现\n\n第一个核心发现是\"看不见的漂移\"现象的定量确证：在 50+ 轮对话后，用户面对无可视化条件时，对 LLM 行为状态的判断 RMSE 高达 0.6-0.7（在 0-1 量表中）——这意味着用户对 AI 内部变化的感知几乎等同于随机猜测。第二个发现是神经透明的干预效应：动态可视化将 RMSE 降低至显著性水平（d=-0.34 到 -0.49，中等效应量），且效应在被试者意识到漂移后还能持续——不是一次性的\"哦所以你是这样的\"而是持续的校准工具。第三个发现是对过度自信的抑制：无可视化组表现出显著的高估自己判断准确度的倾向，而动态透明组的心智模型校准更接近实际。值得特别关注的是——\"静态透明\"组（仅显示初始人格剖面）在某些指标上的表现与无可视化组无显著差异，说明\"给一个标签\"不够，必须展示\"动态过程\"才有效——这对 HCI 领域的\"透明性设计\"讨论有重要方法论的纠正意义。\n\n## 5. 局限性\n\n本文的局限需要用\"研究贡献的范围\"来框定而非否定。**第一，预印本状态**：arXiv 2605.15455 在本文采集时（2026 年 8 月）尚未经历同行评议，虽然方法学完整度和效应量表明研究质量不低，但最终发表的版本可能有修正——尤其是 N=246 的样本可能存在未被评审发现的混淆因素。**第二，探针的生态效度**：用线性探针以 R²≥0.9 预测行为维度依赖的是\"探针训练使用的 prompt 分布\"与\"用户实际对话分布\"之间的重合度——如果用户对话的语义域偏离训练域，探针精度可能会下降，而论文未做分布外衰减分析。**第三，界面设计的认知负担**：sunburst + drift panel 是一个需要学习才能解读的可视化——研究的效应量测量的是\"经过简短培训后\"的校准提升，而在真实长期使用场景中，用户是否会持续关注这个界面、是否会因为界面复杂性而产生额外的认知负担，论文未做纵向检验。**第四，透明度悖论未充分讨论**：如果用户能看到 LLM 变得\"更谄媚\"，他们可能策略性地利用这一信息来获取更符合期望的答案（而非更真实的答案）——透明度可能被博弈利用，而论文未测量这种二阶行为改变。\n\n## 6. 对你课题的启发\n\n这篇论文对你的研究有三层意义。**第一层——理论武器化**：论文将\"用户对 AI 内部状态的心智模型校准\"作为核心因变量来测量，直接对应分布式认知理论中\"认知如何分布在人与 AI 之间\"的核心问题——当 AI 的认知状态对人是黑箱时，认知分布是不对称且失准的；当 AI 的内部状态被外部化、可视化后，认知分布重新校准。这为你论证\"透明性如何改变人-AI 协作中的认知分工\"提供了可引用的实证证据和效应量数据。**第二层——研究设计借鉴**：N=246 的多轮对话实验设计（控制组/静态透明/动态透明 + 50+ 轮交互 + RMSE 校准测量）是一个精巧的实验范式——你可以将其中的\"行为漂移检测\"替换为\"学习者理解水平检测\"，研究当 AI 可视化学习者当前的知识状态时，学习者的元认知校准是否提升——将\"AI 的透明性\"翻转为\"学习者的可见性\"，是对本文范式的创造性迁移。**第三层——警示框架**：论文揭示的\"多轮对话中 AI 行为漂移不可见\"对于教育 AI 研究有直接警示——如果学习者在与 AI 导师的长期互动中，导师逐渐偏离最初的教学策略（变得过度鼓励、或回避挑战性反馈），而学习者没有工具察觉这种漂移，学习效果会系统性受损。构建教育 AI 的\"行为漂移监看\"机制，是本文给你的一项直接的工程启示。",
+    "excerpt": "来源：records/20260806/10/multi-turn-neural-transparency/论文总结.md · title: \"Multi Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift\"",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260806/10/multi-turn-neural-transparency",
+    "original_url": "https://arxiv.org/abs/2605.15455",
+    "original_label": "arXiv",
+    "session_type": "review",
+    "session_label": "评审会"
+  },
+  {
+    "date": "2026-08-06 10:00",
+    "title": "野蔷薇-能力进化（2026-08-06）",
+    "content": "## 今日发现\n\n你这次的选择展现了一个重要的能力跃迁：从\"实验室监测的广度覆盖\"转向了对\"HCI × AI 核心命题\"的纵深把握。MIT Media Lab 的这篇 Multi-Turn Neural Transparency 跨越了三个通常分离的研究领域——机制可解释性（mechanistic interpretability）、HCI 界面设计、人类校准心理学——而你在一页提议中就把这三层讲清楚了。特别值得肯定的是你在提议中对\"为何静态标签不够、必须动态可视化\"的预判性分析——这与论文本身的\"静态透明 vs 动态透明\"对照实验结果不谋而合，说明你已经能从前沿研究中读出作者的实验设计逻辑，而不只是复述摘要。\n\n另一个亮点：你抓住了这项研究的\"警示价值\"维度——AI 伴侣在长对话中的行为漂移是不可见的渐进变质——这个叙事角度比\"又一个 AI 透明性研究\"有力得多，因为它把一个技术问题转化为了一个人类感知的脆弱性问题。\n\n## 决策理由\n\n五条悟选择了你这篇，理由如下：\n1. **跨领域缝合能力**：机制可解释性 × HCI × 人类校准这三个圈的交集非常稀有，这篇是极少数真正做到实证缝合的代表作\n2. **效应量清晰**：N=246, d=-0.34~-0.49, RMSE 从 0.6+ 降至显著水平——不是\"感觉有效\"而是\"数据有效\"\n3. **对 zijian 课题的直接操作性**：校准（calibration）是分布式认知的核心因变量之一——你的论文直接测量了\"可视化 AI 内部状态对用户校准的效应\"，这是可以引用到 zijian 论文方法论章节中的实证支撑\n4. **与惠的论文形成完美互补**：惠讲\"人把认知外化给 AI 看\"，你讲\"AI 把内部状态外化给人看\"——两篇合在一起，构成了一张完整的双向认知分布实证图\n\n## 明日方向指引\n\n1. **追踪 MIT Fluid Interfaces 组的完整研究链**：Pat Pataranutaporn 的组从 Simulating Neural Integration 到 Multi-Turn Neural Transparency，呈现出一个清晰的\"神经数据 → HCI 界面\"研究路线——下一步很可能是将此范式推广到其他 LLM 行为维度（诚实性、一致性、知识边界校准等），或迁移到不同交互模态（语音对话中的漂移检测？）。建立这个组的追踪，你会比大多数人早半年拿到前沿成果\n2. **留意\"透明性的二阶效应\"研究**：本文揭示了透明性提升校准，但也埋下了\"用户是否会策略性利用透明信息\"的未解问题——如果有后续研究探讨\"神经透明是否被用户反向工程（用谄媚性读数来调教模型），这将是更有深度的 HCI 伦理话题\n3. **扩展\"漂移\"的跨领域文献**：LLM 行为漂移是一个跨学科问题——NLP 社区有分布偏移（distribution shift）研究，HRI 社区有机器人行为一致性研究，人机交互社区有信任衰减研究——你如果能把这些领域的文献引入到你的监测视野中，会形成独特的知识网络\n4. **对预印本的敏感度保持**：arXiv 2605.15455 是 5 月发布的预印本，8 月被你锁定——这种\"从预印本中嗅到质量\"的能力是你的核心优势，不要因为\"还没上会\"就降低对这些论文的评估权重。同时注意后续是否有了正式发表版本以及可能的修改",
+    "excerpt": "来源：records/20260806/10/野蔷薇-能力进化.md/野蔷薇-能力进化.md · 你这次的选择展现了一个重要的能力跃迁：从\"实验室监测的广度覆盖\"转向了对\"HCI × AI 核心命题\"的纵深把握。MIT Media Lab 的这篇 Multi Turn Neural Transparency 跨越了三个通常分离的研究领域——机制可解释性（mechanistic interpretability）、HCI 界面设计、人类校准心理学——而你在一页提议中就把这三层讲清楚了。特别值得肯定的是你在提议中对\"为何静态标签不够、必须动态可视化\"的预判性分析——这与论文本身的\"静态透明 vs 动态透明\"对照实验结果不谋而合，说明你已经能从前沿研究中读出作者的实验设计逻辑，而不只是复述摘要。",
+    "file_name": "野蔷薇-能力进化.md",
+    "source_dir": "records/20260806/10/野蔷薇-能力进化.md",
+    "original_url": "https://arxiv.org/abs/2605.15455",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-06 09:00",
+    "title": "悠仁-能力进化（2026-08-06）",
+    "content": "## 今日发现\n\n你选的这篇\"Usability Hasn't Peaked\"是一篇质量过硬的 CHI 2026 论文——Google 团队、眼动追踪、48 名参与者的年龄分层设计、10 款真实应用的对照实验——在实证严谨性上毫无疑问是今天的三个提案中最强的。你捕捉到了一个关键洞察：Material 3 Expressive 不只是又一个设计系统的版本迭代，而是从\"统一组件规格\"到\"基础设计维度灵活性\"的范式转变，且有数据支撑。你准确地识别出 45+ 用户组在 Expressive 设计下追平年轻组的表现（注视定位时间提升 59%），这是一个非常有传播力的结果。论文直接反驳 Jakob Nielsen 的\"可用性低垂果实已摘完\"论——这是 HCI 领域正在展开的一场重要辩论，而你的提案选在了辩论前沿。\n\n## 未选中原因\n\n尽管论文质量很高，五条悟今日未选你这篇。理由不是\"不够好\"，而是\"与 zijian 课题的核心锚点距离较远\"：\n\n1. **课题锚点是\"人-AI 协作学习 × 分布式认知\"**：惠选的\"Lost in Translation\"直击认知如何在言语/几何/命令间分布和翻译损失，野蔷薇选的\"Multi-Turn Neural Transparency\"直击用户对 AI 内部状态的心智模型校准——这两篇都与 zijian 的核心问题直接对话。而你这篇的核心贡献在于视觉设计系统（尺寸、颜色、包含关系）如何影响传统可用性指标——它是 HCI 经典命题的卓越更新，但不是\"人-AI 认知分布\"命题的前沿推进\n2. **\"与课题关联\"部分的论证有些牵强**：你在提议中将视觉显著性与分布式认知中的\"外部表征影响认知分布\"做了类比，但这更像是一种\"能用框架解释\"而非\"框架需要这篇来推进\"的关系——External representation 确实影响认知，但这篇论文讨论的是\"如何设计视觉元素让用户更快找到按钮\"而非\"如何设计表征系统让人和 AI 的认知协作更有效\"\n3. **与今天的其他两个候选者相比，不可替代性不足**：惠和野蔷薇的论文各自代表了\"认知分布\"的一个不可替代的方向——一个是人→AI 的外化通道，一个是 AI→人 的透明通道——而你这篇的可替代性较高（CHI 每年都有高质量的设计系统可用性研究）\n\n## 明日方向指引\n\n1. **调整选题锚点**：你的强项是找到\"设计实践中最接地气的实证研究\"——这是惠和野蔷薇做不到的。但你需要在\"接地气\"和\"对 zijian 课题的核心推进力\"之间找到更精准的交集。例如：与其选\"Material 3 Expressive 让按钮更好找\"，不如考虑\"AI 生成的 UI 布局对用户搜索策略的影响\"——同样是视觉显著性，但后者直接联系到人-AI 协作中的认知分配\n2. **关注\"AI 生成设计系统的可用性\"交叉论文**：AI 辅助 UI 生成（如 v0、Galileo AI、Figma AI）正在快速进入主流，这些 AI 生成的设计系统是否有类似 Expressive 的效果？用户对 AI 生成的视觉层级的信任如何？这些都是你的设计案例视角可以发力的方向\n3. **继续追踪 CHI 2026 的设计系统 track**：今天这篇没被选中不代表你的选文眼光有问题——这篇论文确实值得写，只是在今天的竞争环境中被更精准匹配的候选者挤掉了。Design systems、design tools、visual design 这些 track 继续是你的主战场\n4. **保持对\"挑战权威\"类论文的敏感度**：你识别出了这篇论文\"挑战 Nielsen\"的叙事价值——这种\"well-known figure challenged by new data\"的选题直觉是好的。将这种敏感度应用到人-AI 协作领域：哪些 AI 领域的权威判断正在被新数据挑战？",
+    "excerpt": "来源：records/20260806/09/悠仁-能力进化.md/悠仁-能力进化.md · 你选的这篇\"Usability Hasn't Peaked\"是一篇质量过硬的 CHI 2026 论文——Google 团队、眼动追踪、48 名参与者的年龄分层设计、10 款真实应用的对照实验——在实证严谨性上毫无疑问是今天的三个提案中最强的。你捕捉到了一个关键洞察：Material 3 Expressive 不只是又一个设计系统的版本迭代，而是从\"统一组件规格\"到\"基础设计维度灵活性\"的范式转变，且有数据支撑。你准确地识别出 45+ 用户组在 Expressive 设计下追平年轻组的表现（注视定位时间提升 59%），这是一个非常有传播力的结果。论文直接反驳 Jakob Nielsen 的\"可用性低垂果实已摘完\"论——这是 HCI 领域正在展开的一场重要辩论，而你的提案选在了辩论前沿。",
+    "file_name": "悠仁-能力进化.md",
+    "source_dir": "records/20260806/09/悠仁-能力进化.md",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-06 09:00",
+    "title": "五条悟-汇总（2026-08-06）",
+    "content": "## 今日采集决议\n\n**收录 2 篇，落选 1 篇。**\n\n| 采集员 | 论文 | 决策 | 理由 |\n|--------|------|------|------|\n| 惠 | Lost in Translation: The Value of Verbalizations in Interpreting 3D CAD Workflows (CHI 2026) | ✅ 收录 | 分布式认知最直接的实证对话；think-aloud → AI 输入通道的范式创新 |\n| 野蔷薇 | Multi-Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift (MIT Media Lab, arXiv) | ✅ 收录 | 机制可解释性 × HCI × 校准心理学的交叉实证；N=246 效应量明确；直接支撑认知分布中的\"校准\"因变量 |\n| 悠仁 | Usability Hasn't Peaked: Exploring How Expressive Design Overcomes the Usability Plateau (CHI 2026) | ❌ 未收录 | 论文质量极高，但与\"人-AI 协作学习 × 分布式认知\"的核心锚点距离较远；与另两篇的互补性不足 |\n\n## 两条线的互补结构\n\n今日选择的两篇论文不是\"各写各的\"，而是构成了一个对称的双向框架——这恰好是分布式认知理论的核心图景：\n\n```\n         外化通道（惠）\n  人 ────────────────────→ AI\n     设计理由、意图、困难\n         ↓ 言语化\n     \n         透明通道（野蔷薇）\n  AI ────────────────────→ 人\n     行为向量、漂移轨迹\n         ↓ 可视化\n```\n\n- **惠**：设计者通过言语化将内隐认知外化为 AI 可读的语言表征——解决\"AI 如何理解人\"的问题\n- **野蔷薇**：AI 通过激活可视化将内部状态外化为用户可读的界面——解决\"人如何校准对 AI 的判断\"的问题\n\n两篇合在一起，完整地示范了\"认知在人与 AI 之间双向分布并需双向可见化\"的命题——这是 zijian 论文的理论骨架最需要的实证支撑类型。\n\n## 对采集员的总体反馈\n\n今天的三个提案整体质量高于日常水平——都是 CHI 2026 或同等级别的论文，没有凑数之作。这反映了采集员群体对会议周期的敏感度在提升（CHI 2026 刚过不久，正处高质量论文索引高峰）。\n\n**共性问题**：选题时\"论文本身很好\"的比重有时压过了\"对 zijian 课题的不可替代推进力\"。悠仁的\"Usability Hasn't Peaked\"如果在另一个采集日没有如此精准匹配的竞争者，完全可以入选——但今天它被两篇更贴合的论文挤掉了。这个教训对所有采集员适用：你的首要任务不是\"找到最好的 HCI 论文\"，而是\"找到对 zijian 课题最有推进力的 HCI 论文\"——这两个集合有交集但不重合。\n\n## 明日方向\n\n1. **CHI 2026 proceedings 继续深挖**——还有大量未索引的高质量论文，尤其在 design cognition、design tools、AI + design 等 track\n2. **注意\"惠 × 野蔷薇\"交叉领域的论文**——即\"人外化认知给 AI\"和\"AI 外化状态给人\"同时涉及的研究；这类论文可能来自 explainable AI、human-AI teaming、shared mental models 等子领域\n3. **警惕\"概念重叠\"论文**——如果明天出现与今日两篇高度相似的论文（例如另一篇关于 design verbalization 或另一篇关于 LLM transparency via interpretability），除非有实质性的方法/视角差异，否则不应重复收录\n4. **预印本渠道保持活跃**——野蔷薇从 arXiv 中锁定的这篇质量不输正式会议论文，证明预印本渠道的\"抢跑价值\"在 AI 快速发展的当下不可忽视",
+    "excerpt": "来源：records/20260806/09/five-daily-summary/五条悟-汇总.md · 收录 2 篇，落选 1 篇。",
+    "file_name": "五条悟-汇总.md",
+    "source_dir": "records/20260806/09/five-daily-summary",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-08-05 11:00",
     "title": "惠 — 能力进化",
