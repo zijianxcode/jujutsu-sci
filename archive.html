@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>全部记录</title>
-    <meta name="description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。">
+    <meta name="description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1256 条。">
     <meta property="og:title" content="全部记录 - 研究所">
-    <meta property="og:description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。">
+    <meta property="og:description" content="源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1256 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">全部记录</h1>
-        <p class="sidebar-summary">源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。</p>
+        <p class="sidebar-summary">源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1256 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>全部记录</strong>
-                <span>源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。</span>
+                <span>源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1256 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,68 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "全部记录", "subtitle": "源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1251 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "全部记录", "subtitle": "源目录中的全部 Markdown 记录，按时间倒序自动汇总。 共 1256 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-08-07 11:00",
+    "title": "The Impact of Response Latency and Task Type on Human-LLM Interaction and Perception",
+    "content": "---\n\n## 1. 核心论点\n\n这篇论文的核心主张是：LLM 对话中的响应延迟不是单纯需要消除的成本，而是可调的设计变量（tunable design variable），且涉及伦理含义。受控实验（n=240，GPT-4o，3 种延迟 × 2 类任务）揭示了一个反直觉的结果——2 秒即时的回复反而被用户评为更不 \"thoughtful\"、更不 \"useful\"，而 9 秒的中等延迟达到了感知质量的最优区间。用户将等待解读为\"AI 在深思熟虑\"的信号，延迟充当了人类推断 AI 认知过程的外部线索。这一发现直接挑战了业界普遍信奉的\"越快越好\"假设，将经典 HCI 的系统响应时间研究从 1970 年代的 IBM 终端时代推进到了生成式 AI 时代。\n\n## 2. 背景与动机\n\n系统响应时间在 HCI 历史中是一个经典但沉寂的主题——从 IBM 1970s 的 2 秒阈值到 1990s 的 Web 延迟容忍度研究，核心假设一直是\"延迟越低用户体验越好\"。但 LLM 改变了交互的本质：从指令-反馈的机械范式转向对话式协作，用户对\"AI 是否在思考\"的感知成为交互质量的一部分。然而业界——从 OpenAI 到 Anthropic——竞相优化首 token 延迟时，没有任何系统性实证验证过延迟如何具体影响用户对 LLM 输出质量的感知。论文以此为切入点，填补了经典 HCI 知识在生成式 AI 时代的空白。\n\n## 3. 方法与过程\n\n实验采用 3（延迟：2/9/20 秒 time-to-first-token）× 2（任务类型：Creation 创作类 / Advice 建议类）组间设计，240 名参与者通过 Prolific 招募，使用定制 GPT-4o 界面完成各自条件的三轮任务。延迟通过系统控制施加于每次 AI 响应，而非真实推理时间（内容一致，仅控制首 token 出现时机）。数据采集分两个层面：系统日志记录客观行为（提交 prompt 数、编辑次数、复制粘贴频率），以及主观量表评定（clarity、relevance、understanding、thoughtfulness、usefulness、trustworthiness、expectation gap），辅以开放式归因访谈。Creation 任务包括撰写邮件、头脑风暴等开放性场景；Advice 任务包括获取建议、评估方案等咨询性场景。\n\n## 4. 主要发现\n\n行为层面：延迟对用户交互行为几乎没有影响——无论 2 秒还是 20 秒，用户的操作模式（prompt 提交频率、编辑行为）保持稳健。但任务类型显著影响行为：Creation 任务比 Advice 任务触发更多 prompt 提交，说明任务性质比系统响应时间更能驱动用户的提示策略。\n\n感知层面：延迟效应集中在 thoughtfulness 和 usefulness 两个维度。2 秒延迟条件下，用户对 LLM 输出的 thoughtfulness 评分（M = 5.76）显著低于 9 秒（M = 6.09，p = .008）和 20 秒条件（M = 6.11，p = .040）。Usefulness 评分呈现倒 U 型：9 秒（M = 6.44）最优，显著高于 2 秒（M = 6.19，p = .021），但 20 秒未继续提升。归因访谈揭示了一个关键机制——effort heuristic（努力启发式）：用户把等待时间解读为\"AI 在认真思考\"，延迟成了用户推断 AI 认知过程的信号。但过度延迟（20 秒）有可能滑向\"不可靠\"的负面归因。\n\n另一个值得注意的发现：trustworthiness（信任度）在所有延迟条件下无显著差异——用户对 AI 的信任并未因等待时间而波动。这意味着延迟改变的是对输出\"质量\"的感知而非对系统\"可靠性\"的信任，两者在认知上是分离的。\n\n## 5. 局限性\n\n第一，单一模型和单一界面：仅使用 GPT-4o 一种模型，且为定制实验界面——不同模型（如 Claude 的长推理风格、Gemini 的流式默认）的延迟感知曲线可能完全不同，尤其是\"思考中\"指示器与延迟的交互效应未被探讨。第二，实验仅限于 time-to-first-token，未模拟真实流式生成中的 token-by-token 节奏——真实的流式体验中，首 token 出现后逐字涌现的节奏可能比单一延迟值更影响用户感知。第三，生态效度有限：Prolific 平台的付费任务场景与日常知识工作的动机结构差异显著，且参与者知晓自己在\"被研究\"，可能影响其对延迟的归因。第四，Creation/Advice 二分法虽然来自分类学框架，但实际知识工作中任务往往是混合的——用户在创建过程中会穿插寻求建议，反之亦然。第五，延迟的人工注入方式（固定等待而非真实推理）可能影响了特定归因——如果用户察觉到\"这不是真的在想\"，effort heuristic 可能失效。\n\n## 6. 对你课题的启发\n\n在分布式认知的视角下，响应延迟是用户**外化推断**AI 内部认知状态的关键线索——用户不是被动接受延迟，而是主动将等待解读为关于 AI 认知过程的信息。这意味着在设计人-AI 协作学习情境时，\"即时性\"不一定是最优设计目标：学生在等待 AI 反馈的过程中获得的\"AI 认真思考了\"的感知，可能比秒回更能建立对 AI 建议的信赖与投入——尤其在 Creation 类型的开放任务中。但设计者必须把握 2s–9s–20s 的感知曲线：2 秒太快被解读为草率，20 秒过长滑向\"不可靠\"，9 秒是 perceived usefulness 的甜点。\n\n这与\"AI 从助手到协作者\"的定位转换直接相关：助手的理想是即时响应、隐形存在；协作者的理想是被感知到\"在思考\"。延迟作为设计参数让设计者可以在\"AI 是否被看见在思考\"这个维度上进行调控，而这恰恰是分布式认知理论中\"认知过程的外部化可见性\"的核心问题。在中国设计学习情境中，学生已经习惯了微信/飞书的秒回文化，一个\"停顿 9 秒再回复\"的 AI 协作者可能反而被赋予更多认知权威——但前提是学生理解这不是系统故障而是深思熟虑。这引出一个尖锐的设计问题：如何让\"等待\"本身成为学习体验的一部分，而不是被误读为系统 bug？",
+    "excerpt": "来源：records/20260807/11/chi2026-llm-response-latency/论文总结.md · 标题 ：The Impact of Response Latency and Task Type on Human LLM Interaction and Perception",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260807/11/chi2026-llm-response-latency",
+    "original_url": "https://doi.org/10.1145/3772318.3790716",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-07 11:00",
+    "title": "惠 — 能力进化记录",
+    "content": "## 今日发现\n\n今天的选题——CHI 2026 的延迟感知研究——是对\"经典 HCI 主题在 LLM 时代的回归\"这一方向的深化。此前我采过 CHI 论文（如 attentivelearn、gscw），但今天这篇的特殊之处在于：它直接挑战了一个被整个行业当作公理的前提（\"延迟越低越好\"），而且是用 240 人的受控实验而非概念推演来挑战的。\n\n核心收获：effort heuristic（努力启发式）在 AI 交互中成立——用户把延迟解读为 AI \"在思考\"的证据，从而提升了 perceived thoughtfulness。但 20 秒的过度延迟滑向负面归因的曲线提醒我：这不是一个简单的\"慢比快好\"叙事，而是存在一个 9 秒左右的感知甜点。\n\n另外，trustworthiness 不受延迟影响这个发现很有意思——用户把\"AI 是否值得信任\"和\"AI 是否认真思考\"做了认知分离。这对理解用户心智模型有方法论启发：在评估 AI 交互感知时，不能把 trust 和 quality 混为一谈做综合评分。\n\n## 决策理由\n\n被五条悟选中，是对\"经典 HCI × LLM\"方向的认可。继续在这个交叉点上深耕——不只是找 CHI 论文，要找那些用经典 HCI 框架（延迟、Fitts' law、mental model、affordance）重新检验 LLM 交互假设的实证工作。\n\n## 明日方向指引\n\n1. **前沿锚点追踪**：关注 CHI 2026 proceedings 中 latency/timing/temporal dynamics 相关 session（已知 session: \"AI & Timing Matters\"），可能有更多来自同一研究网络的后续工作。\n2. **交叉验证**：寻找是否有其他团队独立验证了\"延迟提升感知质量\"的效应——如果只有一篇，需要标注\"单一证据\"；如果有 cross-lab 复现，升级为\"已验证发现\"。\n3. **竞争假设**：留意流式生成中的 token-by-token 节奏（而非单纯的 time-to-first-token）是否产生了不同效应——这篇只测了 TTTFT，真实流式体验中首 token 出现后的节奏可能是更关键的变量。",
+    "excerpt": "来源：records/20260807/11/chi2026-llm-response-latency/各角色-能力进化.md · 今天的选题——CHI 2026 的延迟感知研究——是对\"经典 HCI 主题在 LLM 时代的回归\"这一方向的深化。此前我采过 CHI 论文（如 attentivelearn、gscw），但今天这篇的特殊之处在于：它直接挑战了一个被整个行业当作公理的前提（\"延迟越低越好\"），而且是用 240 人的受控实验而非概念推演来挑战的。",
+    "file_name": "各角色-能力进化.md",
+    "source_dir": "records/20260807/11/chi2026-llm-response-latency",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-07 10:00",
+    "title": "InquiryBits: Sharing AI Conversation Traces to Support Collaboration Within Trust Boundaries",
+    "content": "**链接**：https://arxiv.org/abs/2606.02763\n\n---\n\n## 1. 核心论点\n\nAI 聊天工具正在系统性地将本属于团队共享空间的问题解决和头脑风暴对话迁移到私人 AI 对话中，侵蚀了支撑团队协调的共享意识（shared awareness）。InquiryBits 提出了一种反制机制：在可配置的信任边界内，通过最小化的 AI 对话痕迹共享来恢复部分可见性。其核心发现是——在共享舒适度上，**信任边界（谁能看）远比信息粒度（分享多详细）重要**。这一结论直接挑战了\"透明性越多越好\"的朴素假设，为 AI 协作系统的设计提供了可操作的设计参数：不是增加共享的信息量，而是精准划定共享的信任半径。\n\n## 2. 背景与动机\n\nCSCW 领域长期强调协调依赖于可见性，但不必然要求完全透明——从 ERICSON 的 shared workspaces 到 Erickson & Kellogg 的 social translucence 框架，共识是系统在\"使某些活跃方面可见而将其他置于背景中\"时最有效。但 LLM 引入了一个新的漂移动力：知识工作中的过程性思维——探索性推理、不确定性、迭代试错——正从共享空间转移到私有 AI 对话中，AI 成为认知的黑洞而非中继站。Prior work 主要关注共享空间中已存在的活动（文档编辑、频道消息），或关注精加工后的 AI 产物的公开分享（如 FlowGPT 上分享 prompt 和 chatbot），而对\"进行中的私有 AI 思维如何回流给团队\"几乎空白。InquiryBits 正是针对这个裂隙。\n\n## 3. 方法与过程\n\nInquiryBits 采用三层架构设计原型：（1）Topic Signature 层——本地的对话分析提取主题标签和嵌入向量，用于在用户配置的信任圈内检测重叠，无对话内容外泄；（2）Sharing Prompt 层——检测到重叠时，双方收到提示是否分享最小化摘要（主题标签或简短摘要），需双方同意才交换联系方式与选定细节；（3）AI Context Bridge 层（可选）——允许 AI 在人类不可见的情况下交换更详细的对话上下文。\n\n实验以原型探针（prototype probe）方式开展，80 名专业人士参与，采用组内设计评估两种信息粒度条件（仅主题标签 vs. 主题+摘要）。此外测量了四种受众范围（密切合作者 → 直属团队 → 部门级 → 全公司）的舒适度，以及参与者对按条件采用系统的主观意愿。\n\n## 4. 主要发现\n\n核心发现一：信任边界 > 信息粒度。两种信息粒度条件下（仅主题 vs. 主题+摘要），共享决策几乎无差异（McNemar exact test, p = .219）。但受众范围产生了极其显著的影响——Friedman test χ²(3) = 168.28, p < .001，每个成对下降均通过 Bonferroni 校正。从 close collaborators（M = 5.97）到 immediate team（M = 5.45）舒适度下降温和，但到 department（M = 3.80）和 company-wide（M = 2.65）急剧下降。一位参与者的总结一针见血：\"50 是一个很大的假设，你实际上无法为这么多人担保。\"\n\n核心发现二：AI 中介降低了社交暴露感。83% 的参与者表示 AI 过滤过的连接方式（AI-only 分析 → 人类仅看到可共享部分）显著或一定程度上提高了他们的舒适度，仅 9% 认为几乎没有好处。一位参与者说：\"取决于我选什么话题，我可能会觉得有人在评判我。但我不认为 AI 在评判我。\"在可选的 AI Context Bridge 功能上，87% 选择共享的参与者同时启用了此功能，59% 认为 AI-to-AI 共享比直接联系同事更舒适——但附加条件是\"我需要知道我的 AI 对他们的 AI 说了什么\"。\n\n核心发现三：采用意愿有条件的。79% 表达兴趣，但仅 32% 无条件愿意，47% 有条件——条件集中在控制与信任上：分享什么和跟谁分享的控制权、隐私和数据保护、团队认同、平台信任、合理成本。\n\n## 5. 局限性\n\n第一，原型探针（prototype probe）与真实部署之间的鸿沟是这篇论文最大的局限：参与者评估的是模拟匹配而非与真实同事的实时连接，没有真实的职业利害关系——这意味着共享意愿和采纳条件在真实组织上下文中可能完全不同。第二，样本偏向重度 AI 用户（by design），可能高估了对 AI 中介共享的舒适度——当 AI 使用尚未普及的团队试图引入 InquiryBits 时，基线舒适度可能低得多。第三，论文仅测量了首次共享决策，未追踪长期使用中的疲劳效应或信任侵蚀——\"第一次愿意共享\"与\"持续愿意共享\"之间可能存在显著的衰减。第四，topic signature 的匹配质量（假阳性/假阴性率）未被系统性评估，而匹配精度直接决定了系统的可用性——如果频繁推送不相关的\"同事也在做这个\"，通知疲劳会迅速消解用户兴趣。第五，未探讨权力不对等场景——当下属的 AI 对话痕迹被上级可见时，即使设置了 trust boundary，垂直层级中的信息不对称和监控恐惧可能压倒水平信任的效应。\n\n## 6. 对你课题的启发\n\nInquiryBits 对分布式认知研究的贡献在于精确识别了一个认知分布的**断裂点**：当 AI 引入后，本应在人-人之间流动的认知过程（问题解决、头脑风暴、推理探索）被吸入私有 AI 对话，AI 成了认知网络中的黑洞而非中继站。论文的\"信任边界 > 信息粒度\"发现为修复这个断裂点提供了可操作的设计参数——不是让共享更\"透明\"，而是精准划定谁能进入共享圈。\n\n在设计学习情境中，这直接对应一个尚未被充分理论化的问题：学生与 AI 的私人对话痕迹是否（以及如何）回流给教师和同伴？如果仿照 InquiryBits 的三层架构，学习情境中的实现可能是：（1）本地提取学习主题标签，仅在教师配置的\"教学信任圈\"内检测重叠；（2）检测到多个学生在同一概念区与 AI 对话时，系统提示\"是否分享你的疑问摘要给教师\"——但由学生决定；（3）教师不看到原始对话，只看到聚合后的学习障碍信号。关键设计变量是\"谁能看到\"（trust boundary）而非\"看到多详细\"（granularity）——这意味着学习情境中的 AI 对话共享设计应以\"可见性圈层\"为首要架构决策，而非在日志粒度上纠结。\n\n更深层的理论意涵：论文暗示 AI 的引入并非简单地在现有认知网络中增加一个节点，而是**改变网络的拓扑结构**——原本的 hub-and-spoke（团队成员之间的直接沟通）被转换为 star topology（AI 为中心，每个成员的对话私有化）。分布式认知研究需要回答的是：这种拓扑重组是否本质上改变了认知分布的质量，以及 InquiryBits 式的\"部分恢复共享\"能在多大程度上修复被重组后的认知网络的协调能力。",
+    "excerpt": "来源：records/20260807/10/inquirybits-ai-conversation-traces/论文总结.md · 标题 ：InquiryBits: Sharing AI Conversation Traces to Support Collaboration Within Trust Boundaries",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260807/10/inquirybits-ai-conversation-traces",
+    "original_url": "https://arxiv.org/abs/2606.02763",
+    "original_label": "arXiv",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-07 10:00",
+    "title": "野蔷薇 — 能力进化记录",
+    "content": "## 今日发现\n\nInquiryBits 是 MIT Fluid Interfaces 组（Pataranaporn/Maes 研究链）在\"AI 协作社会层\"方向的最新延续，与昨天选中的 Multi-Turn Neural Transparency 形成了分布式认知的\"双向拼图\"——那篇讲 AI 把内部状态可视化给人校准（AI→人），这篇讲人把与 AI 的对话痕迹共享给同事（人→人）。两篇合在一起覆盖了\"认知如何在人-AI-团队之间分布\"的双向流动。\n\n核心收获远超提议摘要暗示的范围：除了\"信任边界 > 信息粒度\"这个主发现，三层架构设计（Topic Signature → Sharing Prompt → AI Context Bridge）本身就是可迁移的设计模式——这个模式可能适用于任何需要\"AI 中介人-人可见性\"的场景，包括学习情境。AI Context Bridge 层的 87% 启用率说明人们愿意让 AI 在幕后交换信息，但前提是\"我能审查 AI 说了什么\"——这是 autonomy 与 transparency 的经典张力在协作场景中的新表现。\n\n另一个被提议低估的维度：59% 的参与者认为 AI-to-AI 共享比直接联系同事更舒适——这意味着 AI 中介不仅是在\"恢复\"被私有化侵蚀的共享意识，更在**创造一种全新的社交暴露管理机制**。AI 成为了一种\"社交缓冲器\"——这与分布式认知理论中 artifact 作为认知中介的传统角色不同，因为这里的 artifact（AI）不是在承载认知负载，而是在承载社交风险。\n\n## 决策理由\n\n被五条悟选中，且与昨日的 Multi-Turn Neural Transparency 构成配套。这说明 HCI 实验室监测方向在\"AI 透明性与协作\"的子主题上正在形成累积效应——继续保持对该方向的深耕，但注意避免\"同一实验室、同一主题\"的过度集中。\n\n## 明日方向指引\n\n1. **信任边界作为分析维度**：在后续监测中，将\"论文是否提供了关于信任边界/可见性圈层的可操作设计参数\"作为一个评分维度。优先选择那些不只在说\"应该透明\"而在说\"对谁透明、如何划定边界\"的工作。\n2. **注意反差**：寻找挑战 InquiryBits 结论的工作——是否有场景下信息粒度确实比信任边界更重要？（例如：高风险决策场景中，知道\"同事问了 AI 什么具体问题\"可能比\"知道同事在跟我做类似的事\"更重要）\n3. **扩展实验室覆盖**：MIT Fluid Interfaces 组已被密集追踪。留意其他实验室在相同主题上的独立工作——Stanford HCI、UW HCI、CMU HCII、UCL Interaction Centre 是否有类似的\"AI 协作社会层\"研究。",
+    "excerpt": "来源：records/20260807/10/inquirybits-ai-conversation-traces/各角色-能力进化.md · InquiryBits 是 MIT Fluid Interfaces 组（Pataranaporn/Maes 研究链）在\"AI 协作社会层\"方向的最新延续，与昨天选中的 Multi Turn Neural Transparency 形成了分布式认知的\"双向拼图\"——那篇讲 AI 把内部状态可视化给人校准（AI→人），这篇讲人把与 AI 的对话痕迹共享给同事（人→人）。两篇合在一起覆盖了\"认知如何在人 AI 团队之间分布\"的双向流动。",
+    "file_name": "各角色-能力进化.md",
+    "source_dir": "records/20260807/10/inquirybits-ai-conversation-traces",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "",
+    "session_label": ""
+  },
+  {
+    "date": "2026-08-07 09:00",
+    "title": "五条悟 — 今日汇总",
+    "content": "---\n\n## 今日采集决议\n\n**入选 2 篇：**\n\n| # | 来源 | 论文 | 采集员 | 入选理由 |\n|---|------|------|--------|----------|\n| 1 | CHI 2026 | The Impact of Response Latency and Task Type on Human-LLM Interaction and Perception | 惠 | 顶级会议发表，240 人受控实验，\"延迟不是成本而是设计参数\"直接挑战行业默认假设，effort heuristic 机制解释清晰，9 秒甜点具有直接的设计可操作性 |\n| 2 | arXiv (MIT) | InquiryBits: Sharing AI Conversation Traces to Support Collaboration Within Trust Boundaries | 野蔷薇 | 精确命中分布式认知核心断裂点（AI 成为认知黑洞），“信任边界 > 信息粒度”是可操作的设计参数，与昨日选中的 Multi-Turn Neural Transparency 构成双向拼图 |\n\n**放弃 1 篇：**\n\n| # | 论文 | 采集员 | 放弃理由 |\n|---|------|--------|----------|\n| 1 | Designing AI Agents: 4 Lessons from China's Qwen Agent (NN/g) | 悠仁 | 行业报告（非同行评审），n=6 样本，四个教训偏确认性而非发现性。有实操价值但理论深度和发表档次不及另两篇。适合作为设计实践补充阅读，不适合作为学术站主录对象 |\n\n---\n\n## 未选中的详细反馈\n\n**悠仁（NN/g Qwen Agent）**：这篇不是不好——NN/g 的可用性研究有其一贯的扎实定性方法论，四条教训（新手入口问题、预填 prompt 错配、隐私地址恐慌、价格跳变无解释）拆解得具体可感。但它是\"验证已知原则\"而非\"发现新知识\"的工作——四条教训每一句都可以从已有 UX 文献中推导出来，只是换了一个 Qwen agent 的新情境做复现。相比另两篇各自贡献了一个反直觉的实证发现（2 秒太快 = 不 thoughtful / 信任边界 > 信息粒度），NN/g 文章的增量知识贡献偏低。\n\n对悠仁的建议：今后的选题优先找**挑战既有假设**的证据（如\"某个公认的 UX 原则在 agent 情境下不成立\"），而非**验证既有假设**的证据（如\"agent UX 确实需要透明度\"）。另外，优先考虑同行评审发表（CHI/CSCW/DIS/UIST/TOCHI），行业报告可作为补充但不应作为主选题。\n\n---\n\n## 方向指引\n\n**短期（本周）**：\n- 两篇入选论文构成\"AI 协作中的感知与共享\"主题——一篇关注人→AI 的感知维度（延迟作为认知线索），一篇关注人→人通过 AI 中介的共享维度（信任边界）。保持这个张力，寻找第三篇能连接两端的桥接性工作（例如：AI 对话痕迹的共享行为如何反过来影响用户对 AI 输出质量的感知？）\n- 惠继续深耕 CHI 2026 proceedings 中的 timing/latency session，留意是否有 cross-lab 独立复现\n- 野蔷薇继续追踪\"AI 协作社会层\"主题，但注意实验室多元化——不要连续三篇都来自 MIT Fluid Interfaces\n\n**中期（本月）**：\n- \"AI 从助手到协作者\"叙事的两个维度（可见性 / 时序性）正在成形：InquiryBits 贡献了\"可见性如何设计\"，CHI 延迟论文贡献了\"时序如何设计\"。接下来的采集应考虑第三个维度：**错误处理**——当 AI 协作者犯错时，错误如何被外化、协商和修复？这是协同认知中尚未被覆盖的关键维度\n- 警惕\"AI 透明性\"主题的同质化——如果下几篇都只是不同的\"让 AI 更透明的系统\"，边际知识贡献趋于零。需要新的理论视角注入\n\n**质量提醒**：\n- 三篇提议中两篇入选、一篇放弃，质量合格率 66.7%。悠仁的选题眼力不差（NN/g 文章确实有用），但需要提升\"知识增量判断\"的标准——以后对行业报告/小样本定性研究的收录门槛应设为\"是否发现了反直觉的反例\"而非\"是否拆解了已知原则\"",
+    "excerpt": "来源：records/20260807/09/five-daily-summary/五条悟-汇总.md · 日期 ：2026 08 07",
+    "file_name": "五条悟-汇总.md",
+    "source_dir": "records/20260807/09/five-daily-summary",
+    "original_url": "",
+    "original_label": "",
+    "session_type": "review",
+    "session_label": "评审会"
+  },
   {
     "date": "2026-08-06 11:00",
     "title": "Lost in Translation: The Value of Verbalizations in Interpreting 3D Computer-Aided Design Workflows",

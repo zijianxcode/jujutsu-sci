@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML</title>
-    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 266 条。">
+    <meta name="description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 267 条。">
     <meta property="og:title" content="ML - 研究所">
-    <meta property="og:description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 266 条。">
+    <meta property="og:description" content="基于关键词自动归类的训练、优化与模型方法研究。 共 267 条。">
     <meta property="og:image" content="logo.jpg">
     <meta property="og:type" content="website">
     <link rel="icon" href="logo.jpg" type="image/jpeg">
@@ -32,7 +32,7 @@
         <a class="sidebar-back" href="index.html">← 返回总览</a>
         <div class="section-kicker">Source Driven</div>
         <h1 class="sidebar-heading">ML</h1>
-        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 266 条。</p>
+        <p class="sidebar-summary">基于关键词自动归类的训练、优化与模型方法研究。 共 267 条。</p>
         <div class="sidebar-metas">
             <span class="meta-chip" id="latestMeta">最新记录</span>
             <span class="meta-chip" id="totalMeta">0 条记录</span>
@@ -50,7 +50,7 @@
         <div class="mobile-bar">
             <div class="mobile-bar-copy">
                 <strong>ML</strong>
-                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 266 条。</span>
+                <span>基于关键词自动归类的训练、优化与模型方法研究。 共 267 条。</span>
             </div>
             <div class="mobile-actions">
                 <button class="menu-toggle" id="menuToggle" type="button">目录</button>
@@ -79,8 +79,20 @@
     </main>
 
     <script>
-        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 266 条。", "obsidian": {"vault": "", "folder": ""}};
+        var pageConfig = {"title": "ML", "subtitle": "基于关键词自动归类的训练、优化与模型方法研究。 共 267 条。", "obsidian": {"vault": "", "folder": ""}};
         var entries = [
+  {
+    "date": "2026-08-07 11:00",
+    "title": "The Impact of Response Latency and Task Type on Human-LLM Interaction and Perception",
+    "content": "---\n\n## 1. 核心论点\n\n这篇论文的核心主张是：LLM 对话中的响应延迟不是单纯需要消除的成本，而是可调的设计变量（tunable design variable），且涉及伦理含义。受控实验（n=240，GPT-4o，3 种延迟 × 2 类任务）揭示了一个反直觉的结果——2 秒即时的回复反而被用户评为更不 \"thoughtful\"、更不 \"useful\"，而 9 秒的中等延迟达到了感知质量的最优区间。用户将等待解读为\"AI 在深思熟虑\"的信号，延迟充当了人类推断 AI 认知过程的外部线索。这一发现直接挑战了业界普遍信奉的\"越快越好\"假设，将经典 HCI 的系统响应时间研究从 1970 年代的 IBM 终端时代推进到了生成式 AI 时代。\n\n## 2. 背景与动机\n\n系统响应时间在 HCI 历史中是一个经典但沉寂的主题——从 IBM 1970s 的 2 秒阈值到 1990s 的 Web 延迟容忍度研究，核心假设一直是\"延迟越低用户体验越好\"。但 LLM 改变了交互的本质：从指令-反馈的机械范式转向对话式协作，用户对\"AI 是否在思考\"的感知成为交互质量的一部分。然而业界——从 OpenAI 到 Anthropic——竞相优化首 token 延迟时，没有任何系统性实证验证过延迟如何具体影响用户对 LLM 输出质量的感知。论文以此为切入点，填补了经典 HCI 知识在生成式 AI 时代的空白。\n\n## 3. 方法与过程\n\n实验采用 3（延迟：2/9/20 秒 time-to-first-token）× 2（任务类型：Creation 创作类 / Advice 建议类）组间设计，240 名参与者通过 Prolific 招募，使用定制 GPT-4o 界面完成各自条件的三轮任务。延迟通过系统控制施加于每次 AI 响应，而非真实推理时间（内容一致，仅控制首 token 出现时机）。数据采集分两个层面：系统日志记录客观行为（提交 prompt 数、编辑次数、复制粘贴频率），以及主观量表评定（clarity、relevance、understanding、thoughtfulness、usefulness、trustworthiness、expectation gap），辅以开放式归因访谈。Creation 任务包括撰写邮件、头脑风暴等开放性场景；Advice 任务包括获取建议、评估方案等咨询性场景。\n\n## 4. 主要发现\n\n行为层面：延迟对用户交互行为几乎没有影响——无论 2 秒还是 20 秒，用户的操作模式（prompt 提交频率、编辑行为）保持稳健。但任务类型显著影响行为：Creation 任务比 Advice 任务触发更多 prompt 提交，说明任务性质比系统响应时间更能驱动用户的提示策略。\n\n感知层面：延迟效应集中在 thoughtfulness 和 usefulness 两个维度。2 秒延迟条件下，用户对 LLM 输出的 thoughtfulness 评分（M = 5.76）显著低于 9 秒（M = 6.09，p = .008）和 20 秒条件（M = 6.11，p = .040）。Usefulness 评分呈现倒 U 型：9 秒（M = 6.44）最优，显著高于 2 秒（M = 6.19，p = .021），但 20 秒未继续提升。归因访谈揭示了一个关键机制——effort heuristic（努力启发式）：用户把等待时间解读为\"AI 在认真思考\"，延迟成了用户推断 AI 认知过程的信号。但过度延迟（20 秒）有可能滑向\"不可靠\"的负面归因。\n\n另一个值得注意的发现：trustworthiness（信任度）在所有延迟条件下无显著差异——用户对 AI 的信任并未因等待时间而波动。这意味着延迟改变的是对输出\"质量\"的感知而非对系统\"可靠性\"的信任，两者在认知上是分离的。\n\n## 5. 局限性\n\n第一，单一模型和单一界面：仅使用 GPT-4o 一种模型，且为定制实验界面——不同模型（如 Claude 的长推理风格、Gemini 的流式默认）的延迟感知曲线可能完全不同，尤其是\"思考中\"指示器与延迟的交互效应未被探讨。第二，实验仅限于 time-to-first-token，未模拟真实流式生成中的 token-by-token 节奏——真实的流式体验中，首 token 出现后逐字涌现的节奏可能比单一延迟值更影响用户感知。第三，生态效度有限：Prolific 平台的付费任务场景与日常知识工作的动机结构差异显著，且参与者知晓自己在\"被研究\"，可能影响其对延迟的归因。第四，Creation/Advice 二分法虽然来自分类学框架，但实际知识工作中任务往往是混合的——用户在创建过程中会穿插寻求建议，反之亦然。第五，延迟的人工注入方式（固定等待而非真实推理）可能影响了特定归因——如果用户察觉到\"这不是真的在想\"，effort heuristic 可能失效。\n\n## 6. 对你课题的启发\n\n在分布式认知的视角下，响应延迟是用户**外化推断**AI 内部认知状态的关键线索——用户不是被动接受延迟，而是主动将等待解读为关于 AI 认知过程的信息。这意味着在设计人-AI 协作学习情境时，\"即时性\"不一定是最优设计目标：学生在等待 AI 反馈的过程中获得的\"AI 认真思考了\"的感知，可能比秒回更能建立对 AI 建议的信赖与投入——尤其在 Creation 类型的开放任务中。但设计者必须把握 2s–9s–20s 的感知曲线：2 秒太快被解读为草率，20 秒过长滑向\"不可靠\"，9 秒是 perceived usefulness 的甜点。\n\n这与\"AI 从助手到协作者\"的定位转换直接相关：助手的理想是即时响应、隐形存在；协作者的理想是被感知到\"在思考\"。延迟作为设计参数让设计者可以在\"AI 是否被看见在思考\"这个维度上进行调控，而这恰恰是分布式认知理论中\"认知过程的外部化可见性\"的核心问题。在中国设计学习情境中，学生已经习惯了微信/飞书的秒回文化，一个\"停顿 9 秒再回复\"的 AI 协作者可能反而被赋予更多认知权威——但前提是学生理解这不是系统故障而是深思熟虑。这引出一个尖锐的设计问题：如何让\"等待\"本身成为学习体验的一部分，而不是被误读为系统 bug？",
+    "excerpt": "来源：records/20260807/11/chi2026-llm-response-latency/论文总结.md · 标题 ：The Impact of Response Latency and Task Type on Human LLM Interaction and Perception",
+    "file_name": "论文总结.md",
+    "source_dir": "records/20260807/11/chi2026-llm-response-latency",
+    "original_url": "https://doi.org/10.1145/3772318.3790716",
+    "original_label": "DOI",
+    "session_type": "",
+    "session_label": ""
+  },
   {
     "date": "2026-08-06 10:00",
     "title": "Multi-Turn Neural Transparency: Surfacing Neural Activations Improves User Calibration to LLM Behavioral Drift",
