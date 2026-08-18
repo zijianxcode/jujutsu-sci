@@ -107,7 +107,7 @@ ensure_repo_clean() {
   if ! git -C "$repo_path" diff --quiet || ! git -C "$repo_path" diff --cached --quiet || [ -n "$(git -C "$repo_path" ls-files --others --exclude-standard)" ]; then
     echo "[$TIMESTAMP] Abort: repository is not clean: $repo_path"
     git -C "$repo_path" status --short
-    exit 1
+    return 1
   fi
 }
 
@@ -361,6 +361,25 @@ sync_emergency_status() {
     echo "[$TIMESTAMP] emergency: status.json synced to CloudBase"
   else
     echo "[$TIMESTAMP] WARNING: emergency status sync failed"
+  fi
+
+  # Commit status.json so the working tree is left clean for the next sync run.
+  # (health-check.js rewrites checkedAt on every run; leaving it uncommitted
+  #  makes the next run's ensure_repo_clean abort the academy mirror step.)
+  if git -C "$HOMEPAGE_LOCAL" diff --quiet -- emergency/status.json; then
+    echo "[$TIMESTAMP] emergency: status.json unchanged, nothing to commit"
+  else
+    git -C "$HOMEPAGE_LOCAL" add emergency/status.json
+    if git -C "$HOMEPAGE_LOCAL" commit -m "chore: commit emergency status update"; then
+      echo "[$TIMESTAMP] emergency: status.json committed"
+      if with_push_timeout git -C "$HOMEPAGE_LOCAL" push origin "$BRANCH" 2>/dev/null; then
+        echo "[$TIMESTAMP] emergency: status.json pushed"
+      else
+        echo "[$TIMESTAMP] WARNING: emergency status.json push failed"
+      fi
+    else
+      echo "[$TIMESTAMP] WARNING: emergency status.json commit failed"
+    fi
   fi
 
   return 0
