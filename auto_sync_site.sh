@@ -160,18 +160,25 @@ sync_academy_mirror() {
   if [ -d "$HOMEPAGE_LOCAL/.git" ]; then
     target_repo="$HOMEPAGE_LOCAL"
     echo "[$TIMESTAMP] academy: using local checkout: $HOMEPAGE_LOCAL"
+    # Never stash or otherwise rewrite a user's homepage worktree. This job is
+    # allowed to update academy/ only; site feature work must be committed or
+    # explicitly handled before the scheduled sync runs.
+    if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
+      echo "[$TIMESTAMP] academy: homepage repository has local changes — aborting without pull, stash, or deploy"
+      return 3
+    fi
     if ! with_timeout git -C "$target_repo" pull origin "$BRANCH" 2>/dev/null; then
       echo "[$TIMESTAMP] academy: git pull timed out — will sync against local state and push later"
     fi
     if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
-      echo "[$TIMESTAMP] academy: local repo not clean — stashing and continuing with local checkout"
-      git -C "$target_repo" stash --include-untracked --quiet 2>/dev/null || true
-      if ! ensure_repo_clean "$target_repo" 2>/dev/null; then
-        echo "[$TIMESTAMP] academy: stash failed, falling back to clone"
-        target_repo=""
-      else
-        echo "[$TIMESTAMP] academy: stash succeeded, repo is now clean"
-      fi
+      echo "[$TIMESTAMP] academy: homepage repository changed during pull — aborting without deploy"
+      return 3
+    fi
+    local divergence
+    divergence="$(git -C "$target_repo" rev-list --left-right --count "origin/$BRANCH...HEAD" 2>/dev/null || true)"
+    if [ "$divergence" != "0 0" ]; then
+      echo "[$TIMESTAMP] academy: homepage repository diverges from origin/$BRANCH ($divergence) — aborting without deploy"
+      return 3
     fi
   fi
 
