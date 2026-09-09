@@ -176,7 +176,7 @@ sync_academy_mirror() {
     fi
     local divergence
     divergence="$(git -C "$target_repo" rev-list --left-right --count "origin/$BRANCH...HEAD" 2>/dev/null || true)"
-    if [ "$divergence" != "0 0" ]; then
+    if [ "$(printf '%s' "$divergence" | tr -d '[:space:]')" != "00" ]; then
       echo "[$TIMESTAMP] academy: homepage repository diverges from origin/$BRANCH ($divergence) — aborting without deploy"
       return 3
     fi
