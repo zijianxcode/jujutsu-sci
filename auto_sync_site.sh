@@ -425,6 +425,71 @@ if [ "$MODE" = "check" ]; then
   exit 0
 fi
 
+# Resume mode — finish an interrupted sync. Plain `sync` exits 0 early when the
+# HTML is already committed (line "No generated HTML changes detected"), so a
+# run interrupted *after* the jujutsu-sci commit — e.g. GitHub unreachable
+# during the push retry loop, or the calling job hitting its wall-clock timeout
+# — would leave the mirror / deploy / verify / emergency stages unfinished
+# forever, no matter how often sync is re-run.
+# Precondition: jujutsu-sci is committed (if the tree is dirty, run `sync` first
+# to generate+commit, then `resume` to finish). Exit codes match sync's.
+if [ "$MODE" = "resume" ]; then
+  if ! ensure_repo_clean "$PROJECT_ROOT"; then
+    echo "[$TIMESTAMP] resume: jujutsu-sci has uncommitted changes — run './auto_sync_site.sh sync' first, then resume."
+    exit 1
+  fi
+
+  resume_commit="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
+  echo "[$TIMESTAMP] resume: jujutsu-sci HEAD=$resume_commit"
+
+  resume_push_ok=false
+  for attempt in $(seq 1 3); do
+    if with_push_timeout git -C "$PROJECT_ROOT" push origin "$BRANCH" 2>/dev/null; then
+      if verify_remote_has_commit "$PROJECT_ROOT" "$resume_commit"; then
+        echo "[$TIMESTAMP] resume: jujutsu-sci push verified on attempt $attempt"
+        resume_push_ok=true
+        break
+      fi
+      echo "[$TIMESTAMP] resume: push attempt $attempt reached remote but verification failed"
+    else
+      echo "[$TIMESTAMP] resume: push attempt $attempt timed out"
+    fi
+    sleep 5
+  done
+
+  sync_academy_mirror || academy_status=$?
+  academy_status="${academy_status:-0}"
+  if [ "$academy_status" -ne 0 ]; then
+    echo "[$TIMESTAMP] FAILURE: academy mirror sync failed (exit=$academy_status)."
+    exit 3
+  fi
+
+  if ! $resume_push_ok; then
+    echo "[$TIMESTAMP] FAILURE: jujutsu-sci push did not reach remote after 3 attempts."
+    exit 2
+  fi
+
+  deploy_to_cloudbase || deploy_status=$?
+  deploy_status="${deploy_status:-0}"
+  if [ "$deploy_status" -ne 0 ]; then
+    echo "[$TIMESTAMP] FAILURE: CloudBase deploy failed (exit=$deploy_status)."
+    exit "$deploy_status"
+  fi
+
+  verify_production || verify_status=$?
+  verify_status="${verify_status:-0}"
+  if [ "$verify_status" -ne 0 ]; then
+    echo "[$TIMESTAMP] FAILURE: production verification failed (exit=$verify_status)."
+    exit "$verify_status"
+  fi
+
+  sync_emergency_status
+  ensure_github_pages_backup
+
+  echo "[$TIMESTAMP] Resume done. push: ok, academy mirror: ok, cloudbase deploy: ok, verify: ok, emergency: synced"
+  exit 0
+fi
+
 ensure_repo_clean "$PROJECT_ROOT"
 
 # Fetch with timeout and retry
