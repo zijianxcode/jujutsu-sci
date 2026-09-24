@@ -407,9 +407,69 @@ ensure_github_pages_backup() {
   return 0
 }
 
+# --- Network egress fallback --------------------------------------------------
+# macOS "system proxy" (ClashX / Surge / etc.) is honored by browsers, but git,
+# curl and node/tcb read only the http_proxy / https_proxy environment vars.
+# Symptom when that differs: `git push` and `tcb hosting deploy` time out while
+# websites load fine in the browser. When direct egress is blocked and a local
+# proxy is listening, export the env vars so child processes can reach the net.
+#   SYNC_PROXY_URL   override proxy URL (default http://127.0.0.1:7890)
+#   SYNC_NO_PROXY=1  disable this fallback entirely
+SYNC_PROXY_URL="${SYNC_PROXY_URL:-http://127.0.0.1:7890}"
+SYNC_EGRESS_PROBE_URL="${SYNC_EGRESS_PROBE_URL:-https://github.com}"
+
+egress_probe_ok() {
+  curl -s -o /dev/null --max-time 8 "$SYNC_EGRESS_PROBE_URL" 2>/dev/null
+}
+
+apply_proxy_egress() {
+  export HTTPS_PROXY="$SYNC_PROXY_URL" HTTP_PROXY="$SYNC_PROXY_URL"
+  export https_proxy="$SYNC_PROXY_URL" http_proxy="$SYNC_PROXY_URL"
+  # Loopback must never be proxied (local probes, CLI callbacks)
+  export NO_PROXY="${NO_PROXY:-localhost,127.0.0.1,::1}"
+  export no_proxy="$NO_PROXY"
+}
+
+ensure_network_egress() {
+  if [ "${SYNC_NO_PROXY:-0}" = "1" ]; then
+    echo "[$TIMESTAMP] egress: proxy fallback disabled (SYNC_NO_PROXY=1)"
+    return 0
+  fi
+  if [ -n "${HTTPS_PROXY:-}${https_proxy:-}" ]; then
+    echo "[$TIMESTAMP] egress: proxy already set by caller (${HTTPS_PROXY:-${https_proxy}})"
+    return 0
+  fi
+  if egress_probe_ok; then
+    echo "[$TIMESTAMP] egress: direct connectivity OK"
+    return 0
+  fi
+
+  local p_host p_port
+  p_host="$(printf '%s' "$SYNC_PROXY_URL" | sed -E 's|^[a-z]+://||; s|[:/].*$||')"
+  p_port="$(printf '%s' "$SYNC_PROXY_URL" | sed -E 's|^[a-z]+://[^:/]*||; s|^:||; s|/.*$||')"
+  p_port="${p_port:-7890}"
+
+  if nc -z -G 3 "$p_host" "$p_port" >/dev/null 2>&1; then
+    apply_proxy_egress
+    if egress_probe_ok; then
+      echo "[$TIMESTAMP] egress: direct blocked — using local proxy $SYNC_PROXY_URL (probe OK)"
+      return 0
+    fi
+    echo "[$TIMESTAMP] egress: WARNING proxy $SYNC_PROXY_URL reachable but probe still fails — continuing direct"
+    unset HTTPS_PROXY HTTP_PROXY https_proxy http_proxy NO_PROXY no_proxy
+    return 0
+  fi
+
+  echo "[$TIMESTAMP] egress: WARNING direct egress blocked and no proxy listening on $SYNC_PROXY_URL — pushes may time out"
+  return 0
+}
+# --- end network egress fallback ----------------------------------------------
+
 # =============================================================================
 # Main
 # =============================================================================
+
+ensure_network_egress
 
 # Check mode — skip clean check, just validate
 if [ "$MODE" = "check" ]; then
