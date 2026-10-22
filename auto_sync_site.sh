@@ -174,11 +174,20 @@ sync_academy_mirror() {
       echo "[$TIMESTAMP] academy: homepage repository changed during pull — aborting without deploy"
       return 3
     fi
-    local divergence
+    local divergence ahead behind
     divergence="$(git -C "$target_repo" rev-list --left-right --count "origin/$BRANCH...HEAD" 2>/dev/null || true)"
-    if [ "$(printf '%s' "$divergence" | tr -d '[:space:]')" != "00" ]; then
+    behind="$(printf '%s' "$divergence" | awk '{print $1}')"
+    ahead="$(printf '%s' "$divergence" | awk '{print $2}')"
+    # Only *behind* origin is a real divergence we must not clobber. Being ahead
+    # is normal: it is our own academy mirror commit that has not been pushed yet
+    # (e.g. a previous run was interrupted mid-push). Aborting on ahead>0 made
+    # `resume` permanently unable to finish after any interrupted push.
+    if [ -n "$behind" ] && [ "$behind" -gt 0 ] 2>/dev/null; then
       echo "[$TIMESTAMP] academy: homepage repository diverges from origin/$BRANCH ($divergence) — aborting without deploy"
       return 3
+    fi
+    if [ -n "$ahead" ] && [ "$ahead" -gt 0 ] 2>/dev/null; then
+      echo "[$TIMESTAMP] academy: local HEAD is $ahead commit(s) ahead of origin/$BRANCH — pending mirror push will be retried"
     fi
   fi
 
@@ -271,6 +280,23 @@ sync_academy_mirror() {
   git add academy/
   if git diff --cached --quiet; then
     echo "[$TIMESTAMP] academy: no HTML changes to sync"
+    # Even with nothing new to rsync, a previous run may have committed the
+    # mirror and failed to push it. Leaving it unpushed makes tomorrow's run
+    # abort on the divergence guard and never deploy again — retry the push here.
+    local pending
+    pending="$(git -C "$target_repo" rev-list --count "origin/$BRANCH..HEAD" 2>/dev/null || echo 0)"
+    if [ "${pending:-0}" -gt 0 ] 2>/dev/null; then
+      echo "[$TIMESTAMP] academy: $pending unpushed mirror commit(s) — retrying push"
+      local_commit=$(git -C "$target_repo" rev-parse HEAD)
+      cd "$PROJECT_ROOT"
+      if with_push_timeout git -C "$target_repo" push origin "$BRANCH" 2>/dev/null &&
+         verify_remote_has_commit "$target_repo" "$local_commit"; then
+        echo "[$TIMESTAMP] academy: pushed and verified pending commit=$local_commit"
+        return 0
+      fi
+      echo "[$TIMESTAMP] academy: failed to push pending mirror commit=$local_commit"
+      return 3
+    fi
     cd "$PROJECT_ROOT"
     return 0
   fi
@@ -419,7 +445,11 @@ SYNC_PROXY_URL="${SYNC_PROXY_URL:-http://127.0.0.1:7890}"
 SYNC_EGRESS_PROBE_URL="${SYNC_EGRESS_PROBE_URL:-https://github.com}"
 
 egress_probe_ok() {
-  curl -s -o /dev/null --max-time 8 "$SYNC_EGRESS_PROBE_URL" 2>/dev/null
+  # NOTE: the proxy can legitimately take >10s to return https://github.com on a
+  # loaded ClashX/mihomo install. A tight timeout here makes the probe report the
+  # proxy as dead, the script unsets the proxy vars, and every git/tcb call then
+  # falls back to blocked direct egress. Keep this generous.
+  curl -s -o /dev/null --max-time "${SYNC_PROBE_TIMEOUT:-25}" "$SYNC_EGRESS_PROBE_URL" 2>/dev/null
 }
 
 apply_proxy_egress() {
