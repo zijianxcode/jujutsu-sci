@@ -439,9 +439,13 @@ ensure_github_pages_backup() {
 # Symptom when that differs: `git push` and `tcb hosting deploy` time out while
 # websites load fine in the browser. When direct egress is blocked and a local
 # proxy is listening, export the env vars so child processes can reach the net.
-#   SYNC_PROXY_URL   override proxy URL (default http://127.0.0.1:7890)
-#   SYNC_NO_PROXY=1  disable this fallback entirely
-SYNC_PROXY_URL="${SYNC_PROXY_URL:-http://127.0.0.1:7890}"
+#   SYNC_PROXY_URL       override proxy URL (skips auto-detection, e.g. http://127.0.0.1:7897)
+#   SYNC_PROXY_CANDIDATES  ports probed when SYNC_PROXY_URL is unset
+#   SYNC_NO_PROXY=1      disable this fallback entirely
+# A hardcoded default port silently breaks every push whenever the proxy app
+# switches its mixed-port (ClashX 7890 → Clash Neo 7897), so auto-detect instead.
+SYNC_PROXY_CANDIDATES="${SYNC_PROXY_CANDIDATES:-7890 7897 7891 1080 6152 8080}"
+SYNC_PROXY_URL="${SYNC_PROXY_URL:-}"
 SYNC_EGRESS_PROBE_URL="${SYNC_EGRESS_PROBE_URL:-https://github.com}"
 
 egress_probe_ok() {
@@ -453,11 +457,30 @@ egress_probe_ok() {
 }
 
 apply_proxy_egress() {
-  export HTTPS_PROXY="$SYNC_PROXY_URL" HTTP_PROXY="$SYNC_PROXY_URL"
-  export https_proxy="$SYNC_PROXY_URL" http_proxy="$SYNC_PROXY_URL"
+  local url="${1:-$SYNC_PROXY_URL}"
+  SYNC_PROXY_URL="$url"
+  export HTTPS_PROXY="$url" HTTP_PROXY="$url"
+  export https_proxy="$url" http_proxy="$url"
   # Loopback must never be proxied (local probes, CLI callbacks)
   export NO_PROXY="${NO_PROXY:-localhost,127.0.0.1,::1}"
   export no_proxy="$NO_PROXY"
+}
+
+# Pick a local proxy URL: explicit override first, else the first listening
+# candidate port. Echoes the URL (empty when nothing is listening).
+detect_proxy_url() {
+  if [ -n "$SYNC_PROXY_URL" ]; then
+    printf '%s' "$SYNC_PROXY_URL"
+    return 0
+  fi
+  local cand
+  for cand in $SYNC_PROXY_CANDIDATES; do
+    if nc -z -G 3 127.0.0.1 "$cand" >/dev/null 2>&1; then
+      printf 'http://127.0.0.1:%s' "$cand"
+      return 0
+    fi
+  done
+  printf ''
 }
 
 ensure_network_egress() {
@@ -474,23 +497,37 @@ ensure_network_egress() {
     return 0
   fi
 
-  local p_host p_port
-  p_host="$(printf '%s' "$SYNC_PROXY_URL" | sed -E 's|^[a-z]+://||; s|[:/].*$||')"
-  p_port="$(printf '%s' "$SYNC_PROXY_URL" | sed -E 's|^[a-z]+://[^:/]*||; s|^:||; s|/.*$||')"
-  p_port="${p_port:-7890}"
+  local proxy_url
+  proxy_url="$(detect_proxy_url)"
 
-  if nc -z -G 3 "$p_host" "$p_port" >/dev/null 2>&1; then
-    apply_proxy_egress
+  if [ -z "$proxy_url" ]; then
+    echo "[$TIMESTAMP] egress: WARNING direct egress blocked and no proxy listening on any of (${SYNC_PROXY_CANDIDATES}) — pushes may time out"
+    return 0
+  fi
+
+  apply_proxy_egress "$proxy_url"
+  if egress_probe_ok; then
+    echo "[$TIMESTAMP] egress: direct blocked — using local proxy $SYNC_PROXY_URL (probe OK)"
+    return 0
+  fi
+
+  # The port accepted a TCP connect but egress still fails — try the remaining
+  # candidates before giving up, then fall back to direct.
+  local tried="$SYNC_PROXY_URL" cand
+  for cand in $SYNC_PROXY_CANDIDATES; do
+    case " $tried " in *" 127.0.0.1:$cand "*|*"http://127.0.0.1:$cand"*) continue ;; esac
+    nc -z -G 3 127.0.0.1 "$cand" >/dev/null 2>&1 || continue
+    apply_proxy_egress "http://127.0.0.1:$cand"
     if egress_probe_ok; then
       echo "[$TIMESTAMP] egress: direct blocked — using local proxy $SYNC_PROXY_URL (probe OK)"
       return 0
     fi
-    echo "[$TIMESTAMP] egress: WARNING proxy $SYNC_PROXY_URL reachable but probe still fails — continuing direct"
-    unset HTTPS_PROXY HTTP_PROXY https_proxy http_proxy NO_PROXY no_proxy
-    return 0
-  fi
+    tried="$tried $SYNC_PROXY_URL"
+  done
 
-  echo "[$TIMESTAMP] egress: WARNING direct egress blocked and no proxy listening on $SYNC_PROXY_URL — pushes may time out"
+  echo "[$TIMESTAMP] egress: WARNING local proxies reachable but probe still fails — continuing direct"
+  unset HTTPS_PROXY HTTP_PROXY https_proxy http_proxy NO_PROXY no_proxy
+  SYNC_PROXY_URL=""
   return 0
 }
 # --- end network egress fallback ----------------------------------------------
